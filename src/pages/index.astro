@@ -1,16 +1,253 @@
 ---
-
+// src/pages/index.astro
 ---
 
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>IND Design Studio</title>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="nav">
+      <div class="nav-left">
+        <a href="#" class="nav-link">Projects</a>
+      </div>
+      <div class="nav-right">
+        <a href="#" class="nav-link">Studio</a>
+        <a href="#" class="nav-link">Team</a>
+        <a href="#" class="nav-link">Job</a>
+        <a href="#" class="nav-link">Eng / Rus</a>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main">
+      
+
+      <!-- Animated Text -->
+      <div class="hero-text">
+        <span class="static-text">BYG</span>
+        <span class="animated-text" id="animatedText">PANORAMA</span>
+      </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+      <a href="#" class="bottom-link">
+        Masterplan <sup>8</sup>
+      </a>
+      <a href="#" class="bottom-link">
+        Architecture <sup>24</sup>
+      </a>
+      <a href="#" class="bottom-link">
+        Interiors <sup>21</sup>
+      </a>
+      <a href="#" class="bottom-link">
+        Landscape <sup>9</sup>
+      </a>
+    </div>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: #ffffff;
+  height: 100vh;
+  overflow: hidden;
+}
+
+      /* Navigation Styles */
+      .nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 40px;
+        z-index: 100;
+      }
+
+      .nav-left,
+      .nav-right {
+        display: flex;
+        gap: 30px;
+      }
+
+      .nav-link {
+        text-decoration: none;
+        color: #666;
+        font-size: 14px;
+        font-weight: 400;
+        transition: color 0.3s ease;
+      }
+
+      .nav-link:hover {
+        color: #000;
+      }
+
+      /* Main Content */
+      .main {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;; /* Center horizontally */
+  position: relative;
+  padding-left: 10vw; /* Move a bit to the right */
+}
+
+      /* Center Plus */
+      .center-plus {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 24px;
+        color: #ccc;
+        z-index: 1;
+      }
+
+      /* Hero Text */
+      .hero-text {
+    font-size: clamp(40px, 7vw, 90px); /* Decrease size */
+    font-weight: 500;
+    color: #4c4c4c;
+    letter-spacing: -0.02em;
+    text-align: left; /* Align text to the left */
+    position: relative;
+    z-index: 2;
+}
+
+      .static-text {
+        margin-right: 0.1em;
+      }
+
+      .animated-text {
+        position: relative;
+        display: inline-block;
+        min-width: 1em;
+        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .animated-text.blur-out {
+        filter: blur(10px);
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+
+      .animated-text.blur-in {
+        filter: blur(0px);
+        opacity: 1;
+        transform: translateY(0px);
+      }
+
+      /* Bottom Navigation */
+      .bottom-nav {
+        position: fixed;
+        bottom: 40px;
+        left: 40px;
+        display: flex;
+        gap: 40px;
+      }
+
+      .bottom-link {
+        text-decoration: none;
+        color: #999;
+        font-size: 14px;
+        font-weight: 400;
+        transition: color 0.3s ease;
+      }
+
+      .bottom-link:hover {
+        color: #333;
+      }
+
+      .bottom-link sup {
+        font-size: 10px;
+        margin-left: 2px;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .nav {
+          padding: 15px 20px;
+        }
+
+        .nav-right {
+          gap: 15px;
+        }
+
+        .bottom-nav {
+          bottom: 20px;
+          left: 20px;
+          gap: 20px;
+          flex-wrap: wrap;
+        }
+
+        .hero-text {
+          font-size: clamp(60px, 15vw, 120px);
+        }
+      }
+    </style>
+
+    <script>
+      
+      // Animation Script
+      const words = [
+        "PANORAMA",
+        "THE VIEWS",
+        "PARK EDGE",
+		"CORAL TOWERS",
+		"PEARL & REEF TOWERS",
+		"AA WATERFRONT",
+		"BEACH TERRACE",
+		"GOLD CREST",
+		"H&S RESIDENCE",
+		"H1 TOWERS",
+		"SAIMA MARINA",
+		"SAIMA WATERFRONT",
+
+
+      ];
+      let currentIndex = 0;
+      const animatedText = document.getElementById("animatedText");
+
+      function changeWord() {
+        if (!animatedText) return;
+        // Blur out current word
+        animatedText.classList.add("blur-out");
+
+        setTimeout(() => {
+          if (!animatedText) return;
+          // Change to next word
+          currentIndex = (currentIndex + 1) % words.length;
+          animatedText.textContent = words[currentIndex];
+
+          // Blur in new word
+          animatedText.classList.remove("blur-out");
+          animatedText.classList.add("blur-in");
+
+          setTimeout(() => {
+            if (!animatedText) return;
+            animatedText.classList.remove("blur-in");
+          }, 800);
+        }, 400);
+      }
+
+      // Start animation after page load
+      setTimeout(() => {
+        setInterval(changeWord, 3000);
+      }, 2000);
+    </script>
+  </body>
 </html>
