@@ -1,442 +1,686 @@
----
-// src/pages/index.astro
----
-
+<!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <title>IND Design Studio</title>
-  </head>
-  <body>
+</head>
+<body>
     <!-- Navigation -->
     <nav class="nav">
-      <div class="nav-left">
-        <a href="#" class="nav-link">Projects</a>
-      </div>
-      <div class="nav-right">
-        <a href="#" class="nav-link">Studio</a>
-        <a href="#" class="nav-link">Team</a>
-        <a href="#" class="nav-link">Job</a>
-        <a href="#" class="nav-link">Eng / Rus</a>
-      </div>
+        <div class="nav-left">
+            <a href="#" class="nav-link">Projects</a>
+        </div>
+        <div class="nav-right">
+            <a href="#" class="nav-link">Studio</a>
+            <a href="#" class="nav-link">Team</a>
+            <a href="#" class="nav-link">Job</a>
+            <a href="#" class="nav-link">Eng / Rus</a>
+        </div>
     </nav>
 
     <!-- Main Content -->
     <main class="main">
-      <!-- Animated Text -->
-      <div class="hero-text">
-        <span class="static-text">BYG</span>
-        <span class="animated-text" id="animatedText">PANORAMA</span>
-      </div>
+        <!-- Animated Text -->
+        <div class="hero-text">
+            <span class="static-text">BYG</span>
+            <span class="animated-text" id="animatedText">PANORAMA</span>
+        </div>
     </main>
 
     <!-- Bottom Navigation -->
     <div class="bottom-nav">
-      <a href="#" class="bottom-link">
-        Masterplan <sup>8</sup>
-      </a>
-      <a href="#" class="bottom-link">
-        Architecture <sup>24</sup>
-      </a>
-      <a href="#" class="bottom-link">
-        Interiors <sup>21</sup>
-      </a>
-      <a href="#" class="bottom-link">
-        Landscape <sup>9</sup>
-      </a>
+        <a href="#" class="bottom-link">
+            Masterplan <sup>8</sup>
+        </a>
+        <a href="#" class="bottom-link">
+            Architecture <sup>24</sup>
+        </a>
+        <a href="#" class="bottom-link">
+            Interiors <sup>21</sup>
+        </a>
+        <a href="#" class="bottom-link">
+            Landscape <sup>9</sup>
+        </a>
     </div>
 
     <!-- Projects Section -->
     <section class="projects-section">
-      <!-- Full Screen Image -->
-      <div class="project-image" id="projectImage">
-        <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Modern Architecture Project" />
-      </div>
-      
-      <!-- Project Names -->
-      <div class="project-names" id="projectNames">
-        <div class="project-item" data-project="1">
-          <h2 class="project-title">Residential Complex</h2>
-          <p class="project-subtitle">Copenhagen, Denmark</p>
+        <!-- Full Screen Image -->
+        <div class="project-image" id="projectImage">
+            <img id="mainProjectImage" src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Modern Architecture Project" />
         </div>
-        <div class="project-item" data-project="2">
-          <h2 class="project-title">Modern Villa</h2>
-          <p class="project-subtitle">Barcelona, Spain</p>
+        
+        <!-- Projects List Sidebar -->
+        <div class="projects-sidebar" id="projectsSidebar">
+            <div class="favorites-section">
+                <h3 class="section-title">Projects</h3>
+                <div class="favorite-icon">+</div>
+            </div>
+            
+            <div class="projects-list">
+                <div class="project-item active" data-project="1" data-image="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80">
+                    <span class="project-number">001</span>
+                    <div class="project-info">
+                        <h4 class="project-name">"Gustav" Creative Industries Technopark</h4>
+                        <p class="project-location">Cultural Center Riyadh</p>
+                    </div>
+                </div>
+                
+                <div class="project-item" data-project="2" data-image="https://images.unsplash.com/photo-1487958449943-2429e8be8625?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80">
+                    <span class="project-number">002</span>
+                    <div class="project-info">
+                        <h4 class="project-name">Innovative School in Dubai</h4>
+                        <p class="project-location">Educational Complex Dubai</p>
+                    </div>
+                </div>
+                
+                <div class="project-item" data-project="3" data-image="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2053&q=80">
+                    <span class="project-number">003</span>
+                    <div class="project-info">
+                        <h4 class="project-name">New Resort in Sheregesh</h4>
+                        <p class="project-location">Ski Resort Complex</p>
+                    </div>
+                </div>
+                
+                <div class="project-item" data-project="4" data-image="https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80">
+                    <span class="project-number">004</span>
+                    <div class="project-info">
+                        <h4 class="project-name">Bali Village</h4>
+                        <p class="project-location">Residential Development</p>
+                    </div>
+                </div>
+                
+                <div class="project-item" data-project="5" data-image="https://images.unsplash.com/photo-1600573472556-89ad03d75b87?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80">
+                    <span class="project-number">005</span>
+                    <div class="project-info">
+                        <h4 class="project-name">Ecopolis in Sakhalin</h4>
+                        <p class="project-location">Sustainable Community</p>
+                    </div>
+                </div>
+                
+                <div class="project-item" data-project="6" data-image="https://images.unsplash.com/photo-1600210492486-724fe5c67fb8?ixlib=rb-4.0.3&auto=format&fit=crop&w=2074&q=80">
+                    <span class="project-number">006</span>
+                    <div class="project-info">
+                        <h4 class="project-name">City Pavilion Shaqal</h4>
+                        <p class="project-location">Urban Development</p>
+                    </div>
+                </div>
+                
+                <div class="project-item" data-project="7" data-image="https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80">
+                    <span class="project-number">007</span>
+                    <div class="project-info">
+                        <h4 class="project-name">Digital Lab</h4>
+                        <p class="project-location">Technology Center</p>
+                    </div>
+                </div>
+                
+                <div class="project-item" data-project="8" data-image="https://images.unsplash.com/photo-1600121848594-d8644e57abab?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80">
+                    <span class="project-number">008</span>
+                    <div class="project-info">
+                        <h4 class="project-name">Music Museum in Cyprus</h4>
+                        <p class="project-location">Cultural Institution</p>
+                    </div>
+                </div>
+                
+                <div class="project-item" data-project="9" data-image="https://images.unsplash.com/photo-1600298881974-6be191ceeda1?ixlib=rb-4.0.3&auto=format&fit=crop&w=2053&q=80">
+                    <span class="project-number">009</span>
+                    <div class="project-info">
+                        <h4 class="project-name">School in Burabay</h4>
+                        <p class="project-location">Educational Facility</p>
+                    </div>
+                </div>
+                
+                <div class="project-item" data-project="10" data-image="https://images.unsplash.com/photo-1600607687644-c7171b42498b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80">
+                    <span class="project-number">010</span>
+                    <div class="project-info">
+                        <h4 class="project-name">Master Plan Sochi</h4>
+                        <p class="project-location">Urban Planning</p>
+                    </div>
+                </div>
+                
+                <div class="project-item" data-project="11" data-image="https://images.unsplash.com/photo-1600566752355-35792bedcfea?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80">
+                    <span class="project-number">011</span>
+                    <div class="project-info">
+                        <h4 class="project-name">Lishui Master Plan</h4>
+                        <p class="project-location">China Development</p>
+                    </div>
+                </div>
+                
+                <div class="project-item" data-project="12" data-image="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80">
+                    <span class="project-number">012</span>
+                    <div class="project-info">
+                        <h4 class="project-name">Xingfu Village Museum</h4>
+                        <p class="project-location">Cultural Heritage</p>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="project-item" data-project="3">
-          <h2 class="project-title">Urban Development</h2>
-          <p class="project-subtitle">London, UK</p>
-        </div>
-        <div class="project-item" data-project="4">
-          <h2 class="project-title">Eco Housing</h2>
-          <p class="project-subtitle">Amsterdam, Netherlands</p>
-        </div>
-      </div>
+
+       
     </section>
 
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-      body {
-        font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        background-color: #ffffff;
-        overflow-x: hidden;
-      }
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #ffffff;
+            overflow-x: hidden;
+        }
 
-      body, html {
-  cursor: url('data:image/svg+xml;utf8,<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg"><line x1="8" y1="3" x2="8" y2="13" stroke="black" stroke-width="2"/><line x1="3" y1="8" x2="13" y2="8" stroke="black" stroke-width="2"/></svg>') 8 8, crosshair;
-}
+        body, html {
+            cursor: url('data:image/svg+xml;utf8,<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg"><line x1="8" y1="3" x2="8" y2="13" stroke="black" stroke-width="2"/><line x1="3" y1="8" x2="13" y2="8" stroke="black" stroke-width="2"/></svg>') 8 8, crosshair;
+        }
 
-      /* Navigation Styles */
-      .nav {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 20px 40px;
-        z-index: 100;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-      }
-
-      .nav-left,
-      .nav-right {
-        display: flex;
-        gap: 30px;
-      }
-
-      .nav-link {
-        text-decoration: none;
-        color: #666;
-        font-size: 14px;
-        font-weight: 400;
-        transition: color 0.3s ease;
-      }
-
-      .nav-link:hover {
-        color: #000;
-      }
-
-      /* Main Content */
-      .main {
-        height: 110vh;
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        position: relative;
-        padding-left: 10vw;
-      }
-
-      /* Hero Text */
-      .hero-text {
-        font-size: clamp(40px, 7vw, 90px);
-        font-weight: 500;
-        color: #4c4c4c;
-        letter-spacing: -0.02em;
-        text-align: left;
-        position: relative;
-        z-index: 2;
-      }
-
-      .static-text {
-        margin-right: 0.1em;
-      }
-
-      .animated-text {
-        position: relative;
-        display: inline-block;
-        min-width: 1em;
-        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-
-      .animated-text.blur-out {
-        filter: blur(10px);
-        opacity: 0;
-        transform: translateY(-20px);
-      }
-
-      .animated-text.blur-in {
-        filter: blur(0px);
-        opacity: 1;
-        transform: translateY(0px);
-      }
-
-      /* Bottom Navigation */
-      .bottom-nav {
-        position: fixed;
-        bottom: 40px;
-        left: 40px;
-        display: flex;
-        gap: 40px;
-        z-index: 10;
-      }
-
-      .bottom-link {
-        text-decoration: none;
-        color: #999;
-        font-size: 14px;
-        font-weight: 400;
-        transition: color 0.3s ease;
-      }
-
-      .bottom-link:hover {
-        color: #333;
-      }
-
-      .bottom-link sup {
-        font-size: 10px;
-        margin-left: 2px;
-      }
-
-      /* Projects Section */
-      .projects-section {
-        height: 400vh; /* Make it scrollable */
-        position: relative;
-      }
-
-      /* Project Image */
-      .project-image {
-        position: fixed;
-        top: 10vh;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        z-index: 1;
-        will-change: transform, width, height, top, left;
-      }
-
-      .project-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: all 0.1s ease-out;
-      }
-
-      /* Project Names */
-      .project-names {
-        position: fixed;
-        left: 10vw;
-        top: 50%;
-        transform: translateY(-50%);
-        z-index: 5;
-        opacity: 0;
-        will-change: opacity;
-      }
-
-      .project-item {
-        margin-bottom: 60px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        opacity: 0;
-        transform: translateX(-50px);
-        will-change: opacity, transform;
-      }
-
-      .project-item.visible {
-        opacity: 1;
-        transform: translateX(0);
-      }
-
-      .project-title {
-        font-size: clamp(32px, 4vw, 48px);
-        font-weight: 500;
-        color: #333;
-        margin-bottom: 8px;
-        transition: color 0.3s ease;
-      }
-
-      .project-subtitle {
-        font-size: 16px;
-        color: #666;
-        font-weight: 400;
-        transition: color 0.3s ease;
-      }
-
-      .project-item:hover .project-title {
-        color: #000;
-      }
-
-      .project-item:hover .project-subtitle {
-        color: #333;
-      }
-
-      /* Responsive Design */
-      @media (max-width: 768px) {
+        /* Navigation Styles */
         .nav {
-          padding: 15px 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
         }
 
+        .nav-left,
         .nav-right {
-          gap: 15px;
+            display: flex;
+            gap: 30px;
         }
 
-        .bottom-nav {
-          bottom: 20px;
-          left: 20px;
-          gap: 20px;
-          flex-wrap: wrap;
+        .nav-link {
+            text-decoration: none;
+            color: #666;
+            font-size: 14px;
+            font-weight: 400;
+            transition: color 0.3s ease;
         }
 
+        .nav-link:hover {
+            color: #000;
+        }
+
+        /* Main Content */
+        .main {
+            height: 110vh;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            position: relative;
+            padding-left: 10vw;
+        }
+
+        /* Hero Text */
         .hero-text {
-          font-size: clamp(60px, 15vw, 120px);
+            font-size: clamp(40px, 7vw, 90px);
+            font-weight: 500;
+            color: #4c4c4c;
+            letter-spacing: -0.02em;
+            text-align: left;
+            position: relative;
+            z-index: 2;
         }
 
-        .project-names {
-          left: 5vw;
+        .static-text {
+            margin-right: 0.1em;
         }
 
-        .project-title {
-          font-size: clamp(24px, 6vw, 36px);
+        .animated-text {
+            position: relative;
+            display: inline-block;
+            min-width: 1em;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
-      }
+
+        .animated-text.blur-out {
+            filter: blur(10px);
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        .animated-text.blur-in {
+            filter: blur(0px);
+            opacity: 1;
+            transform: translateY(0px);
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 40px;
+            left: 40px;
+            display: flex;
+            gap: 40px;
+            z-index: 10;
+        }
+
+        .bottom-link {
+            text-decoration: none;
+            color: #999;
+            font-size: 14px;
+            font-weight: 400;
+            transition: color 0.3s ease;
+        }
+
+        .bottom-link:hover {
+            color: #333;
+        }
+
+        .bottom-link sup {
+            font-size: 10px;
+            margin-left: 2px;
+        }
+
+        /* Projects Section */
+        .projects-section {
+            height: 400vh;
+            position: relative;
+        }
+
+        /* Project Image */
+        .project-image {
+            position: fixed;
+            top: 10vh;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            will-change: transform, width, height, top, left;
+        }
+
+        .project-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.3s ease;
+        }
+
+        /* Projects Sidebar */
+        .projects-sidebar {
+            position: fixed;
+            left: 5vw;
+            top: 15vh;
+            width: 400px;
+            max-height: 70vh;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 30px 25px;
+            z-index: 5;
+            opacity: 0;
+            transform: translateX(-100px);
+            will-change: opacity, transform;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .projects-sidebar.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .favorites-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .favorite-icon {
+            font-size: 18px;
+            color: #999;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .favorite-icon:hover {
+            color: #333;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        /* Project Items */
+        .project-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            position: relative;
+            margin-bottom: 4px;
+        }
+
+        .project-item:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+            transform: translateX(5px);
+        }
+
+        .project-item.active {
+            background-color: rgba(0, 0, 0, 0.08);
+            transform: translateX(5px);
+        }
+
+        .project-number {
+            font-size: 11px;
+            color: #999;
+            margin-right: 12px;
+            font-weight: 500;
+            min-width: 25px;
+            margin-top: 2px;
+        }
+
+        .project-info {
+            flex: 1;
+        }
+
+        .project-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 3px;
+            line-height: 1.4;
+        }
+
+        .project-location {
+            font-size: 11px;
+            color: #999;
+            line-height: 1.3;
+        }
+
+        /* Award Badge */
+        .award-badge {
+            position: fixed;
+            bottom: 8vh;
+            right: 8vw;
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 20px 25px;
+            border-radius: 12px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+            z-index: 5;
+            opacity: 0;
+            transform: translateY(30px);
+            will-change: opacity, transform;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .award-badge.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .award-icon {
+            font-size: 28px;
+            margin-right: 15px;
+        }
+
+        .award-text strong {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 3px;
+        }
+
+        .award-category {
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* Custom Scrollbar for Sidebar */
+        .projects-sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .projects-sidebar::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 2px;
+        }
+
+        .projects-sidebar::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 2px;
+        }
+
+        .projects-sidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .projects-sidebar {
+                width: 350px;
+                left: 3vw;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav {
+                padding: 15px 20px;
+            }
+
+            .nav-right {
+                gap: 15px;
+            }
+
+            .bottom-nav {
+                bottom: 20px;
+                left: 20px;
+                gap: 20px;
+                flex-wrap: wrap;
+            }
+
+            .hero-text {
+                font-size: clamp(60px, 15vw, 120px);
+            }
+
+            .projects-sidebar {
+                width: 90vw;
+                left: 5vw;
+                max-height: 60vh;
+            }
+
+            .award-badge {
+                bottom: 5vh;
+                right: 5vw;
+                left: 5vw;
+                text-align: center;
+            }
+        }
     </style>
 
     <script>
-      // Animation Script for hero text
-      const words = [
-        "PANORAMA",
-        "THE VIEWS",
-        "PARK EDGE",
-        "CORAL TOWERS",
-        "PEARL & REEF TOWERS",
-        "AA WATERFRONT",
-        "BEACH TERRACE",
-        "GOLD CREST",
-        "H&S RESIDENCE",
-        "H1 TOWER",
-        "SAIMA MARINA",
-        "SAIMA WATERFRONT",
-      ];
-      let currentIndex = 0;
-      const animatedText = document.getElementById("animatedText");
+        // Animation Script for hero text
+        const words = [
+            "PANORAMA",
+            "THE VIEWS",
+            "PARK EDGE",
+            "CORAL TOWERS",
+            "PEARL & REEF TOWERS",
+            "AA WATERFRONT",
+            "BEACH TERRACE",
+            "GOLD CREST",
+            "H&S RESIDENCE",
+            "H1 TOWER",
+            "SAIMA MARINA",
+            "SAIMA WATERFRONT",
+        ];
+        let currentIndex = 0;
+        const animatedText = document.getElementById("animatedText");
 
-      function changeWord() {
-        if (!animatedText) return;
-        animatedText.classList.add("blur-out");
+        function changeWord() {
+            if (!animatedText) return;
+            animatedText.classList.add("blur-out");
+
+            setTimeout(() => {
+                if (!animatedText) return;
+                currentIndex = (currentIndex + 1) % words.length;
+                animatedText.textContent = words[currentIndex];
+                animatedText.classList.remove("blur-out");
+                animatedText.classList.add("blur-in");
+
+                setTimeout(() => {
+                    if (!animatedText) return;
+                    animatedText.classList.remove("blur-in");
+                }, 800);
+            }, 400);
+        }
 
         setTimeout(() => {
-          if (!animatedText) return;
-          currentIndex = (currentIndex + 1) % words.length;
-          animatedText.textContent = words[currentIndex];
-          animatedText.classList.remove("blur-out");
-          animatedText.classList.add("blur-in");
+            setInterval(changeWord, 3000);
+        }, 2000);
 
-          setTimeout(() => {
-            if (!animatedText) return;
-            animatedText.classList.remove("blur-in");
-          }, 800);
-        }, 400);
-      }
+        // Main scroll animation and project interaction
+        const projectImage = document.getElementById('projectImage');
+        const projectsSidebar = document.getElementById('projectsSidebar');
+        const awardBadge = document.getElementById('awardBadge');
+        const projectItems = document.querySelectorAll('.project-item');
+        const mainProjectImage = document.getElementById('mainProjectImage');
 
-      setTimeout(() => {
-        setInterval(changeWord, 3000);
-      }, 2000);
-
-      // Scroll Animation Script
-      const projectImage = document.getElementById('projectImage');
-      const projectNames = document.getElementById('projectNames');
-      const projectItems = document.querySelectorAll('.project-item');
-
-      function handleScroll() {
-        const scrollY = window.scrollY;
-        const windowHeight = window.innerHeight;
-        
-        // Start animation when scroll reaches the viewport height
-        const scrollStart = windowHeight;
-        const scrollRange = windowHeight * 2; // Animation happens over 2 viewport heights
-        
-        if (scrollY < scrollStart) {
-          // Before animation starts
-          projectImage.style.top = '100vh';
-          projectImage.style.left = '0';
-          projectImage.style.width = '100vw';
-          projectImage.style.height = '100vh';
-          projectNames.style.opacity = '0';
-          return;
-        }
-        
-        // Calculate progress (0 to 1)
-        const progress = Math.min((scrollY - scrollStart) / scrollRange, 1);
-        
-        // Smooth easing function for more natural movement
-        const easeOutQuart = (t) => 1 - Math.pow(1 - t, 4);
-        const easedProgress = easeOutQuart(progress);
-        
-        // Image animation - first moves up to cover screen, then shrinks and moves to top-right
-        if (projectImage) {
-          if (progress < 0.5) {
-            // Phase 1: Image moves up to completely cover the screen (first 50% of scroll)
-            const moveProgress = progress / 0.5;
-            const imageTop = 100 - (moveProgress * 100); // Move from 100vh to 0vh (covers full screen)
-            
-            projectImage.style.top = `${imageTop}vh`;
-            projectImage.style.left = '0';
-            projectImage.style.width = '100vw';
-            projectImage.style.height = '100vh';
-          } else {
-            // Phase 2: Image shrinks and moves to top-right (remaining 50% of scroll)
-            const shrinkProgress = (progress - 0.5) / 0.5;
-            const easedShrink = easeOutQuart(shrinkProgress);
-            
-            const imageTop = 0 + (easedShrink * 15); // Move from 0vh to 15vh (top-right position)
-            const imageLeft = easedShrink * 55; // Move from 0 to 55vw
-            const imageWidth = 100 - (easedShrink * 55); // Shrink from 100vw to 45vw
-            const imageHeight = 100 - (easedShrink * 45); // Shrink from 100vh to 55vh
-            
-            projectImage.style.top = `${imageTop}vh`;
-            projectImage.style.left = `${imageLeft}vw`;
-            projectImage.style.width = `${imageWidth}vw`;
-            projectImage.style.height = `${imageHeight}vh`;
-          }
-        }
-        
-        // Project names animation - appears during phase 2 (when image starts shrinking)
-        if (projectNames) {
-          const namesOpacity = progress > 0.5 ? Math.min((progress - 0.5) * 2, 1) : 0;
-          projectNames.style.opacity = namesOpacity;
-        }
-        
-        // Individual project items animation with stagger - also during phase 2
+        // Project interaction
         projectItems.forEach((item, index) => {
-          const itemDelay = index * 0.1;
-          const phaseProgress = Math.max(0, progress - 0.5) / 0.5; // Only during phase 2
-          const itemProgress = Math.max(0, Math.min((phaseProgress - itemDelay) / 0.25, 1));
-          
-          if (itemProgress > 0) {
-            item.classList.add('visible');
-            item.style.transitionDelay = `${index * 0.08}s`;
-          } else {
-            item.classList.remove('visible');
-          }
+            item.addEventListener('click', () => {
+                // Remove active class from all items
+                projectItems.forEach(pi => pi.classList.remove('active'));
+                // Add active class to clicked item
+                item.classList.add('active');
+                
+                // Change main image
+                const imageUrl = item.dataset.image;
+                if (imageUrl && mainProjectImage) {
+                    mainProjectImage.src = imageUrl;
+                }
+            });
+            
+            // Hover effect for image preview
+            item.addEventListener('mouseenter', () => {
+                const imageUrl = item.dataset.image;
+                if (imageUrl && mainProjectImage) {
+                    mainProjectImage.style.opacity = '0.7';
+                    setTimeout(() => {
+                        mainProjectImage.src = imageUrl;
+                        mainProjectImage.style.opacity = '1';
+                    }, 150);
+                }
+            });
         });
-      }
 
-      // Throttled scroll handler for better performance
-      let ticking = false;
-      function requestTick() {
-        if (!ticking) {
-          requestAnimationFrame(handleScroll);
-          ticking = true;
+        function handleScroll() {
+            const scrollY = window.scrollY;
+            const windowHeight = window.innerHeight;
+            
+            // Start animation when scroll reaches the viewport height
+            const scrollStart = windowHeight;
+            const scrollRange = windowHeight * 2; // Animation happens over 2 viewport heights
+            
+            if (scrollY < scrollStart) {
+                // Before animation starts
+                projectImage.style.top = '100vh';
+                projectImage.style.left = '0';
+                projectImage.style.width = '100vw';
+                projectImage.style.height = '100vh';
+                projectsSidebar.classList.remove('visible');
+                awardBadge.classList.remove('visible');
+                return;
+            }
+            
+            // Calculate progress (0 to 1)
+            const progress = Math.min((scrollY - scrollStart) / scrollRange, 1);
+            
+            // Smooth easing function for more natural movement
+            const easeOutQuart = (t) => 1 - Math.pow(1 - t, 4);
+            const easedProgress = easeOutQuart(progress);
+            
+            // Image animation - first moves up to cover screen, then shrinks and moves to top-right
+            if (projectImage) {
+                if (progress < 0.5) {
+                    // Phase 1: Image moves up to completely cover the screen (first 50% of scroll)
+                    const moveProgress = progress / 0.5;
+                    const imageTop = 100 - (moveProgress * 100); // Move from 100vh to 0vh (covers full screen)
+                    
+                    projectImage.style.top = `${imageTop}vh`;
+                    projectImage.style.left = '0';
+                    projectImage.style.width = '100vw';
+                    projectImage.style.height = '100vh';
+                } else {
+                    // Phase 2: Image shrinks and moves to top-right (remaining 50% of scroll)
+                    const shrinkProgress = (progress - 0.5) / 0.5;
+                    const easedShrink = easeOutQuart(shrinkProgress);
+                    
+                    const imageTop = 0 + (easedShrink * 15); // Move from 0vh to 15vh (top-right position)
+                    const imageLeft = easedShrink * 55; // Move from 0 to 55vw
+                    const imageWidth = 100 - (easedShrink * 55); // Shrink from 100vw to 45vw
+                    const imageHeight = 100 - (easedShrink * 45); // Shrink from 100vh to 55vh
+                    
+                    projectImage.style.top = `${imageTop}vh`;
+                    projectImage.style.left = `${imageLeft}vw`;
+                    projectImage.style.width = `${imageWidth}vw`;
+                    projectImage.style.height = `${imageHeight}vh`;
+                }
+            }
+            
+            // Projects sidebar and award badge animation - appears during phase 2 (when image starts shrinking)
+            if (progress > 0.5) {
+                const elementsOpacity = Math.min((progress - 0.5) * 2, 1);
+                
+                if (elementsOpacity > 0.3) {
+                    projectsSidebar.classList.add('visible');
+                    setTimeout(() => {
+                        awardBadge.classList.add('visible');
+                    }, 200);
+                }
+            } else {
+                projectsSidebar.classList.remove('visible');
+                awardBadge.classList.remove('visible');
+            }
         }
-      }
 
-      window.addEventListener('scroll', () => {
-        requestTick();
-        ticking = false;
-      });
+        // Throttled scroll handler for better performance
+        let ticking = false;
+        function requestTick() {
+            if (!ticking) {
+                requestAnimationFrame(handleScroll);
+                ticking = true;
+            }
+        }
 
-      // Initial call
-      handleScroll();
+        window.addEventListener('scroll', () => {
+            requestTick();
+            ticking = false;
+        });
+
+        // Initial call
+        handleScroll();
     </script>
-  </body>
+</body>
 </html>
