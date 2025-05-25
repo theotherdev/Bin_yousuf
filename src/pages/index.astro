@@ -26,8 +26,6 @@
 
     <!-- Main Content -->
     <main class="main">
-      
-
       <!-- Animated Text -->
       <div class="hero-text">
         <span class="static-text">BYG</span>
@@ -51,6 +49,34 @@
       </a>
     </div>
 
+    <!-- Projects Section -->
+    <section class="projects-section">
+      <!-- Full Screen Image -->
+      <div class="project-image" id="projectImage">
+        <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Modern Architecture Project" />
+      </div>
+      
+      <!-- Project Names -->
+      <div class="project-names" id="projectNames">
+        <div class="project-item" data-project="1">
+          <h2 class="project-title">Residential Complex</h2>
+          <p class="project-subtitle">Copenhagen, Denmark</p>
+        </div>
+        <div class="project-item" data-project="2">
+          <h2 class="project-title">Modern Villa</h2>
+          <p class="project-subtitle">Barcelona, Spain</p>
+        </div>
+        <div class="project-item" data-project="3">
+          <h2 class="project-title">Urban Development</h2>
+          <p class="project-subtitle">London, UK</p>
+        </div>
+        <div class="project-item" data-project="4">
+          <h2 class="project-title">Eco Housing</h2>
+          <p class="project-subtitle">Amsterdam, Netherlands</p>
+        </div>
+      </div>
+    </section>
+
     <style>
       * {
         margin: 0;
@@ -59,10 +85,13 @@
       }
 
       body {
-  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background-color: #ffffff;
-  height: 100vh;
-  overflow: hidden;
+        font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background-color: #ffffff;
+        overflow-x: hidden;
+      }
+
+      body, html {
+  cursor: url('data:image/svg+xml;utf8,<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg"><line x1="8" y1="3" x2="8" y2="13" stroke="black" stroke-width="2"/><line x1="3" y1="8" x2="13" y2="8" stroke="black" stroke-width="2"/></svg>') 8 8, crosshair;
 }
 
       /* Navigation Styles */
@@ -76,6 +105,8 @@
         align-items: center;
         padding: 20px 40px;
         z-index: 100;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
       }
 
       .nav-left,
@@ -98,35 +129,24 @@
 
       /* Main Content */
       .main {
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;; /* Center horizontally */
-  position: relative;
-  padding-left: 10vw; /* Move a bit to the right */
-}
-
-      /* Center Plus */
-      .center-plus {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 24px;
-        color: #ccc;
-        z-index: 1;
+        height: 110vh;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        position: relative;
+        padding-left: 10vw;
       }
 
       /* Hero Text */
       .hero-text {
-    font-size: clamp(40px, 7vw, 90px); /* Decrease size */
-    font-weight: 500;
-    color: #4c4c4c;
-    letter-spacing: -0.02em;
-    text-align: left; /* Align text to the left */
-    position: relative;
-    z-index: 2;
-}
+        font-size: clamp(40px, 7vw, 90px);
+        font-weight: 500;
+        color: #4c4c4c;
+        letter-spacing: -0.02em;
+        text-align: left;
+        position: relative;
+        z-index: 2;
+      }
 
       .static-text {
         margin-right: 0.1em;
@@ -158,6 +178,7 @@
         left: 40px;
         display: flex;
         gap: 40px;
+        z-index: 10;
       }
 
       .bottom-link {
@@ -175,6 +196,78 @@
       .bottom-link sup {
         font-size: 10px;
         margin-left: 2px;
+      }
+
+      /* Projects Section */
+      .projects-section {
+        height: 400vh; /* Make it scrollable */
+        position: relative;
+      }
+
+      /* Project Image */
+      .project-image {
+        position: fixed;
+        top: 10vh;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 1;
+        will-change: transform, width, height, top, left;
+      }
+
+      .project-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: all 0.1s ease-out;
+      }
+
+      /* Project Names */
+      .project-names {
+        position: fixed;
+        left: 10vw;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 5;
+        opacity: 0;
+        will-change: opacity;
+      }
+
+      .project-item {
+        margin-bottom: 60px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        opacity: 0;
+        transform: translateX(-50px);
+        will-change: opacity, transform;
+      }
+
+      .project-item.visible {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      .project-title {
+        font-size: clamp(32px, 4vw, 48px);
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 8px;
+        transition: color 0.3s ease;
+      }
+
+      .project-subtitle {
+        font-size: 16px;
+        color: #666;
+        font-weight: 400;
+        transition: color 0.3s ease;
+      }
+
+      .project-item:hover .project-title {
+        color: #000;
+      }
+
+      .project-item:hover .project-subtitle {
+        color: #333;
       }
 
       /* Responsive Design */
@@ -197,43 +290,44 @@
         .hero-text {
           font-size: clamp(60px, 15vw, 120px);
         }
+
+        .project-names {
+          left: 5vw;
+        }
+
+        .project-title {
+          font-size: clamp(24px, 6vw, 36px);
+        }
       }
     </style>
 
     <script>
-      
-      // Animation Script
+      // Animation Script for hero text
       const words = [
         "PANORAMA",
         "THE VIEWS",
         "PARK EDGE",
-		"CORAL TOWERS",
-		"PEARL & REEF TOWERS",
-		"AA WATERFRONT",
-		"BEACH TERRACE",
-		"GOLD CREST",
-		"H&S RESIDENCE",
-		"H1 TOWERS",
-		"SAIMA MARINA",
-		"SAIMA WATERFRONT",
-
-
+        "CORAL TOWERS",
+        "PEARL & REEF TOWERS",
+        "AA WATERFRONT",
+        "BEACH TERRACE",
+        "GOLD CREST",
+        "H&S RESIDENCE",
+        "H1 TOWER",
+        "SAIMA MARINA",
+        "SAIMA WATERFRONT",
       ];
       let currentIndex = 0;
       const animatedText = document.getElementById("animatedText");
 
       function changeWord() {
         if (!animatedText) return;
-        // Blur out current word
         animatedText.classList.add("blur-out");
 
         setTimeout(() => {
           if (!animatedText) return;
-          // Change to next word
           currentIndex = (currentIndex + 1) % words.length;
           animatedText.textContent = words[currentIndex];
-
-          // Blur in new word
           animatedText.classList.remove("blur-out");
           animatedText.classList.add("blur-in");
 
@@ -244,10 +338,105 @@
         }, 400);
       }
 
-      // Start animation after page load
       setTimeout(() => {
         setInterval(changeWord, 3000);
       }, 2000);
+
+      // Scroll Animation Script
+      const projectImage = document.getElementById('projectImage');
+      const projectNames = document.getElementById('projectNames');
+      const projectItems = document.querySelectorAll('.project-item');
+
+      function handleScroll() {
+        const scrollY = window.scrollY;
+        const windowHeight = window.innerHeight;
+        
+        // Start animation when scroll reaches the viewport height
+        const scrollStart = windowHeight;
+        const scrollRange = windowHeight * 2; // Animation happens over 2 viewport heights
+        
+        if (scrollY < scrollStart) {
+          // Before animation starts
+          projectImage.style.top = '100vh';
+          projectImage.style.left = '0';
+          projectImage.style.width = '100vw';
+          projectImage.style.height = '100vh';
+          projectNames.style.opacity = '0';
+          return;
+        }
+        
+        // Calculate progress (0 to 1)
+        const progress = Math.min((scrollY - scrollStart) / scrollRange, 1);
+        
+        // Smooth easing function for more natural movement
+        const easeOutQuart = (t) => 1 - Math.pow(1 - t, 4);
+        const easedProgress = easeOutQuart(progress);
+        
+        // Image animation - first moves up to cover screen, then shrinks and moves to top-right
+        if (projectImage) {
+          if (progress < 0.5) {
+            // Phase 1: Image moves up to completely cover the screen (first 50% of scroll)
+            const moveProgress = progress / 0.5;
+            const imageTop = 100 - (moveProgress * 100); // Move from 100vh to 0vh (covers full screen)
+            
+            projectImage.style.top = `${imageTop}vh`;
+            projectImage.style.left = '0';
+            projectImage.style.width = '100vw';
+            projectImage.style.height = '100vh';
+          } else {
+            // Phase 2: Image shrinks and moves to top-right (remaining 50% of scroll)
+            const shrinkProgress = (progress - 0.5) / 0.5;
+            const easedShrink = easeOutQuart(shrinkProgress);
+            
+            const imageTop = 0 + (easedShrink * 15); // Move from 0vh to 15vh (top-right position)
+            const imageLeft = easedShrink * 55; // Move from 0 to 55vw
+            const imageWidth = 100 - (easedShrink * 55); // Shrink from 100vw to 45vw
+            const imageHeight = 100 - (easedShrink * 45); // Shrink from 100vh to 55vh
+            
+            projectImage.style.top = `${imageTop}vh`;
+            projectImage.style.left = `${imageLeft}vw`;
+            projectImage.style.width = `${imageWidth}vw`;
+            projectImage.style.height = `${imageHeight}vh`;
+          }
+        }
+        
+        // Project names animation - appears during phase 2 (when image starts shrinking)
+        if (projectNames) {
+          const namesOpacity = progress > 0.5 ? Math.min((progress - 0.5) * 2, 1) : 0;
+          projectNames.style.opacity = namesOpacity;
+        }
+        
+        // Individual project items animation with stagger - also during phase 2
+        projectItems.forEach((item, index) => {
+          const itemDelay = index * 0.1;
+          const phaseProgress = Math.max(0, progress - 0.5) / 0.5; // Only during phase 2
+          const itemProgress = Math.max(0, Math.min((phaseProgress - itemDelay) / 0.25, 1));
+          
+          if (itemProgress > 0) {
+            item.classList.add('visible');
+            item.style.transitionDelay = `${index * 0.08}s`;
+          } else {
+            item.classList.remove('visible');
+          }
+        });
+      }
+
+      // Throttled scroll handler for better performance
+      let ticking = false;
+      function requestTick() {
+        if (!ticking) {
+          requestAnimationFrame(handleScroll);
+          ticking = true;
+        }
+      }
+
+      window.addEventListener('scroll', () => {
+        requestTick();
+        ticking = false;
+      });
+
+      // Initial call
+      handleScroll();
     </script>
   </body>
 </html>

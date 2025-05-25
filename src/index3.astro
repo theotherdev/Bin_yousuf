@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>IND Design Studio</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background-color: #ffffff;
+        overflow-x: hidden;
+        color: #333;
+      }
+
+      body, html {
+        cursor: url('data:image/svg+xml;utf8,<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg"><line x1="8" y1="3" x2="8" y2="13" stroke="black" stroke-width="2"/><line x1="3" y1="8" x2="13" y2="8" stroke="black" stroke-width="2"/></svg>') 8 8, crosshair;
+      }
+
+      /* Navigation Styles */
+      .nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 40px;
+        z-index: 1000;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      }
+
+      .nav-left,
+      .nav-right {
+        display: flex;
+        gap: 30px;
+      }
+
+      .nav-link {
+        text-decoration: none;
+        color: #999;
+        font-size: 14px;
+        font-weight: 400;
+        transition: color 0.3s ease;
+        position: relative;
+      }
+
+      .nav-link.active {
+        color: #000;
+      }
+
+      .nav-link:hover {
+        color: #000;
+      }
+
+      /* Hero Section */
+      .hero-section {
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        position: relative;
+        padding-left: 10vw;
+      }
+
+      /* Hero Text */
+      .hero-text {
+        font-size: clamp(40px, 7vw, 90px);
+        font-weight: 500;
+        color: #4c4c4c;
+        letter-spacing: -0.02em;
+        text-align: left;
+        position: relative;
+        z-index: 2;
+      }
+
+      .static-text {
+        margin-right: 0.1em;
+      }
+
+      .animated-text {
+        position: relative;
+        display: inline-block;
+        min-width: 1em;
+        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .animated-text.blur-out {
+        filter: blur(10px);
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+
+      .animated-text.blur-in {
+        filter: blur(0px);
+        opacity: 1;
+        transform: translateY(0px);
+      }
+
+      /* Bottom Navigation */
+      .bottom-nav {
+        position: fixed;
+        bottom: 40px;
+        left: 40px;
+        display: flex;
+        gap: 40px;
+        z-index: 10;
+      }
+
+      .bottom-link {
+        text-decoration: none;
+        color: #999;
+        font-size: 14px;
+        font-weight: 400;
+        transition: color 0.3s ease;
+      }
+
+      .bottom-link:hover {
+        color: #333;
+      }
+
+      .bottom-link sup {
+        font-size: 10px;
+        margin-left: 2px;
+      }
+
+      /* Projects Section */
+      .projects-section {
+        position: relative;
+      }
+
+      /* Main Container */
+      .main-container {
+        display: flex;
+        margin-top: 80px;
+        min-height: calc(100vh - 80px);
+      }
+
+      /* Sidebar */
+      .sidebar {
+        width: 400px;
+        background: #fafafa;
+        padding: 30px 20px;
+        position: fixed;
+        height: calc(100vh - 80px);
+        overflow-y: auto;
+        border-right: 1px solid #eee;
+      }
+
+      .favorites-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .section-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+      }
+
+      .favorite-icon {
+        font-size: 20px;
+        color: #999;
+        cursor: pointer;
+        transition: color 0.3s ease;
+      }
+
+      .favorite-icon:hover {
+        color: #333;
+      }
+
+      /* Projects List */
+      .projects-list {
+        space-y: 2px;
+      }
+
+      .project-item {
+        display: flex;
+        align-items: flex-start;
+        padding: 15px 0;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+        position: relative;
+      }
+
+      .project-item:hover {
+        background-color: rgba(0, 0, 0, 0.02);
+        padding-left: 10px;
+      }
+
+      .project-item.active {
+        background-color: rgba(0, 0, 0, 0.05);
+        padding-left: 10px;
+      }
+
+      .project-number {
+        font-size: 12px;
+        color: #999;
+        margin-right: 15px;
+        font-weight: 500;
+        min-width: 30px;
+      }
+
+      .project-info {
+        flex: 1;
+      }
+
+      .project-name {
+        font-size: 14px;
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 4px;
+        line-height: 1.4;
+      }
+
+      .project-location {
+        font-size: 12px;
+        color: #999;
+        line-height: 1.3;
+      }
+
+      /* Content Area */
+      .content-area {
+        margin-left: 400px;
+        flex: 1;
+        position: relative;
+      }
+
+      .project-display {
+        height: 100vh;
+        position: relative;
+        opacity: 0;
+        transform: translateY(50px);
+        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .project-display.active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .project-display.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .project-image {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .project-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.8s ease;
+      }
+
+      .project-item:hover + .content-area .project-display.active .project-image img,
+      .project-display:hover .project-image img {
+        transform: scale(1.02);
+      }
+
+      /* Project Details */
+      .project-details {
+        position: absolute;
+        bottom: 40px;
+        left: 40px;
+        z-index: 10;
+      }
+
+      .award-badge {
+        display: flex;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        padding: 15px 20px;
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        transform: translateY(20px);
+        opacity: 0;
+        animation: slideUp 0.8s ease forwards;
+        animation-delay: 0.5s;
+      }
+
+      .award-icon {
+        font-size: 24px;
+        margin-right: 15px;
+      }
+
+      .award-text strong {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 2px;
+      }
+
+      .award-category {
+        font-size: 12px;
+        color: #999;
+      }
+
+      @keyframes slideUp {
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      /* Responsive Design */
+      @media (max-width: 1024px) {
+        .sidebar {
+          width: 350px;
+        }
+        
+        .content-area {
+          margin-left: 350px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .main-container {
+          flex-direction: column;
+        }
+        
+        .sidebar {
+          position: relative;
+          width: 100%;
+          height: auto;
+          order: 2;
+        }
+        
+        .content-area {
+          margin-left: 0;
+          order: 1;
+        }
+        
+        .project-display {
+          height: 60vh;
+        }
+        
+        .nav {
+          padding: 15px 20px;
+        }
+        
+        .nav-right {
+          gap: 15px;
+        }
+
+        .hero-text {
+          font-size: clamp(60px, 15vw, 120px);
+        }
+
+        .bottom-nav {
+          bottom: 20px;
+          left: 20px;
+          gap: 20px;
+          flex-wrap: wrap;
+        }
+      }
+
+      /* Smooth scrolling */
+      html {
+        scroll-behavior: smooth;
+      }
+
+      /* Custom scrollbar */
+      .sidebar::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .sidebar::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+
+      .sidebar::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 3px;
+      }
+
+      .sidebar::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
+      }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+      <div class="nav-left">
+        <a href="#" class="nav-link active">Projects</a>
+        <a href="#" class="nav-link">Filters</a>
+      </div>
+      <div class="nav-right">
+        <a href="#" class="nav-link">Studio</a>
+        <a href="#" class="nav-link">Team</a>
+        <a href="#" class="nav-link">Job</a>
+        <a href="#" class="nav-link">Eng / Rus</a>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-text">
+        <span class="static-text">BYG</span>
+        <span class="animated-text" id="animatedText">PANORAMA</span>
+      </div>
+    </section>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+      <a href="#" class="bottom-link">
+        Masterplan <sup>8</sup>
+      </a>
+      <a href="#" class="bottom-link">
+        Architecture <sup>24</sup>
+      </a>
+      <a href="#" class="bottom-link">
+        Interiors <sup>21</sup>
+      </a>
+      <a href="#" class="bottom-link">
+        Landscape <sup>9</sup>
+      </a>
+    </div>
+
+    <!-- Projects Section -->
+    <div class="main-container">
+      <!-- Left Sidebar - Project List -->
+      <div class="sidebar">
+        <div class="favorites-section">
+          <h3 class="section-title">Favorites</h3>
+          <div class="favorite-icon">+</div>
+        </div>
+        
+        <div class="projects-list">
+          <div class="project-item" data-project="1">
+            <span class="project-number">001</span>
+            <div class="project-info">
+              <h4 class="project-name">"Gustav" Creative Industries Technopark</h4>
+              <p class="project-location">Cultural Center Riyadh</p>
+            </div>
+          </div>
+          
+          <div class="project-item" data-project="2">
+            <span class="project-number">002</span>
+            <div class="project-info">
+              <h4 class="project-name">Innovative School in Dubai</h4>
+              <p class="project-location">Educational Complex Dubai</p>
+            </div>
+          </div>
+          
+          <div class="project-item" data-project="3">
+            <span class="project-number">003</span>
+            <div class="project-info">
+              <h4 class="project-name">New Resort in Sheregesh</h4>
+              <p class="project-location">Ski Resort Complex</p>
+            </div>
+          </div>
+          
+          <div class="project-item" data-project="4">
+            <span class="project-number">004</span>
+            <div class="project-info">
+              <h4 class="project-name">Bali Village</h4>
+              <p class="project-location">Residential Development</p>
+            </div>
+          </div>
+          
+          <div class="project-item" data-project="5">
+            <span class="project-number">005</span>
+            <div class="project-info">
+              <h4 class="project-name">Ecopolis in Sakhalin</h4>
+              <p class="project-location">Sustainable Community</p>
+            </div>
+          </div>
+          
+          <div class="project-item" data-project="6">
+            <span class="project-number">006</span>
+            <div class="project-info">
+              <h4 class="project-name">City Pavilion Shaqal</h4>
+              <p class="project-location">Urban Development</p>
+            </div>
+          </div>
+          
+          <div class="project-item" data-project="7">
+            <span class="project-number">007</span>
+            <div class="project-info">
+              <h4 class="project-name">Digital Lab</h4>
+              <p class="project-location">Technology Center</p>
+            </div>
+          </div>
+          
+          <div class="project-item" data-project="8">
+            <span class="project-number">008</span>
+            <div class="project-info">
+              <h4 class="project-name">Music Museum in Cyprus</h4>
+              <p class="project-location">Cultural Institution</p>
+            </div>
+          </div>
+          
+          <div class="project-item" data-project="9">
+            <span class="project-number">009</span>
+            <div class="project-info">
+              <h4 class="project-name">School in Burabay</h4>
+              <p class="project-location">Educational Facility</p>
+            </div>
+          </div>
+          
+          <div class="project-item" data-project="10">
+            <span class="project-number">010</span>
+            <div class="project-info">
+              <h4 class="project-name">Master Plan Sochi</h4>
+              <p class="project-location">Urban Planning</p>
+            </div>
+          </div>
+          
+          <div class="project-item" data-project="11">
+            <span class="project-number">011</span>
+            <div class="project-info">
+              <h4 class="project-name">Lishui Master Plan</h4>
+              <p class="project-location">China Development</p>
+            </div>
+          </div>
+          
+          <div class="project-item" data-project="12">
+            <span class="project-number">012</span>
+            <div class="project-info">
+              <h4 class="project-name">Xingfu Village Museum</h4>
+              <p class="project-location">Cultural Heritage</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Content - Project Images -->
+      <div class="content-area">
+        <div class="project-display" id="project-1">
+          <div class="project-image">
+            <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Gustav Creative Industries Technopark" />
+          </div>
+          <div class="project-details">
+            <div class="award-badge">
+              <div class="award-icon">🏆</div>
+              <div class="award-text">
+                <strong>World Architecture Festival 2024</strong>
+                <div class="award-category">Winner - 1st place 2024</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="project-display" id="project-2">
+          <div class="project-image">
+            <img src="https://images.unsplash.com/photo-1487958449943-2429e8be8625?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Innovative School Dubai" />
+          </div>
+        </div>
+        
+        <div class="project-display" id="project-3">
+          <div class="project-image">
+            <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2053&q=80" alt="Resort Sheregesh" />
+          </div>
+        </div>
+        
+        <div class="project-display" id="project-4">
+          <div class="project-image">
+            <img src="https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Bali Village" />
+          </div>
+        </div>
+        
+        <div class="project-display" id="project-5">
+          <div class="project-image">
+            <img src="https://images.unsplash.com/photo-1600573472556-89ad03d75b87?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Ecopolis Sakhalin" />
+          </div>
+        </div>
+        
+        <div class="project-display" id="project-6">
+          <div class="project-image">
+            <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb8?ixlib=rb-4.0.3&auto=format&fit=crop&w=2074&q=80" alt="City Pavilion" />
+          </div>
+        </div>
+        
+        <div class="project-display" id="project-7">
+          <div class="project-image">
+            <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Digital Lab" />
+          </div>
+        </div>
+        
+        <div class="project-display" id="project-8">
+          <div class="project-image">
+            <img src="https://images.unsplash.com/photo-1600121848594-d8644e57abab?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Music Museum Cyprus" />
+          </div>
+        </div>
+        
+        <div class="project-display" id="project-9">
+          <div class="project-image">
+            <img src="https://images.unsplash.com/photo-1600298881974-6be191ceeda1?ixlib=rb-4.0.3&auto=format&fit=crop&w=2053&q=80" alt="School Burabay" />
+          </div>
+        </div>
+        
+        <div class="project-display" id="project-10">
+          <div class="project-image">
+            <img src="https://images.unsplash.com/photo-1600607687644-c7171b42498b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Master Plan Sochi" />
+          </div>
+        </div>
+        
+        <div class="project-display" id="project-11">
+          <div class="project-image">
+            <img src="https://images.unsplash.com/photo-1600566752355-35792bedcfea?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Lishui Master Plan" />
+          </div>
+        </div>
+        
+        <div class="project-display" id="project-12">
+          <div class="project-image">
+            <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Xingfu Village Museum" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Animation Script for hero text
+      const words = [
+        "PANORAMA",
+        "THE VIEWS",
+        "PARK EDGE",
+        "CORAL TOWERS",
+        "PEARL & REEF TOWERS",
+        "AA WATERFRONT",
+        "BEACH TERRACE",
+        "GOLD CREST",
+        "H&S RESIDENCE",
+        "H1 TOWER",
+        "SAIMA MARINA",
+        "SAIMA WATERFRONT",
+      ];
+      let currentIndex = 0;
+      const animatedText = document.getElementById("animatedText");
+
+      function changeWord() {
+        if (!animatedText) return;
+        animatedText.classList.add("blur-out");
+
+        setTimeout(() => {
+          if (!animatedText) return;
+          currentIndex = (currentIndex + 1) % words.length;
+          animatedText.textContent = words[currentIndex];
+          animatedText.classList.remove("blur-out");
+          animatedText.classList.add("blur-in");
+
+          setTimeout(() => {
+            if (!animatedText) return;
+            animatedText.classList.remove("blur-in");
+          }, 800);
+        }, 400);
+      }
+
+      setTimeout(() => {
+        setInterval(changeWord, 3000);
+      }, 2000);
+
+      // Project navigation functionality
+      const projectItems = document.querySelectorAll('.project-item');
+      const projectDisplays = document.querySelectorAll('.project-display');
+      
+      // Set first project as active by default
+      projectItems[0].classList.add('active');
+      projectDisplays[0].classList.add('active', 'visible');
+      
+      // Add click handlers to project items
+      projectItems.forEach((item, index) => {
+        item.addEventListener('click', () => {
+          // Remove active class from all items and displays
+          projectItems.forEach(pi => pi.classList.remove('active'));
+          projectDisplays.forEach(pd => {
+            pd.classList.remove('active', 'visible');
+          });
+          
+          // Add active class to clicked item and corresponding display
+          item.classList.add('active');
+          projectDisplays[index].classList.add('active');
+          
+          // Smooth scroll to the project display with offset for fixed nav
+          const targetProject = document.getElementById(`project-${index + 1}`);
+          if (targetProject) {
+            const offsetTop = targetProject.offsetTop - 80; // Account for fixed nav
+            window.scrollTo({
+              top: offsetTop,
+              behavior: 'smooth'
+            });
+            
+            // Add visible class after scroll starts
+            setTimeout(() => {
+              projectDisplays[index].classList.add('visible');
+            }, 100);
+          }
+        });
+      });
+      
+      // Handle scroll-based activation
+      function handleScroll() {
+        const scrollPosition = window.scrollY + window.innerHeight / 2;
+        
+        projectDisplays.forEach((display, index) => {
+          const displayTop = display.offsetTop;
+          const displayBottom = displayTop + display.offsetHeight;
+          
+          if (scrollPosition >= displayTop && scrollPosition < displayBottom) {
+            // Remove active from all
+            projectItems.forEach(item => item.classList.remove('active'));
+            projectDisplays.forEach(pd => pd.classList.remove('active'));
+            
+            // Add active to current
+            projectItems[index].classList.add('active');
+            display.classList.add('active', 'visible');
+          }
+        });
+      }
+      
+      // Intersection Observer for better performance
+      const observerOptions = {
+        root: null,
+        rootMargin: '-20% 0px -20% 0px',
+        threshold: 0.5
+      };
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const index = Array.from(projectDisplays).indexOf(entry.target);
+            
+            // Update active states
+            projectItems.forEach(item => item.classList.remove('active'));
+            projectDisplays.forEach(pd => pd.classList.remove('active'));
+            
+            projectItems[index].classList.add('active');
+            entry.target.classList.add('active', 'visible');
+          }
+        });
+      }, observerOptions);
+      
+      // Observe all project displays
+      projectDisplays.forEach(display => {
+        observer.observe(display);
+      });
+      
+      // Add smooth hover effects
+      projectItems.forEach(item => {
+        item.addEventListener('mouseenter', () => {
+          item.style.transform = 'translateX(5px)';
+        });
+        
+        item.addEventListener('mouseleave', () => {
+          item.style.transform = 'translateX(0)';
+        });
+      });
+      
+      // Initialize first project visibility
+      setTimeout(() => {
+        projectDisplays[0].classList.add('visible');
+      }, 300);
+    </script>
+</body>
+</html>
