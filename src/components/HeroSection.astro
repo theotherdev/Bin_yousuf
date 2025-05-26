@@ -1,0 +1,90 @@
+---
+import { projects } from '../data/projects.js';
+
+const heroWords = projects.map(project => project.name.toUpperCase());
+---
+
+<main class="main">
+  <div class="hero-text">
+    <span class="static-text">BYG</span>
+    <span class="animated-text" id="animatedText">PANORAMA</span>
+  </div>
+</main>
+
+<script define:vars={{ heroWords }}>
+  const words = heroWords;
+  let currentIndex = 0;
+  const animatedText = document.getElementById("animatedText");
+
+  function changeWord() {
+    if (!animatedText) return;
+    animatedText.classList.add("blur-out");
+
+    setTimeout(() => {
+      if (!animatedText) return;
+      currentIndex = (currentIndex + 1) % words.length;
+      animatedText.textContent = words[currentIndex];
+      animatedText.classList.remove("blur-out");
+      animatedText.classList.add("blur-in");
+
+      setTimeout(() => {
+        if (!animatedText) return;
+        animatedText.classList.remove("blur-in");
+      }, 800);
+    }, 400);
+  }
+
+  setTimeout(() => {
+    setInterval(changeWord, 3000);
+  }, 2000);
+</script>
+
+<style>
+  .main {
+    height: 110vh;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    position: relative;
+    padding-left: 10vw;
+  }
+
+  .hero-text {
+    font-size: clamp(40px, 7vw, 90px);
+    font-weight: 500;
+    color: #4c4c4c;
+    letter-spacing: -0.02em;
+    text-align: left;
+    position: relative;
+    z-index: 2;
+  }
+
+  .static-text {
+    margin-right: 0.1em;
+  }
+
+  .animated-text {
+    position: relative;
+    display: inline-block;
+    min-width: 1em;
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .animated-text.blur-out {
+    filter: blur(10px);
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  .animated-text.blur-in {
+    filter: blur(0px);
+    opacity: 1;
+    transform: translateY(0px);
+  }
+
+  @media (max-width: 768px) {
+    .hero-text {
+      font-size: clamp(60px, 15vw, 120px);
+    }
+  }
+</style>
