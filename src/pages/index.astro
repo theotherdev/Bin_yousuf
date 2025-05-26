@@ -1,3 +1,113 @@
+---
+// src/pages/index.astro or src/components/DesignStudio.astro
+import { Image } from 'astro:assets';
+
+// Import your images from src/assets - Fix the paths here
+import panoramaImg from '../assets/projects/emaar/panorama/main-image.webp';
+import theViewsImg from '../assets/projects/emaar/the-views/main-image.webp';
+import parkEdgeImg from '../assets/projects/emaar/park-edge/main-image.webp';
+import coralTowersImg from '../assets/projects/emaar/coral-towers/main-image.webp';
+import pearlReefImg from '../assets/projects/emaar/pearl-reef-towers/main-image.webp';
+import aaWaterfrontImg from '../assets/projects/hmr/aa-waterfront/main-image.webp';
+import goldCrestImg from '../assets/projects/hmr/gold-crest-residence/main-image.webp';
+import hsResidenceImg from '../assets/projects/hmr/hs-residence/main-image.webp';
+import h1TowerImg from '../assets/projects/hmr/h1-tower/main-image.webp';
+import saimaMarinaImg from '../assets/projects/hmr/saima-marina/main-image.webp';
+import saimaWaterfrontImg from '../assets/projects/hmr/saima-waterfront/main-image.webp';
+import beachTerraceImg from '../assets/projects/hmr/beach-terraces-by-metro/main-image.webp';
+
+// Project configuration - use imported images
+const projects = [
+    {
+        id: 1,
+        number: '001',
+        name: 'Panorama',
+        location: 'Emaar',
+        image: panoramaImg, // Use imported image
+    },
+    {
+        id: 2,
+        number: '002',
+        name: 'The Views',
+        location: 'Emaar',
+        image: theViewsImg,
+    },
+    {
+        id: 3,
+        number: '003',
+        name: 'Park Edge',
+        location: 'Emaar',
+        image: parkEdgeImg,
+    },
+    {
+        id: 4,
+        number: '004',
+        name: 'Coral Towers',
+        location: 'Emaar',
+        image: coralTowersImg,
+    },
+    {
+        id: 5,
+        number: '005',
+        name: 'Pearl & Reef Towers',
+        location: 'Emaar',
+        image: pearlReefImg,
+    },
+    {
+        id: 6,
+        number: '006',
+        name: 'AA Waterfront',
+        location: 'HMR',
+        image: aaWaterfrontImg,
+    },
+    {
+        id: 7,
+        number: '007',
+        name: 'Gold Crest Residence',
+        location: 'HMR',
+        image: goldCrestImg,
+    },
+    {
+        id: 8,
+        number: '008',
+        name: 'H&S Residence',
+        location: 'HMR',
+        image: hsResidenceImg,
+    },
+    {
+        id: 9,
+        number: '009',
+        name: 'H1 Tower',
+        location: 'HMR',
+        image: h1TowerImg,
+    },
+    {
+        id: 10,
+        number: '010',
+        name: 'Saima Marina',
+        location: 'HMR',
+        image: saimaMarinaImg,
+    },
+    {
+        id: 11,
+        number: '011',
+        name: 'Saima Waterfront',
+        location: 'HMR',
+        image: saimaWaterfrontImg,
+    },
+    {
+        id: 12,
+        number: '012',
+        name: 'Beach Terraces By Metro',
+        location: 'HMR',
+        image: beachTerraceImg,
+    },
+];
+
+// Animation words for hero text
+const heroWords = projects.map(project => project.name.toUpperCase());
+---
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -56,149 +166,40 @@
             </div>
             
             <div class="projects-list">
-                <div class="project-item" data-project="1">
-                    <span class="project-number">001</span>
-                    <div class="project-info">
-                        <h4 class="project-name">Panorama</h4>
-                         <p class="project-location">Emaar</p> 
+                {projects.map((project) => (
+                    <div class="project-item" data-project={project.id}>
+                        <span class="project-number">{project.number}</span>
+                        <div class="project-info">
+                            <h4 class="project-name">{project.name}</h4>
+                            <p class="project-location">{project.location}</p>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="project-item" data-project="2">
-                    <span class="project-number">002</span>
-                    <div class="project-info">
-                        <h4 class="project-name">The Views</h4>
-                      <p class="project-location">Emaar</p>
-                    </div>
-                </div>
-                
-                <div class="project-item" data-project="3">
-                    <span class="project-number">003</span>
-                    <div class="project-info">
-                        <h4 class="project-name">Park Edge</h4>
-                        <p class="project-location">Emaar</p>
-                    </div>
-                </div>
-                
-                <div class="project-item" data-project="4">
-                    <span class="project-number">004</span>
-                    <div class="project-info">
-                        <h4 class="project-name">Coral Towers</h4>
-                        <p class="project-location">Emaar</p>
-                    </div>
-                </div>
-                
-                <div class="project-item" data-project="5">
-                    <span class="project-number">005</span>
-                    <div class="project-info">
-                        <h4 class="project-name">Pearl & Reef Towers</h4>
-                        <p class="project-location">Emaar</p>
-                    </div>
-                </div>
-                
-                <div class="project-item" data-project="6">
-                    <span class="project-number">006</span>
-                    <div class="project-info">
-                        <h4 class="project-name">AA Waterfront</h4>
-                        <p class="project-location">HMR</p>
-                    </div>
-                </div>
-                
-                <div class="project-item" data-project="7">
-                    <span class="project-number">007</span>
-                    <div class="project-info">
-                        <h4 class="project-name">Gold Crest Residence</h4>
-                        <p class="project-location">HMR</p>
-                    </div>
-                </div>
-                
-                <div class="project-item" data-project="8">
-                    <span class="project-number">008</span>
-                    <div class="project-info">
-                        <h4 class="project-name">H&S Residence</h4>
-                        <p class="project-location">HMR</p>
-                    </div>
-                </div>
-                
-                <div class="project-item" data-project="9">
-                    <span class="project-number">009</span>
-                    <div class="project-info">
-                        <h4 class="project-name">H1 Tower</h4>
-                        <p class="project-location">HMR</p>
-                    </div>
-                </div>
-                
-                <div class="project-item" data-project="10">
-                    <span class="project-number">010</span>
-                    <div class="project-info">
-                        <h4 class="project-name">Saima Marina</h4>
-                        <p class="project-location">HMR</p>
-                    </div>
-                </div>
-                
-                <div class="project-item" data-project="11">
-                    <span class="project-number">011</span>
-                    <div class="project-info">
-                        <h4 class="project-name">Saima Waterfront</h4>
-                        <p class="project-location">HMR</p>
-                    </div>
-                </div>
+                ))}
             </div>
         </div>
 
         <!-- Images List Container -->
         <div class="images-container" id="imagesContainer">
-            <div class="project-image-item" data-project="1">
-                <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Gustav Creative Industries Technopark" />
-            </div>
-            
-            <div class="project-image-item" data-project="2">
-                <img src="https://images.unsplash.com/photo-1487958449943-2429e8be8625?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Innovative School in Dubai" />
-            </div>
-            
-            <div class="project-image-item" data-project="3">
-                <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2053&q=80" alt="New Resort in Sheregesh" />
-            </div>
-            
-            <div class="project-image-item" data-project="4">
-                <img src="https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Bali Village" />
-            </div>
-            
-            <div class="project-image-item" data-project="5">
-                <img src="https://images.unsplash.com/photo-1600573472556-89ad03d75b87?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Ecopolis in Sakhalin" />
-            </div>
-            
-            <div class="project-image-item" data-project="6">
-                <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb8?ixlib=rb-4.0.3&auto=format&fit=crop&w=2074&q=80" alt="City Pavilion Shaqal" />
-            </div>
-            
-            <div class="project-image-item" data-project="7">
-                <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Digital Lab" />
-            </div>
-            
-            <div class="project-image-item" data-project="8">
-                <img src="https://images.unsplash.com/photo-1600121848594-d8644e57abab?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Music Museum in Cyprus" />
-            </div>
-            
-            <div class="project-image-item" data-project="9">
-                <img src="https://images.unsplash.com/photo-1600298881974-6be191ceeda1?ixlib=rb-4.0.3&auto=format&fit=crop&w=2053&q=80" alt="School in Burabay" />
-            </div>
-            
-            <div class="project-image-item" data-project="10">
-                <img src="https://images.unsplash.com/photo-1600607687644-c7171b42498b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Master Plan Sochi" />
-            </div>
-            
-            <div class="project-image-item" data-project="11">
-                <img src="https://images.unsplash.com/photo-1600566752355-35792bedcfea?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Lishui Master Plan" />
-            </div>
-            
-            <div class="project-image-item" data-project="12">
-                <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Xingfu Village Museum" />
-            </div>
+            {projects.map((project) => (
+                <div class="project-image-item" data-project={project.id}>
+                    <Image
+                        src={project.image}
+                        alt={project.name}
+                        width={1200}
+                        height={800}
+                        quality={90}
+                        format="webp"
+                        loading="lazy"
+                        class="project-image"
+                    />
+                </div>
+            ))}
         </div>
     </section>
 
+    <!-- Your existing styles here -->
     <style>
+        /* All your existing CSS styles remain the same */
         * {
             margin: 0;
             padding: 0;
@@ -459,14 +460,15 @@
             box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
         }
 
-        .project-image-item img {
+        /* Astro Image component styling */
+        .project-image {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: transform 0.3s ease;
         }
 
-        .project-image-item:hover img {
+        .project-image-item:hover .project-image {
             transform: scale(1.05);
         }
 
@@ -546,22 +548,9 @@
         }
     </style>
 
-    <script>
-        // Animation Script for hero text
-        const words = [
-            "PANORAMA",
-            "THE VIEWS",
-            "PARK EDGE",
-            "CORAL TOWERS",
-            "PEARL & REEF TOWERS",
-            "AA WATERFRONT",
-            "BEACH TERRACE",
-            "GOLD CREST",
-            "H&S RESIDENCE",
-            "H1 TOWER",
-            "SAIMA MARINA",
-            "SAIMA WATERFRONT",
-        ];
+    <script define:vars={{ heroWords }}>
+        // Animation Script for hero text using passed data
+        const words = heroWords;
         let currentIndex = 0;
         const animatedText = document.getElementById("animatedText");
 
@@ -582,10 +571,6 @@
                 }, 800);
             }, 400);
         }
-
-        setTimeout(() => {
-            setInterval(changeWord, 3000);
-        }, 2000);
 
         // Main scroll animation and project interaction
         const projectsSidebar = document.getElementById('projectsSidebar');
@@ -662,8 +647,13 @@
             ticking = false;
         });
 
-        // Initial call
+        // Initial calls
         handleScroll();
+        
+        // Start text animation
+        setTimeout(() => {
+            setInterval(changeWord, 3000);
+        }, 2000);
     </script>
 </body>
 </html>
