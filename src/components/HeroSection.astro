@@ -8,6 +8,7 @@ const heroWords = projects.map(project => project.name.toUpperCase());
   <div class="hero-text">
     <span class="static-text">BYG</span>
     <span class="animated-text" id="animatedText">PANORAMA</span>
+    <div class="hero-subtext">Official Partners With EMAAR® Oceanfront & HMR® Waterfront</div>
   </div>
 </main>
 
@@ -49,8 +50,18 @@ const heroWords = projects.map(project => project.name.toUpperCase());
     padding-left: 10vw;
   }
 
+  .hero-subtext {
+  display: block;
+  font-size: 0.15em;
+  font-weight: 600;
+  color: #888;
+  margin-top: 0.4em;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
   .hero-text {
-    font-size: clamp(40px, 7vw, 90px);
+    font-size: clamp(40px, 7vw, 80px);
     font-weight: 500;
     color: #4c4c4c;
     letter-spacing: -0.02em;

@@ -5,6 +5,7 @@ import HeroSection from '../components/HeroSection.astro';
 import BottomNavigation from '../components/BottomNavigation.astro';
 import ProjectsSidebar from '../components/ProjectsSidebar.astro';
 import ProjectsGrid from '../components/ProjectsGrid.astro';
+import { projects } from '../data/projects.js';
 ---
 
 <Layout title="IND Design Studio">
@@ -12,43 +13,55 @@ import ProjectsGrid from '../components/ProjectsGrid.astro';
   <HeroSection />
   <BottomNavigation />
   
+  <!-- Fullscreen Project Image Animation Container -->
+  <div class="fullscreen-project-container">
+    <!-- Fixed animated image for Project 1 -->
+    <div class="animated-project-image" id="animatedProjectImage">
+      <img 
+        src={projects[0]?.image?.src} 
+        alt={projects[0]?.name}
+        id="mainAnimatedImage"
+      />
+    </div>
+  </div>
+  <div id="scrollSpacer"></div>
   <section class="projects-section">
     <ProjectsSidebar />
     <ProjectsGrid />
   </section>
 
-  <script>
+  <script define:vars={{ projects }}>
   // Main scroll animation and project interaction
   const projectsSidebar = document.getElementById('projectsSidebar');
   const projectItems = document.querySelectorAll('.project-item');
   const imageItems = document.querySelectorAll('.project-image-item');
+  
+  // Animation elements
+  const animatedProjectImage = document.getElementById('animatedProjectImage');
+  const mainAnimatedImage = document.getElementById('mainAnimatedImage');
+  const firstProjectInGrid = document.querySelector('#project-1');
 
   // Function to scroll sidebar to show active project
-  function scrollSidebarToActiveProject(activeItem: Element) {
+  function scrollSidebarToActiveProject(activeItem) {
     if (!projectsSidebar || !activeItem) return;
     
     const sidebarRect = projectsSidebar.getBoundingClientRect();
     const activeItemRect = activeItem.getBoundingClientRect();
     
-    // Calculate the position of the active item relative to the sidebar
     const activeItemTop = activeItemRect.top - sidebarRect.top;
     const activeItemBottom = activeItemRect.bottom - sidebarRect.top;
     
-    // Get sidebar's scrollable height
     const sidebarHeight = projectsSidebar.clientHeight;
     const sidebarScrollTop = projectsSidebar.scrollTop;
     
-    // Check if active item is above the visible area
     if (activeItemTop < 0) {
       projectsSidebar.scrollTo({
-        top: sidebarScrollTop + activeItemTop - 20, // 20px padding from top
+        top: sidebarScrollTop + activeItemTop - 20,
         behavior: 'smooth'
       });
-    }
-    // Check if active item is below the visible area
-    else if (activeItemBottom > sidebarHeight) {
+    } else if (activeItemBottom > sidebarHeight) {
       projectsSidebar.scrollTo({
-        top: sidebarScrollTop + (activeItemBottom - sidebarHeight) + 20, // 20px padding from bottom
+        top: sidebarScrollTop + (activeItemBottom - sidebarHeight) + 20,
         behavior: 'smooth'
       });
     }
@@ -57,29 +70,23 @@ import ProjectsGrid from '../components/ProjectsGrid.astro';
   // Enhanced project interaction for highlighting and scrolling
   projectItems.forEach((item) => {
     item.addEventListener('click', () => {
-      // Remove active class from all items
       projectItems.forEach(pi => pi.classList.remove('active'));
-      // Add active class to clicked item
       item.classList.add('active');
       
-      // Get the target image ID from data attribute
-      const targetId = (item as HTMLElement).dataset.scrollTarget;
+      const targetId = item.dataset.scrollTarget;
       if (typeof targetId === 'string') {
         const targetImage = document.getElementById(targetId);
         
         if (targetImage) {
-          // Calculate offset to account for fixed navigation
-          const navHeight = 80; // Adjust this based on your nav height
+          const navHeight = 80;
           const elementPosition = targetImage.getBoundingClientRect().top;
           const offsetPosition = elementPosition + window.pageYOffset - navHeight;
           
-          // Smooth scroll to the target image
           window.scrollTo({
             top: offsetPosition,
             behavior: 'smooth'
           });
           
-          // Optional: Add a highlight effect to the target image
           targetImage.classList.add('highlighted');
           setTimeout(() => {
             targetImage.classList.remove('highlighted');
@@ -89,17 +96,104 @@ import ProjectsGrid from '../components/ProjectsGrid.astro';
     });
   });
 
-  // Scroll handler for sidebar animation
-  function handleScroll() {
-    const scrollY = window.scrollY;
-    const windowHeight = window.innerHeight;
+  // Main scroll animation handler
+// Replace your handleScroll function with this corrected version
+function handleScroll() {
+  const scrollY = window.scrollY;
+  const windowHeight = window.innerHeight;
+  
+  // Calculate the actual position of the first project image
+  const heroHeight = windowHeight * 1.1; // 110vh from hero section
+  const projectsSectionPadding = windowHeight * 0.12; // 12vh padding-top from projects-section
+  const firstProjectPosition = heroHeight + projectsSectionPadding; // 122vh total
+  
+  // Animation should start when first project is about to enter viewport
+  const scrollStart = firstProjectPosition - windowHeight; // Start when image is 1 viewport below
+  const scrollRange = windowHeight * 2; // Animation happens over 2 viewport heights
+  
+  // Sidebar visibility
+  if (scrollY > windowHeight * 0.8) {
+    projectsSidebar?.classList.add('visible');
+  } else {
+    projectsSidebar?.classList.remove('visible');
+  }
+  
+  if (!animatedProjectImage) return;
+  
+  if (scrollY < scrollStart) {
+    // Before animation starts - image is off-screen below
+    animatedProjectImage.style.top = '100vh';
+    animatedProjectImage.style.left = '0';
+    animatedProjectImage.style.width = '100vw';
+    animatedProjectImage.style.height = '100vh';
+    animatedProjectImage.style.opacity = '0';
     
-    if (scrollY > windowHeight * 0.8) {
-      projectsSidebar?.classList.add('visible');
-    } else {
-      projectsSidebar?.classList.remove('visible');
+    // Show original project in grid
+    if (firstProjectInGrid) {
+      firstProjectInGrid.style.opacity = '1';
+    }
+    return;
+  }
+  
+  // Calculate progress (0 to 1)
+  const progress = Math.min((scrollY - scrollStart) / scrollRange, 1);
+  
+  // Smooth easing function
+  const easeOutQuart = (t) => 1 - Math.pow(1 - t, 4);
+  const easedProgress = easeOutQuart(progress);
+  
+  // Image animation
+  if (progress < 0.5) {
+    // Phase 1: Image moves up to completely cover the screen (first 50% of scroll)
+    const moveProgress = progress / 0.5;
+    const imageTop = 100 - (moveProgress * 100); // Move from 100vh to 0vh
+    
+    animatedProjectImage.style.top = `${imageTop}vh`;
+    animatedProjectImage.style.left = '0';
+    animatedProjectImage.style.width = '100vw';
+    animatedProjectImage.style.height = '100vh';
+    animatedProjectImage.style.opacity = moveProgress.toString();
+    
+    // Hide original project in grid during fullscreen phase
+    if (firstProjectInGrid) {
+      firstProjectInGrid.style.opacity = (1 - moveProgress * 0.5).toString();
+    }
+  } else {
+    // Phase 2: Image shrinks and moves to final position (remaining 50% of scroll)
+    const shrinkProgress = (progress - 0.5) / 0.5;
+    const easedShrink = easeOutQuart(shrinkProgress);
+    
+    // Calculate final position based on your grid layout
+    const finalTop = 12; // Match your projects-section padding-top: 12vh
+    const finalLeft = 38; // Match your images-container margin-left: 38vw  
+    const finalWidth = 60; // Match your images-container width: 60vw
+    const finalHeight = 60; // Match your project-image-item height: 60vh
+    
+    const imageTop = 0 + (easedShrink * finalTop);
+    const imageLeft = 0 + (easedShrink * finalLeft);
+    const imageWidth = 100 - (easedShrink * (100 - finalWidth));
+    const imageHeight = 100 - (easedShrink * (100 - finalHeight));
+    
+    animatedProjectImage.style.top = `${imageTop}vh`;
+    animatedProjectImage.style.left = `${imageLeft}vw`;
+    animatedProjectImage.style.width = `${imageWidth}vw`;
+    animatedProjectImage.style.height = `${imageHeight}vh`;
+    animatedProjectImage.style.opacity = (1 - easedShrink).toString();
+    
+    // Gradually show original project in grid
+    if (firstProjectInGrid) {
+      firstProjectInGrid.style.opacity = (0.5 + easedShrink * 0.5).toString();
     }
   }
+  
+  // Hide animated image completely when animation is done
+  if (progress >= 1) {
+    animatedProjectImage.style.opacity = '0';
+    if (firstProjectInGrid) {
+      firstProjectInGrid.style.opacity = '1';
+    }
+  }
+}
 
   // Highlight sidebar item when scrolling through images
   function highlightActiveProject() {
@@ -111,14 +205,11 @@ import ProjectsGrid from '../components/ProjectsGrid.astro';
       const imageBottom = imageTop + rect.height;
       
       if (scrollPosition >= imageTop && scrollPosition <= imageBottom) {
-        // Remove active from all
         projectItems.forEach(item => item.classList.remove('active'));
-        // Add active to corresponding sidebar item
-        const projectName = (image as HTMLElement).dataset.project;
+        const projectName = image.dataset.project;
         const correspondingItem = document.querySelector(`.project-item[data-project="${projectName}"]`);
         if (correspondingItem) {
           correspondingItem.classList.add('active');
-          // Auto-scroll sidebar to show the active project
           scrollSidebarToActiveProject(correspondingItem);
         }
       }
@@ -154,10 +245,61 @@ import ProjectsGrid from '../components/ProjectsGrid.astro';
     padding-top: 12vh;
   }
 
+  /* Fullscreen animation container */
+  .fullscreen-project-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  #scrollSpacer {
+  height: 110vh; /* Adjust this height to control the scroll gap */
+  background: #fff; /* or match your theme */
+}
+
+  .animated-project-image {
+    position: absolute;
+    top: 100vh;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+    overflow: hidden;
+    opacity: 0;
+    will-change: transform, width, height, top, left, opacity;
+    transition: border-radius 0.3s ease;
+  }
+
+  .animated-project-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Add border radius when image shrinks */
+  .animated-project-image[style*="width: 60vw"] {
+    border-radius: 12px;
+  }
+
+  @media (max-width: 1024px) {
+    .animated-project-image[style*="width: 55vw"] {
+      border-radius: 12px;
+    }
+  }
+
   @media (max-width: 768px) {
     .projects-section {
       flex-direction: column;
       padding-top: 5vh;
+    }
+    
+    .animated-project-image[style*="width: 90vw"] {
+      border-radius: 12px;
     }
   }
 </style>
