@@ -1,3 +1,9 @@
+/* Import Tailwind CSS */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom base styles */
 * {
   margin: 0;
   padding: 0;
@@ -12,4 +18,36 @@ body {
 
 body, html {
   cursor: url('data:image/svg+xml;utf8,<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg"><line x1="8" y1="3" x2="8" y2="13" stroke="black" stroke-width="2"/><line x1="3" y1="8" x2="13" y2="8" stroke="black" stroke-width="2"/></svg>') 8 8, crosshair;
+}
+
+/* Custom component styles */
+.project-highlight {
+  transform: translateY(-1rem);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.project-highlight .project-image {
+  transform: scale(1.05);
+}
+
+.animated-text-blur-out {
+  animation: blur-out 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animated-text-blur-in {
+  animation: blur-in 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Custom utilities */
+.will-change-transform {
+  will-change: transform, width, height, top, left, opacity;
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-gpu {
+  transform: translateZ(0);
 }
