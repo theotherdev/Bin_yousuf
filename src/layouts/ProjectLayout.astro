@@ -1,0 +1,283 @@
+---
+// src/layouts/ProjectLayout.astro
+import type { ProjectData } from '../types/project';
+import { Image } from 'astro:assets';
+
+export interface Props {
+    project: ProjectData;
+}
+
+const { project } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{project.name} - Project Portfolio</title>
+    <meta name="description" content={project.description}>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <main class="project-page">
+        <section class="hero">
+            <div class="hero-image">
+                <Image 
+                    src={project.heroImage.src} 
+                    alt={project.heroImage.alt}
+                    width={project.heroImage.width}
+                    height={project.heroImage.height}
+                />
+                <div class="hero-overlay">
+                    </div>
+            </div>
+        </section>
+
+        <section class="project-header-description">
+            <div class="header-description-content">
+                <h1>{project.name}</h1>
+                <p>{project.description}</p> {/* This will display the project's description */}
+                {/* If you literally want "Add your project description here..." you can add it like this: */}
+                {/* <p>Add your project description here. This should be a compelling overview of the project that captures its essence and key features.</p> */}
+            </div>
+        </section>
+
+        <section class="project-info">
+            <div class="info-grid">
+                <div class="info-item">
+                    <h3>Typology</h3>
+                    <p>{project.info.typology.join(', ')}</p>
+                </div>
+                <div class="info-item">
+                    <h3>Status</h3>
+                    <p>{project.info.status}</p>
+                </div>
+                <div class="info-item">
+                    <h3>Year</h3>
+                    <p>{project.info.yearOfDesign}</p>
+                </div>
+                <div class="info-item">
+                    <h3>Location</h3>
+                    <p>{project.info.location}</p>
+                </div>
+                <div class="info-item">
+                    <h3>Area</h3>
+                    <p>{project.info.square}</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="about-project">
+            <h2>About the Project</h2>
+            <div class="about-content">
+                <p set:html={project.aboutProject.replace(/\n/g, '<br>')}></p>
+            </div>
+        </section>
+
+        <section class="gallery">
+            <h2>Gallery</h2>
+            <div class="gallery-scroll">
+                {project.galleryImages.map((image) => (
+                    <div class="gallery-item">
+                        <Image 
+                            src={image.src} 
+                            alt={image.alt}
+                            width={image.width}
+                            height={image.height}
+                        />
+                    </div>
+                ))}
+            </div>
+        </section>
+    </main>
+</body>
+</html>
+
+<style>
+    * {
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        overflow-x: hidden;
+    }
+
+    .project-page {
+        width: 100%;
+    }
+
+    .hero {
+        position: relative;
+        height: 70vh; /* Adjusted height, you might want to change this */
+        width: 100vw;
+        margin-left: calc(-50vw + 50%);
+        overflow: hidden;
+    }
+
+    .hero-image {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+
+    .hero-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+    }
+
+    .hero-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.3); /* Optional: keep a subtle overlay or remove if not needed */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Styles for the new Project Heading and Description Section */
+    .project-header-description {
+        max-width: 1200px;
+        margin: 2rem auto; /* Add some space above and below */
+        padding: 2rem;
+        text-align: center; /* Center the text */
+    }
+
+    .header-description-content h1 {
+        font-size: 3rem; /* Adjust as needed */
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: #333; /* Example color */
+    }
+
+    .header-description-content p {
+        font-size: 1.3rem; /* Adjust as needed */
+        font-weight: 400;
+        line-height: 1.6;
+        color: #555; /* Example color */
+        max-width: 800px; /* Optional: constrain width for readability */
+        margin-left: auto;
+        margin-right: auto;
+    }
+    /* End of new styles */
+
+
+    .project-info {
+        max-width: 1200px;
+        margin: 3rem auto;
+        padding: 2rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .info-item h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .info-item p {
+        font-size: 1.1rem;
+        font-weight: 400;
+        color: #666;
+    }
+
+    .about-project {
+        max-width: 1200px;
+        margin: 3rem auto;
+        padding: 0 2rem;
+    }
+
+    .about-project h2 {
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        color: #333;
+    }
+
+    .about-content p {
+        font-size: 1.1rem;
+        font-weight: 400;
+        line-height: 1.7;
+        color: #555;
+    }
+
+    .gallery {
+        max-width: 1200px;
+        margin: 3rem auto;
+        padding: 0 2rem;
+    }
+
+    .gallery h2 {
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        color: #333;
+    }
+
+    .gallery-scroll {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .gallery-item {
+        width: 100%;
+    }
+
+    .gallery-item img {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+        transition: transform 0.3s ease;
+    }
+
+    .gallery-item:hover img {
+        transform: scale(1.02);
+    }
+
+    @media (max-width: 768px) {
+        .hero {
+            height: 50vh; /* Adjust for smaller screens */
+        }
+
+        /* Adjust styles for the new header/description section on mobile */
+        .project-header-description {
+            padding: 1.5rem 1rem;
+            margin: 1.5rem auto;
+        }
+
+        .header-description-content h1 {
+            font-size: 2rem;
+        }
+        
+        .header-description-content p {
+            font-size: 1.1rem;
+        }
+        
+        .project-info,
+        .about-project,
+        .gallery {
+            padding: 0 1rem;
+        }
+    }
+</style>

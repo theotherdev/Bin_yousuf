@@ -1,0 +1,87 @@
+---
+// src/pages/projects/gold-crest-residence.astro
+import ProjectLayout from '../../layouts/ProjectLayout.astro';
+import type { ProjectData } from '../../types/project';
+
+// Import your project images - Update these paths with your actual image imports
+import heroImg from '../../assets/projects/hmr/gold-crest-residence/main-image.webp';
+import gallery1 from '../../assets/projects/hmr/gold-crest-residence/gallery-1.webp';
+import gallery2 from '../../assets/projects/hmr/gold-crest-residence/gallery-2.webp';
+import gallery3 from '../../assets/projects/hmr/gold-crest-residence/gallery-3.webp';
+import gallery4 from '../../assets/projects/hmr/gold-crest-residence/gallery-4.webp';
+import gallery5 from '../../assets/projects/hmr/gold-crest-residence/gallery-5.webp';
+import gallery6 from '../../assets/projects/hmr/gold-crest-residence/gallery-6.webp';
+import gallery7 from '../../assets/projects/hmr/gold-crest-residence/gallery-7.webp';
+
+const projectData: ProjectData = {
+    id: 'gold-crest-residence',
+    name: 'Gold Crest Residence',
+    location: 'HMR',
+    description: 'Add your project description here. This should be a compelling overview of the project that captures its essence and key features.',
+    heroImage: {
+        src: heroImg,
+        alt: 'Gold Crest Residence - Main View',
+        width: 1920,
+        height: 1080
+    },
+    info: {
+        typology: ['Architecture', 'Residential'], // Update with actual typologies
+        status: 'Completed', // Update with actual status
+        yearOfDesign: 2023, // Update with actual year
+        location: 'Location Details', // Update with specific location
+        square: '0000 m2' // Update with actual area
+    },
+    aboutProject: `Add detailed project information here. This should include:
+    - Design concept and philosophy
+    - Key architectural features
+    - Environmental considerations
+    - Technical specifications
+    - Any unique aspects of the project`,
+    galleryImages: [
+        {
+            src: gallery1,
+            alt: 'Gold Crest Residence - Gallery Image 1',
+            width: 1200,
+            height: 800
+        },
+        {
+            src: gallery2,
+            alt: 'Gold Crest Residence - Gallery Image 2',
+            width: 1200,
+            height: 800
+        },
+        {
+            src: gallery3,
+            alt: 'Gold Crest Residence - Gallery Image 3',
+            width: 1200,
+            height: 800
+        },
+        {
+            src: gallery4,
+            alt: 'Gold Crest Residence - Gallery Image 4',
+            width: 1200,
+            height: 800
+        },
+        {
+            src: gallery5,
+            alt: 'Gold Crest Residence - Gallery Image 5',
+            width: 1200,
+            height: 800
+        },
+        {
+            src: gallery6,
+            alt: 'Gold Crest Residence - Gallery Image 6',
+            width: 1200,
+            height: 800
+        },
+        {
+            src: gallery7,
+            alt: 'Gold Crest Residence - Gallery Image 7',
+            width: 1200,
+            height: 800
+        }
+    ]
+};
+---
+
+<ProjectLayout project={projectData} />
