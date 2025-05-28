@@ -235,34 +235,80 @@ class ProjectAnimationController {
     
     const gsap = window.gsap;
     
-    // Sidebar visibility
-    if (scrollY > windowHeight * 0.8) {
+    // FIXED SIDEBAR VISIBILITY - Smooth and responsive
+    const sidebarThreshold = windowHeight * 0.3; // Earlier appearance
+    
+    if (scrollY > sidebarThreshold) {
       if (this.elements.projectsSidebar && !this.elements.projectsSidebar.classList.contains('visible')) {
+        // Remove CSS transition temporarily to let JS take control
+        this.elements.projectsSidebar.style.transition = 'none';
+        
         if (gsap) {
-          gsap.to(this.elements.projectsSidebar, {
-            opacity: 1,
-            x: 0,
-            duration: 0.8,
-            ease: "power2.out"
-          });
+          // Kill any existing animations on the sidebar
+          gsap.killTweensOf(this.elements.projectsSidebar);
+          
+          gsap.fromTo(this.elements.projectsSidebar, 
+            {
+              opacity: 0,
+              x: -100
+            },
+            {
+              opacity: 1,
+              x: 0,
+              duration: 0.5,
+              ease: "power2.out",
+              onComplete: () => {
+                // Restore CSS transitions after animation
+                if (this.elements.projectsSidebar) {
+                  this.elements.projectsSidebar.style.transition = '';
+                }
+              }
+            }
+          );
         } else {
+          // Faster fallback animation
           this.elements.projectsSidebar.style.opacity = '1';
           this.elements.projectsSidebar.style.transform = 'translateX(0)';
+          // Restore transition after a brief delay
+          setTimeout(() => {
+            if (this.elements.projectsSidebar) {
+              this.elements.projectsSidebar.style.transition = '';
+            }
+          }, 50);
         }
         this.elements.projectsSidebar.classList.add('visible');
       }
     } else {
       if (this.elements.projectsSidebar && this.elements.projectsSidebar.classList.contains('visible')) {
+        // Remove CSS transition temporarily to let JS take control
+        this.elements.projectsSidebar.style.transition = 'none';
+        
         if (gsap) {
+          // Kill any existing animations on the sidebar
+          gsap.killTweensOf(this.elements.projectsSidebar);
+          
           gsap.to(this.elements.projectsSidebar, {
             opacity: 0,
             x: -100,
-            duration: 0.8,
-            ease: "power2.out"
+            duration: 0.3,
+            ease: "power2.in",
+            onComplete: () => {
+              // Restore CSS transitions after animation
+              if (this.elements.projectsSidebar) {
+                this.elements.projectsSidebar.style.transition = '';
+              }
+            }
           });
         } else {
+          // Faster fallback animation
           this.elements.projectsSidebar.style.opacity = '0';
           this.elements.projectsSidebar.style.transform = 'translateX(-100px)';
+          // Restore transition after a brief delay
+          setTimeout(() => {
+            if (this.elements.projectsSidebar) {
+              this.elements.projectsSidebar.style.transition = '';
+            }
+          }, 50);
         }
         this.elements.projectsSidebar.classList.remove('visible');
       }
@@ -373,6 +419,18 @@ class ProjectAnimationController {
     });
   }
 
+  private debounce(func: Function, wait: number): Function {
+    let timeout: NodeJS.Timeout;
+    return function executedFunction(...args: any[]) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  }
+
   private requestTick(): void {
     if (!this.ticking) {
       requestAnimationFrame(() => {
@@ -393,7 +451,7 @@ class ProjectAnimationController {
       this.initializeGSAPAnimations();
       this.setupProjectInteractions();
       
-      // Add scroll listener
+      // Add scroll listener with passive option for better performance
       window.addEventListener('scroll', () => this.requestTick(), { passive: true });
       
       // Initial calls
@@ -411,11 +469,13 @@ class ProjectAnimationController {
       console.log('🚀 App initialized with fallback animations!');
     }
 
-    // Handle window resize
-    window.addEventListener('resize', () => {
+    // Handle window resize with debouncing for better performance
+    const debouncedResize = this.debounce(() => {
       this.animationState.windowHeight = window.innerHeight;
       this.handleScroll();
-    });
+    }, 150);
+    
+    window.addEventListener('resize', debouncedResize);
   }
 }
 
