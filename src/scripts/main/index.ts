@@ -67,33 +67,41 @@ class ProjectAnimationController {
     // Create main timeline
     this.mainTimeline = gsap.timeline({ paused: true });
 
-    // Set initial state
+    // Set initial state - positioned below viewport
     gsap.set(this.elements.animatedProjectImage, {
       top: '100vh',
       left: '0',
       width: '100vw',
       height: '100vh',
       opacity: 0,
-      borderRadius: '0px'
+      borderRadius: '0px',
+      zIndex: 999
     });
 
-    // Create animation sequence
+    // Create animation sequence matching your reference
     this.mainTimeline
+      // Phase 1: Scale up from bottom and fade in (0 -> 0.4)
       .to(this.elements.animatedProjectImage, {
         top: '0vh',
         opacity: 1,
-        duration: 1,
+        duration: 0.4,
         ease: "power2.out"
       })
+      // Phase 2: Shrink and move to grid position (0.4 -> 1.0)
       .to(this.elements.animatedProjectImage, {
         top: '12vh',
         left: '38vw',
         width: '60vw',
         height: '60vh',
         borderRadius: '12px',
-        opacity: 0,
-        duration: 1,
-        ease: "power2.out"
+        duration: 0.6,
+        ease: "power2.inOut"
+      })
+      // Phase 3: Final fade to match grid opacity
+      .to(this.elements.animatedProjectImage, {
+        opacity: 0.8,
+        duration: 0.1,
+        ease: "none"
       });
   }
 
@@ -230,23 +238,20 @@ class ProjectAnimationController {
     const heroHeight = windowHeight * 1.1; // 110vh from scrollSpacer
     const projectsSectionPadding = windowHeight * 0.12; // 12vh padding-top
     const firstProjectPosition = heroHeight + projectsSectionPadding;
-    const scrollStart = firstProjectPosition - windowHeight;
-    const scrollRange = windowHeight * 2;
+    const scrollStart = firstProjectPosition - windowHeight * 0.8; // Start earlier
+    const scrollRange = windowHeight * 1.5; // Shorter range for smoother animation
     
     const gsap = window.gsap;
     
-    // FIXED SIDEBAR VISIBILITY - Smooth and responsive
-    const sidebarThreshold = windowHeight * 0.3; // Earlier appearance
+    // SIDEBAR VISIBILITY - Earlier appearance
+    const sidebarThreshold = windowHeight * 0.2;
     
     if (scrollY > sidebarThreshold) {
       if (this.elements.projectsSidebar && !this.elements.projectsSidebar.classList.contains('visible')) {
-        // Remove CSS transition temporarily to let JS take control
         this.elements.projectsSidebar.style.transition = 'none';
         
         if (gsap) {
-          // Kill any existing animations on the sidebar
           gsap.killTweensOf(this.elements.projectsSidebar);
-          
           gsap.fromTo(this.elements.projectsSidebar, 
             {
               opacity: 0,
@@ -258,7 +263,6 @@ class ProjectAnimationController {
               duration: 0.5,
               ease: "power2.out",
               onComplete: () => {
-                // Restore CSS transitions after animation
                 if (this.elements.projectsSidebar) {
                   this.elements.projectsSidebar.style.transition = '';
                 }
@@ -266,10 +270,8 @@ class ProjectAnimationController {
             }
           );
         } else {
-          // Faster fallback animation
           this.elements.projectsSidebar.style.opacity = '1';
           this.elements.projectsSidebar.style.transform = 'translateX(0)';
-          // Restore transition after a brief delay
           setTimeout(() => {
             if (this.elements.projectsSidebar) {
               this.elements.projectsSidebar.style.transition = '';
@@ -280,30 +282,24 @@ class ProjectAnimationController {
       }
     } else {
       if (this.elements.projectsSidebar && this.elements.projectsSidebar.classList.contains('visible')) {
-        // Remove CSS transition temporarily to let JS take control
         this.elements.projectsSidebar.style.transition = 'none';
         
         if (gsap) {
-          // Kill any existing animations on the sidebar
           gsap.killTweensOf(this.elements.projectsSidebar);
-          
           gsap.to(this.elements.projectsSidebar, {
             opacity: 0,
             x: -100,
             duration: 0.3,
             ease: "power2.in",
             onComplete: () => {
-              // Restore CSS transitions after animation
               if (this.elements.projectsSidebar) {
                 this.elements.projectsSidebar.style.transition = '';
               }
             }
           });
         } else {
-          // Faster fallback animation
           this.elements.projectsSidebar.style.opacity = '0';
           this.elements.projectsSidebar.style.transform = 'translateX(-100px)';
-          // Restore transition after a brief delay
           setTimeout(() => {
             if (this.elements.projectsSidebar) {
               this.elements.projectsSidebar.style.transition = '';
@@ -316,44 +312,51 @@ class ProjectAnimationController {
     
     if (!this.elements.animatedProjectImage) return;
     
-    // Calculate progress
-    const progress = Math.min((scrollY - scrollStart) / scrollRange, 1);
-    this.animationState.progress = Math.max(0, progress);
+    // Calculate progress for the main animation
+    const progress = Math.min(Math.max((scrollY - scrollStart) / scrollRange, 0), 1);
+    this.animationState.progress = progress;
     
     // Update timeline progress with GSAP or fallback
     if (gsap && this.mainTimeline) {
-      this.mainTimeline.progress(this.animationState.progress);
+      this.mainTimeline.progress(progress);
     } else {
       // Fallback animation without GSAP
-      this.fallbackAnimation(this.animationState.progress);
+      this.fallbackAnimation(progress);
     }
     
-    // Handle first project grid visibility
+    // Handle first project grid visibility - smooth transition
     if (this.elements.firstProjectInGrid) {
-      if (progress < 0.5) {
-        const moveProgress = progress / 0.5;
-        const opacity = 1 - moveProgress * 0.5;
-        if (gsap) {
-          gsap.set(this.elements.firstProjectInGrid, { opacity });
-        } else {
-          this.elements.firstProjectInGrid.style.opacity = opacity.toString();
-        }
+      let gridOpacity = 0;
+      
+      if (progress < 0.7) {
+        // Keep grid hidden during main animation
+        gridOpacity = 0;
+      } else if (progress < 0.95) {
+        // Fade in the grid
+        const fadeProgress = (progress - 0.7) / 0.25;
+        gridOpacity = fadeProgress;
       } else {
-        const shrinkProgress = (progress - 0.5) / 0.5;
-        const opacity = 0.5 + shrinkProgress * 0.5;
-        if (gsap) {
-          gsap.set(this.elements.firstProjectInGrid, { opacity });
-        } else {
-          this.elements.firstProjectInGrid.style.opacity = opacity.toString();
-        }
+        // Fully visible
+        gridOpacity = 1;
       }
       
-      if (progress >= 1) {
-        if (gsap) {
-          gsap.set(this.elements.firstProjectInGrid, { opacity: 1 });
-        } else {
-          this.elements.firstProjectInGrid.style.opacity = '1';
-        }
+      if (gsap) {
+        gsap.set(this.elements.firstProjectInGrid, { opacity: gridOpacity });
+      } else {
+        this.elements.firstProjectInGrid.style.opacity = gridOpacity.toString();
+      }
+    }
+
+    // Hide animated image when animation is complete
+    if (progress >= 1) {
+      if (gsap) {
+        gsap.set(this.elements.animatedProjectImage, { 
+          opacity: 0,
+          pointerEvents: 'none' 
+        });
+      } else {
+        this.elements.animatedProjectImage.style.opacity = '0';
+        this.elements.animatedProjectImage.style.pointerEvents = 'none';
       }
     }
   }
@@ -361,35 +364,40 @@ class ProjectAnimationController {
   private fallbackAnimation(progress: number): void {
     if (!this.elements.animatedProjectImage) return;
     
-    if (progress < 0.5) {
-      // Phase 1: Move up and fade in
-      const moveProgress = progress / 0.5;
-      const top = 100 - (moveProgress * 100);
+    if (progress === 0) {
+      // Initial state
+      this.elements.animatedProjectImage.style.top = '100vh';
+      this.elements.animatedProjectImage.style.left = '0';
+      this.elements.animatedProjectImage.style.width = '100vw';
+      this.elements.animatedProjectImage.style.height = '100vh';
+      this.elements.animatedProjectImage.style.opacity = '0';
+      this.elements.animatedProjectImage.style.borderRadius = '0px';
+    } else if (progress < 0.4) {
+      // Phase 1: Scale up from bottom and fade in
+      const phaseProgress = progress / 0.4;
+      const top = 100 - (phaseProgress * 100);
       
       this.elements.animatedProjectImage.style.top = `${top}vh`;
       this.elements.animatedProjectImage.style.left = '0';
       this.elements.animatedProjectImage.style.width = '100vw';
       this.elements.animatedProjectImage.style.height = '100vh';
-      this.elements.animatedProjectImage.style.opacity = moveProgress.toString();
+      this.elements.animatedProjectImage.style.opacity = phaseProgress.toString();
       this.elements.animatedProjectImage.style.borderRadius = '0px';
     } else {
-      // Phase 2: Shrink and move to position
-      const shrinkProgress = (progress - 0.5) / 0.5;
-      const top = 0 + (shrinkProgress * 12);
-      const left = 0 + (shrinkProgress * 38);
-      const width = 100 - (shrinkProgress * 40);
-      const height = 100 - (shrinkProgress * 40);
+      // Phase 2: Shrink and move to grid position
+      const phaseProgress = (progress - 0.4) / 0.6;
+      const top = 0 + (phaseProgress * 12);
+      const left = 0 + (phaseProgress * 38);
+      const width = 100 - (phaseProgress * 40);
+      const height = 100 - (phaseProgress * 40);
+      const borderRadius = phaseProgress * 12;
       
       this.elements.animatedProjectImage.style.top = `${top}vh`;
       this.elements.animatedProjectImage.style.left = `${left}vw`;
       this.elements.animatedProjectImage.style.width = `${width}vw`;
       this.elements.animatedProjectImage.style.height = `${height}vh`;
-      this.elements.animatedProjectImage.style.opacity = (1 - shrinkProgress).toString();
-      this.elements.animatedProjectImage.style.borderRadius = `${shrinkProgress * 12}px`;
-    }
-    
-    if (progress >= 1) {
-      this.elements.animatedProjectImage.style.opacity = '0';
+      this.elements.animatedProjectImage.style.opacity = '1';
+      this.elements.animatedProjectImage.style.borderRadius = `${borderRadius}px`;
     }
   }
 

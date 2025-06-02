@@ -6,6 +6,7 @@ import BottomNavigation from '../components/BottomNavigation.astro';
 import ProjectsSidebar from '../components/ProjectsSidebar.astro';
 import ProjectsGrid from '../components/ProjectsGrid.astro';
 import { projects } from '../data/projects.js';
+import { Image } from 'astro:assets';
 ---
 
 <Layout title="IND Design Studio">
@@ -16,15 +17,22 @@ import { projects } from '../data/projects.js';
   <!-- Fullscreen Project Image Animation Container -->
   <div class="fixed top-0 left-0 w-screen h-screen pointer-events-none z-[999]">
     <div 
-      class="absolute top-full left-0 w-screen h-screen overflow-hidden opacity-0 transition-all duration-300 ease-out will-change-transform"
+      class="absolute top-full left-0 w-screen h-screen overflow-hidden opacity-0 transition-none will-change-transform"
       id="animatedProjectImage"
     >
-      <img 
-        src={projects[0]?.image?.src} 
-        alt={projects[0]?.name}
-        id="mainAnimatedImage"
-        class="w-full h-full object-cover block"
-      />
+      {projects[0] && (
+        <Image
+          src={projects[0].image}
+          alt={projects[0].name}
+          id="mainAnimatedImage"
+          class="w-full h-full object-cover block"
+          width={1920}
+          height={1080}
+          quality={90}
+          format="webp"
+          loading="eager"
+        />
+      )}
     </div>
   </div>
   
@@ -40,3 +48,15 @@ import { projects } from '../data/projects.js';
 <script>
   import('../scripts/main/index.ts');
 </script>
+
+<style>
+  /* Ensure smooth animations */
+  #animatedProjectImage {
+    transition: none !important;
+  }
+  
+  /* Hide scrollbars during animation */
+  body.animating {
+    overflow-x: hidden;
+  }
+</style>
