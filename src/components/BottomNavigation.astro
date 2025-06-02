@@ -1,16 +1,32 @@
 ---
+// src/components/BottomNavigation.astro
 import { getProjectCounts } from '../data/projects.js';
 
 const projectCounts = getProjectCounts();
+const currentPath = Astro.url.pathname;
+const isProjectsPage = currentPath === '/projects' || currentPath === '/projects/';
 ---
 
 <div class="bottom-nav">
-  <a href="#emaar" class="bottom-link">
-    Emaar <sup>{projectCounts.emaar}</sup>
-  </a>
-  <a href="#hmr" class="bottom-link">
-    HMR <sup>{projectCounts.hmr}</sup>
-  </a>
+  {isProjectsPage ? (
+    <>
+      <a href="#emaar" class="bottom-link" data-section="emaar">
+        Emaar <sup>{projectCounts.emaar}</sup>
+      </a>
+      <a href="#hmr" class="bottom-link" data-section="hmr">
+        HMR <sup>{projectCounts.hmr}</sup>
+      </a>
+    </>
+  ) : (
+    <>
+      <a href="/projects?section=emaar" class="bottom-link">
+        Emaar <sup>{projectCounts.emaar}</sup>
+      </a>
+      <a href="/projects?section=hmr" class="bottom-link">
+        HMR <sup>{projectCounts.hmr}</sup>
+      </a>
+    </>
+  )}
 </div>
 
 <style>

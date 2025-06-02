@@ -1,5 +1,9 @@
 ---
+// src/components/ProjectsSidebar.astro
 import { projects } from '../data/projects.js';
+
+const currentPath = Astro.url.pathname;
+const isProjectsPage = currentPath === '/projects' || currentPath === '/projects/';
 ---
 
 <div class="projects-sidebar" id="projectsSidebar">
@@ -8,17 +12,83 @@ import { projects } from '../data/projects.js';
   </div>
   
   <div class="projects-list">
-    {projects.map((project) => (
-      <div class="project-item" data-project={project.id} data-scroll-target={`project-${project.id}`}>
-  <span class="project-number">{project.number}</span>
-  <div class="project-info">
-    <h4 class="project-name">{project.name}</h4>
-    <p class="project-location">{project.location}</p>
-  </div>
-</div>
+    {projects.map((project, index) => (
+      isProjectsPage ? (
+        <div 
+          class="project-item" 
+          data-project={project.id} 
+          data-scroll-target={`project-${project.id}`}
+          data-project-index={index}
+        >
+          <span class="project-number">{project.number}</span>
+          <div class="project-info">
+            <h4 class="project-name">{project.name}</h4>
+            <p class="project-location">{project.location}</p>
+          </div>
+        </div>
+      ) : (
+        <a 
+          href={`/projects?project=${project.id}`}
+          class="project-item" 
+          data-project={project.id}
+        >
+          <span class="project-number">{project.number}</span>
+          <div class="project-info">
+            <h4 class="project-name">{project.name}</h4>
+            <p class="project-location">{project.location}</p>
+          </div>
+        </a>
+      )
     ))}
   </div>
 </div>
+
+<script>
+  // Handle sidebar clicks on projects page
+  const currentPath = window.location.pathname;
+  if (currentPath.includes('/projects')) {
+    document.addEventListener('DOMContentLoaded', () => {
+      const projectItems = document.querySelectorAll('.projects-sidebar .project-item');
+      
+      projectItems.forEach(item => {
+        item.addEventListener('click', () => {
+          const projectIndex = parseInt(item.dataset.projectIndex);
+          const targetSection = document.querySelectorAll('.project-section')[projectIndex];
+          
+          if (targetSection) {
+            targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      });
+      
+      // Update active state based on scroll
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const projectId = entry.target.dataset.projectId;
+            
+            // Update active state in sidebar
+            projectItems.forEach(item => {
+              if (item.dataset.project === projectId) {
+                item.classList.add('active');
+              } else {
+                item.classList.remove('active');
+              }
+            });
+          }
+        });
+      }, {
+        root: null,
+        rootMargin: '-50% 0px -50% 0px',
+        threshold: 0
+      });
+      
+      document.querySelectorAll('.project-section').forEach(section => {
+        observer.observe(section);
+      });
+    });
+  }
+</script>
 
 <style>
   .projects-sidebar {
@@ -35,16 +105,12 @@ import { projects } from '../data/projects.js';
     opacity: 0;
     transform: translateX(-100px);
     will-change: opacity, transform;
-    /* REMOVED: transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); */
-    /* This was causing conflicts with JavaScript animations */
     overflow-y: auto;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
   }
 
   .projects-sidebar.visible {
     /* These styles are now handled by JavaScript for smoother control */
-    /* opacity: 1;
-    transform: translateX(0); */
   }
 
   .favorites-section {
@@ -62,25 +128,6 @@ import { projects } from '../data/projects.js';
     color: #333;
   }
 
-  .favorite-icon {
-    font-size: 18px;
-    color: #999;
-    cursor: pointer;
-    transition: color 0.3s ease;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    background: rgba(0, 0, 0, 0.05);
-  }
-
-  .favorite-icon:hover {
-    color: #333;
-    background: rgba(0, 0, 0, 0.1);
-  }
-
   .project-item {
     display: flex;
     align-items: flex-start;
@@ -90,6 +137,8 @@ import { projects } from '../data/projects.js';
     border-radius: 8px;
     position: relative;
     margin-bottom: 4px;
+    text-decoration: none;
+    color: inherit;
   }
 
   .project-item:hover {

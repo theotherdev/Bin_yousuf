@@ -1,18 +1,23 @@
 ---
+// src/components/Navigation.astro
 import { getProjectCounts } from '../data/projects.js';
 
 const projectCounts = getProjectCounts();
+const currentPath = Astro.url.pathname;
+const isProjectsListPage = currentPath === '/projects' || currentPath === '/projects/';
+const isProjectDetailPage = currentPath.startsWith('/projects/') && currentPath !== '/projects/';
 ---
 
 <nav class="nav">
   <div class="nav-left">
-    <a href="#projects" class="nav-link">Projects</a>
+    <a href="/" class="nav-link logo">BYG</a>
+    <a href="/projects" class="nav-link {isProjectsListPage || isProjectDetailPage ? 'active' : ''}">Projects</a>
   </div>
   <div class="nav-right">
-    <a href="#emaar" class="nav-link">Emaar</a>
-    <a href="#hmr" class="nav-link">HMR Waterfront</a>
-    <a href="#about" class="nav-link">About</a>
-    <a href="#contact" class="nav-link">Contact</a>
+    <a href="/projects?section=emaar" class="nav-link">Emaar</a>
+    <a href="/projects?section=hmr" class="nav-link">HMR Waterfront</a>
+    <a href="/#about" class="nav-link">About</a>
+    <a href="/#contact" class="nav-link">Contact</a>
   </div>
 </nav>
 
@@ -35,6 +40,7 @@ const projectCounts = getProjectCounts();
   .nav-right {
     display: flex;
     gap: 30px;
+    align-items: center;
   }
 
   .nav-link {
@@ -45,7 +51,14 @@ const projectCounts = getProjectCounts();
     transition: color 0.3s ease;
   }
 
-  .nav-link:hover {
+  .nav-link:hover,
+  .nav-link.active {
+    color: #000;
+  }
+
+  .logo {
+    font-weight: 600;
+    font-size: 18px;
     color: #000;
   }
 

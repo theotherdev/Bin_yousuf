@@ -1,11 +1,13 @@
 ---
+// src/components/ProjectsGrid.astro
 import { Image } from 'astro:assets';
 import { projects } from '../data/projects.js';
 ---
 
 <div class="images-container" id="imagesContainer">
   {projects.map((project, index) => (
-    <div 
+    <a 
+      href={`/projects?project=${project.id}`}
       class="project-image-item" 
       data-project={project.id} 
       id={`project-${project.id}`}
@@ -30,11 +32,24 @@ import { projects } from '../data/projects.js';
           <p class="project-location">{project.location}</p>
         </div>
       </div>
-    </div>
+    </a>
   ))}
 </div>
 
 <style>
+  .project-image-item {
+    position: relative;
+    width: 100%;
+    height: 60vh;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: block;
+    text-decoration: none;
+  }
+
   .project-image-item.highlighted {
     transform: translateY(-15px);
     box-shadow: 0 40px 100px rgba(0, 0, 0, 0.25);
@@ -52,17 +67,6 @@ import { projects } from '../data/projects.js';
     flex-direction: column;
     gap: 40px;
     padding: 20px 0;
-  }
-
-  .project-image-item {
-    position: relative;
-    width: 100%;
-    height: 60vh;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-    transition: all 0.3s ease;
-    cursor: pointer;
   }
 
   .project-image-item:hover {
