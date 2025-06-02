@@ -35,14 +35,16 @@ import { projects } from '../data/projects.js';
     opacity: 0;
     transform: translateX(-100px);
     will-change: opacity, transform;
-    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    /* REMOVED: transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); */
+    /* This was causing conflicts with JavaScript animations */
     overflow-y: auto;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
   }
 
   .projects-sidebar.visible {
-    opacity: 1;
-    transform: translateX(0);
+    /* These styles are now handled by JavaScript for smoother control */
+    /* opacity: 1;
+    transform: translateX(0); */
   }
 
   .favorites-section {

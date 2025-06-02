@@ -4,32 +4,47 @@ import { projects } from '../data/projects.js';
 ---
 
 <div class="images-container" id="imagesContainer">
-  {projects.map((project) => (
-    <div class="project-image-item" data-project={project.id} id={`project-${project.id}`}>
-  <Image
-    src={project.image}
-    alt={project.name}
-    width={1200}
-    height={800}
-    quality={90}
-    format="webp"
-    loading="lazy"
-    class="project-image"
-  />
-</div>
+  {projects.map((project, index) => (
+    <div 
+      class="project-image-item" 
+      data-project={project.id} 
+      id={`project-${project.id}`}
+      style={index === 0 ? 'opacity: 0;' : ''}
+    >
+      <Image
+        src={project.image}
+        alt={project.name}
+        width={1200}
+        height={800}
+        quality={90}
+        format="webp"
+        loading={index < 3 ? "eager" : "lazy"}
+        class="project-image"
+      />
+      
+      <!-- Project overlay info -->
+      <div class="project-overlay">
+        <div class="project-info">
+          <span class="project-number">{project.number}</span>
+          <h3 class="project-title">{project.name}</h3>
+          <p class="project-location">{project.location}</p>
+        </div>
+      </div>
+    </div>
   ))}
 </div>
 
 <style>
   .project-image-item.highlighted {
-  transform: translateY(-15px);
-  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.25);
-  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
+    transform: translateY(-15px);
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.25);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
 
-.project-image-item.highlighted .project-image {
-  transform: scale(1.02);
-}
+  .project-image-item.highlighted .project-image {
+    transform: scale(1.02);
+  }
+
   .images-container {
     margin-left: 38vw;
     width: 60vw;
@@ -40,12 +55,14 @@ import { projects } from '../data/projects.js';
   }
 
   .project-image-item {
+    position: relative;
     width: 100%;
     height: 60vh;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
     transition: all 0.3s ease;
+    cursor: pointer;
   }
 
   .project-image-item:hover {
@@ -64,6 +81,44 @@ import { projects } from '../data/projects.js';
     transform: scale(1.05);
   }
 
+  /* Project overlay */
+  .project-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+    padding: 40px 30px 30px;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    color: white;
+  }
+
+  .project-image-item:hover .project-overlay {
+    transform: translateY(0);
+  }
+
+  .project-number {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+    margin-bottom: 5px;
+    display: block;
+  }
+
+  .project-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    line-height: 1.2;
+  }
+
+  .project-location {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 400;
+  }
+
   @media (max-width: 1024px) {
     .images-container {
       margin-left: 40vw;
@@ -79,6 +134,14 @@ import { projects } from '../data/projects.js';
 
     .project-image-item {
       height: 50vh;
+    }
+
+    .project-overlay {
+      padding: 20px;
+    }
+
+    .project-title {
+      font-size: 18px;
     }
   }
 </style>

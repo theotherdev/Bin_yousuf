@@ -93,7 +93,7 @@ export const projects = [
   {
     id: 12,
     number: '012',
-    name: 'Beach Terraces By Metro',
+    name: 'Beach Terraces',
     location: 'HMR',
     image: beachTerraceImg,
   },
