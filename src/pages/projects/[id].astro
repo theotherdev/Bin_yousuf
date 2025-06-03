@@ -1,9 +1,24 @@
 ---
-// src/pages/projects/[id].astro
+// src/pages/projects/[id].astro - Fixed with proper TypeScript types
 import type { GetStaticPaths } from "astro";
 import ProjectLayout from '../../layouts/ProjectLayout.astro';
 import type { ProjectData } from '../../types/project';
 import { projects } from '../../data/projects.js';
+import type { ImageMetadata } from 'astro';
+
+// Define the project info type based on your projects data structure
+interface ProjectInfo {
+  id: number;
+  number: string;
+  name: string;
+  location: string;
+  image: ImageMetadata;
+}
+
+interface PageProps {
+  projectInfo: ProjectInfo;
+  projectId: string;
+}
 
 // Generate static paths for all projects
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -17,67 +32,82 @@ export const getStaticPaths: GetStaticPaths = async () => {
       props: { 
         projectInfo: project,
         projectId: projectId
-      }
+      } as PageProps
     };
   });
   
   return paths;
 };
 
-const { projectInfo, projectId } = Astro.props;
+const { projectInfo, projectId }: PageProps = Astro.props;
 
-// Import specific images based on project
-let projectImages: any = {};
-try {
-  // Dynamically import only the images that exist for this specific project
-  const imageModules = import.meta.glob('../../assets/projects/**/*.webp');
-  
-  for (const [path, resolver] of Object.entries(imageModules)) {
-    if (path.includes(`/${projectId}/`)) {
-      const module = await resolver();
-      projectImages[path] = module.default;
+// Helper function to safely import images with proper typing
+async function safeImageImport(imagePath: string): Promise<ImageMetadata | null> {
+  try {
+    const imageModules = import.meta.glob('../../assets/projects/**/*.{webp,jpg,jpeg,png}');
+    if (imageModules[imagePath]) {
+      const module = await imageModules[imagePath]() as { default: ImageMetadata };
+      return module.default;
     }
+    return null;
+  } catch (error) {
+    console.warn(`Could not load image: ${imagePath}`, error);
+    return null;
+  }
+}
+
+// Build safe image paths
+const basePath = `../../assets/projects/${projectInfo.location.toLowerCase()}/${projectId}`;
+const heroImagePath = `${basePath}/main-image.webp`;
+
+// Try to load gallery images safely
+const galleryImages: Array<{
+  src: ImageMetadata;
+  alt: string;
+  width: number;
+  height: number;
+}> = [];
+
+const maxGalleryImages = 10; // Limit to prevent build issues
+
+for (let i = 1; i <= maxGalleryImages; i++) {
+  try {
+    const imagePath = `${basePath}/gallery-${i}.webp`;
+    const image = await safeImageImport(imagePath);
+    
+    if (image) {
+      galleryImages.push({
+        src: image,
+        alt: `${projectInfo.name} - Gallery Image ${i}`,
+        width: 1200,
+        height: 800
+      });
+    }
+  } catch (error) {
+    // Skip corrupted or missing images
+    console.warn(`Skipping gallery image ${i} for ${projectId}:`, error);
+    continue;
+  }
+}
+
+// Use main project image as hero if available, otherwise use fallback
+let heroImage: ImageMetadata;
+try {
+  const loadedHeroImage = await safeImageImport(heroImagePath);
+  if (loadedHeroImage) {
+    heroImage = loadedHeroImage;
+  } else {
+    heroImage = projectInfo.image; // Fallback to main project image
   }
 } catch (error) {
-  console.warn(`Could not load images for project ${projectId}:`, error);
+  console.warn(`Using fallback hero image for ${projectId}:`, error);
+  heroImage = projectInfo.image;
 }
 
-// Helper function to get image from loaded images
-const getProjectImage = (imageName: string) => {
-  const possiblePaths = [
-    `../../assets/projects/${projectInfo.location.toLowerCase()}/${projectId}/${imageName}.webp`,
-    `../../assets/projects/${projectInfo.location.toLowerCase()}/${projectId}/${imageName}`
-  ];
-  
-  for (const path of possiblePaths) {
-    if (projectImages[path]) {
-      return projectImages[path];
-    }
-  }
-  return null;
-};
-
-// Build project data
-const heroImg = getProjectImage('main-image') || projectInfo.image;
-
-// Get gallery images dynamically
-const galleryImages = [];
-for (let i = 1; i <= 15; i++) {
-  const img = getProjectImage(`gallery-${i}`);
-  if (img) {
-    galleryImages.push({
-      src: img,
-      alt: `${projectInfo.name} - Gallery Image ${i}`,
-      width: 1200,
-      height: 800
-    });
-  }
-}
-
-// If no gallery images found, use the hero image
-if (galleryImages.length === 0 && heroImg) {
+// If no gallery images found, use the hero image as a gallery item
+if (galleryImages.length === 0) {
   galleryImages.push({
-    src: heroImg,
+    src: heroImage,
     alt: `${projectInfo.name} - Main Image`,
     width: 1200,
     height: 800
@@ -90,14 +120,14 @@ const projectData: ProjectData = {
   location: projectInfo.location,
   description: 'A luxurious residential development offering modern living spaces with stunning views and world-class amenities.',
   heroImage: {
-    src: heroImg,
+    src: heroImage,
     alt: `${projectInfo.name} - Main View`,
     width: 1920,
     height: 1080
   },
   info: {
     typology: ['Architecture', 'Residential'],
-    status: 'Completed',
+    status: 'Available',
     yearOfDesign: 2023,
     location: `${projectInfo.location} Oceanfront`,
     square: '15,000 m2'
