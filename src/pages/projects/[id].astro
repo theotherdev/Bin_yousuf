@@ -1,5 +1,5 @@
 ---
-// src/pages/projects/[id].astro - Fixed with proper TypeScript types
+// src/pages/projects/[id].astro - Fixed with proper TypeScript types and project content
 import type { GetStaticPaths } from "astro";
 import ProjectLayout from '../../layouts/ProjectLayout.astro';
 import type { ProjectData } from '../../types/project';
@@ -19,6 +19,284 @@ interface PageProps {
   projectInfo: ProjectInfo;
   projectId: string;
 }
+
+// Project-specific content data
+const projectContent = {
+  'panorama': {
+    description: 'Elevated lifestyle. Karachi address. Panorama residences exude an aura of luxury, and are elegantly designed keeping you and your family in mind.',
+    aboutProject: `Panorama is strategically located in the heart of DHA Phase 8 and is only minutes away from Karachi's top hotspots.
+
+Step out and find yourself on a vibrant promenade offering exceptional dining and retail experiences for the entire family.
+
+Panorama's beauty is nothing short of mesmerising. As soon as you arrive, a tastefully crafted grand entrance welcomes you home. Elegantly designed with contemporary decor, every square inch of Panorama is set to encapsulate you and your family in an aura of architectural splendour.
+
+Emaar's finest architects have left no stone unturned to deliver exquisitely designed residences with an expansive range of amenities at Panorama — to keep your whole family entertained and pampered, every day.
+
+Amenities:
+- Infinity Swimming Pool
+- Kids' Play Areas
+- Fully-Equipped Gym
+- Cinema Screen
+- Business Centre
+- Residents' Lounge
+
+Limited inventory of 1, 2, 3 & 4 bedroom sea-facing apartments. With premium finishing and beach front location, Panorama homes are designed to ensure you and your family long for nothing—with a range of leisure amenities at your doorstep.
+
+Emaar Pakistan's Panorama is on track to become Pakistan's Tallest water front tower.`,
+    typology: ['Residential', 'Sea-Facing Apartments'],
+    status: 'Under Construction',
+    year: 2026,
+    location: 'DHA Phase 8, Karachi',
+    area: '1547 Sq.Ft',
+    priceFrom: '7.9 Crore'
+  },
+  
+  'park-edge': {
+    description: 'Resort lifestyle. Karachi address. Discover a new jewel at Emaar Oceanfront Karachi. Experience luxury living with breathtaking views of Central Park and the Arabian Sea.',
+    aboutProject: `Twin Tower project located at the heart of Emaar Oceanfront, a Mixed-Use development along the coastal belt of Karachi. The project focuses on landscape and community living, surrounded by the serene views of two lush green parks at the project's periphery.
+
+Experience upscale living at Emaar Park Edge. The Project features luxury apartments, stunning views, and top class amenities for a premium lifestyle in DHA Phase 8, Karachi.
+
+Welcome to a haven of elegance, where our state-of-the-art park is the centerpiece of our exceptional amenities. Designed with a keen eye for beauty and functionality, the park offers a green oasis decorated with lush landscapes. Whether you are seeking relaxation or engaging in recreational activities, the park provides the perfect setting for any endeavor.
+
+Every corner invites you to connect with nature and unwind, surrounded by a harmonious blend of modern design and natural splendor, that makes our community truly special.
+
+Amenities:
+- Swimming Pool
+- Kid's Play & Recreational Area
+- Fully-Equipped Gym
+- Business Centre
+- Residents' Lounge
+
+Available Units: 1-4 bedroom apartments and penthouse
+Payment Plan: Flexible 3 year payment plan with 10% down payment and 6.42% for 14 installments.`,
+    typology: ['Residential', 'Twin Towers'],
+    status: 'Under Construction',
+    year: 2028,
+    location: 'DHA Phase 8, Karachi',
+    area: '1,400 Sq.Ft',
+    priceFrom: '5.9 Crore'
+  },
+  
+  'the-views': {
+    description: 'Scenic lifestyle. Karachi address. Experience a new standard of luxury living in DHA Phase 8 as you fall in love with breathtaking sunsets over the Arabian Sea.',
+    aboutProject: `Located in DHA Phase 8 and minutes away from top attractions of Karachi including top schools and hospitals, The Views will be an added jewel in the beauty of the city.
+
+Enter a new realm of luxury with the seascape promenade that offers breathtaking views as you enjoy the many dining options and other activities for the entire family.
+
+The Views encapsulate the beauty, splendor and inspiring scenery that you deserve. With its mesmerizing seascape, stunning entrance, spacious and luxurious interiors with sophisticated finishing, you get the dreamy and moving lifestyle you have always wanted.
+
+From the stunning views of the sea and the city to the majestic architecture combined with an extensive range of amenities. The Views will surely be the home of your dreams.
+
+Amenities:
+- Infinity Swimming Pool
+- Kid's Play & Recreational Area
+- Fully-Equipped Gym
+- Business Centre
+- Residents' Lounge
+
+Limited inventory of 1, 2, 3 & 4 bedroom sea-facing apartments. With premium finishing and beach front location, The Views is designed to ensure you and your family long for nothing—with a range of leisure amenities at your doorstep.`,
+    typology: ['Residential', 'Sea-Facing Apartments'],
+    status: 'Under Construction',
+    year: 2026,
+    location: 'DHA Phase 8, Karachi',
+    area: '1,320 Sq.Ft',
+    priceFrom: '7.3 Crore'
+  },
+  
+  'coral-towers': {
+    description: 'Architectural masterpieces that maximize the uninterrupted sea views that stretch out to the horizon. Coral Towers share exceptional facilities for luxury living.',
+    aboutProject: `Coral Towers are architectural masterpieces that maximize the uninterrupted sea views that stretch out to the horizon. The towers share exceptional facilities, including a large swimming pool and children's paddling pool, a gymnasium, function room and barbecue area.
+
+Available Units: 1-2-3-4 bedroom apartments and townhouses duplex
+
+Key Features:
+- Three High Speed Elevators for Each Tower
+- CCTV Security in Common Areas
+- Mail Box for Each Apartment
+- Voice Communications
+- Fire Protection System for Every Floor and Car Park
+- Tropical Garden Rooms
+- Kids' Splash Pads & Play Area
+
+The development offers unparalleled sea views and exceptional facilities designed for modern luxury living with comprehensive security and safety features.`,
+    typology: ['Residential', 'Towers & Townhouses'],
+    status: 'Planning Phase',
+    year: 2025,
+    location: 'Emaar Oceanfront, Karachi',
+    area: 'Various Sizes Available'
+  },
+  
+  'pearl-reef-towers': {
+    description: 'Grand sea-facing residences offering spacious apartments with high ceilings and abundant natural light. A place of peace and tranquility with contemporary design.',
+    aboutProject: `Inside, the apartments are spacious with high ceilings and abundant natural light. Pearl & Reef Towers are a place of peace and tranquility. Polished granite and marble in the kitchens and bathrooms complement the contemporary fittings and faucets.
+
+Available Units: 1-2-3-4 bedroom apartments and penthouses
+
+Key Features:
+- Three High Speed Elevators for Each Tower
+- CCTV Security in Common Areas
+- Mail Box for Each Apartment
+- Voice Communications
+- Fire Protection System for Every Floor and Car Park
+- Tropical Garden Rooms
+- Kids' Splash Pads & Play Area
+
+The towers feature premium finishes with polished granite and marble throughout, creating an atmosphere of luxury and sophistication. Contemporary fittings and faucets complement the high-end design, ensuring residents enjoy the finest in modern living.`,
+    typology: ['Residential', 'Luxury Towers'],
+    status: 'VIP Preview',
+    year: 2024,
+    location: 'Emaar Oceanfront, Karachi',
+    area: 'Various Sizes Available'
+  },
+  
+  'aa-waterfront': {
+    description: 'AA Waterfront delivers exceptional waterfront living with contemporary design and comprehensive amenities in HMR\'s premium district.',
+    aboutProject: `AA Waterfront represents HMR's commitment to creating exceptional living experiences. This development combines contemporary architectural design with comprehensive lifestyle amenities.
+
+Located in HMR's most sought-after waterfront district, residents enjoy direct water access and a full spectrum of recreational and wellness facilities designed for modern family living.
+
+Key Features:
+- Direct waterfront access
+- Family-oriented amenities
+- Contemporary architectural design
+- Comprehensive recreational facilities
+- Water sports facilities
+- Children's education center
+- Multi-generational living options`,
+    typology: ['Residential', 'Waterfront'],
+    status: 'Available',
+    year: 2023,
+    location: 'HMR Waterfront District',
+    area: '20,000 m2'
+  },
+  
+  'gold-crest-residence': {
+    description: 'Gold Crest Residence offers sophisticated urban living with premium finishes and exclusive amenities in the heart of HMR\'s business district.',
+    aboutProject: `Gold Crest Residence exemplifies sophisticated urban living with its prime location in HMR's prestigious business district. This development caters to discerning professionals seeking luxury, convenience, and exceptional investment value.
+
+The residence features premium materials, cutting-edge technology, and thoughtfully designed spaces that reflect contemporary lifestyle preferences while maintaining timeless appeal.
+
+Key Features:
+- Prime business district location
+- Premium interior finishes
+- Executive business facilities
+- Advanced security systems
+- Luxury concierge services
+- Investment-grade properties
+- Professional networking spaces`,
+    typology: ['Residential', 'Executive Living'],
+    status: 'Selling Fast',
+    year: 2023,
+    location: 'HMR Business District',
+    area: '16,500 m2'
+  },
+  
+  'hs-residence': {
+    description: 'H&S Residence provides modern family living with spacious layouts and community-focused amenities in a tranquil HMR neighborhood.',
+    aboutProject: `H&S Residence is thoughtfully designed for modern families seeking quality living in a peaceful neighborhood setting. This development prioritizes space, comfort, and community connections.
+
+The project features generous living spaces, family-friendly amenities, and safe outdoor areas where children can play and families can gather, creating a true sense of community.
+
+Key Features:
+- Spacious family-oriented layouts
+- Safe children's play areas
+- Community gathering spaces
+- Educational facilities nearby
+- Public transportation access
+- Local shopping and dining
+- Peaceful neighborhood setting`,
+    typology: ['Residential', 'Family Living'],
+    status: 'Move-in Ready',
+    year: 2022,
+    location: 'HMR Family District',
+    area: '14,000 m2'
+  },
+  
+  'h1-tower': {
+    description: 'H1 Tower stands as HMR\'s flagship development, offering luxury high-rise living with panoramic city views and world-class amenities.',
+    aboutProject: `H1 Tower represents the pinnacle of HMR's architectural achievement. This flagship high-rise development offers residents an elevated lifestyle with breathtaking panoramic views and comprehensive luxury amenities.
+
+As HMR's signature project, H1 Tower incorporates the finest materials, advanced technologies, and exclusive services to create an unmatched residential experience.
+
+Key Features:
+- Flagship high-rise design
+- Panoramic city and water views
+- Luxury sky amenities
+- Private elevator access
+- Premium building materials
+- 24/7 luxury services
+- Exclusive residents' club`,
+    typology: ['Residential', 'High-Rise Luxury'],
+    status: 'Exclusive Launch',
+    year: 2024,
+    location: 'HMR Central',
+    area: '28,000 m2'
+  },
+  
+  'saima-marina': {
+    description: 'Saima Marina offers waterfront luxury with private marina access and comprehensive recreational facilities for the ultimate coastal lifestyle.',
+    aboutProject: `Saima Marina delivers the ultimate coastal lifestyle experience with its prime waterfront location and exclusive marina facilities. This development is designed for residents who appreciate luxury, privacy, and direct water access.
+
+The project features premium residences with private balconies overlooking the marina, complemented by world-class recreational and wellness facilities.
+
+Key Features:
+- Private marina and yacht berths
+- Waterfront residences with marina views
+- Luxury yacht club facilities
+- Water sports and recreation center
+- Premium dining and entertainment
+- Private beach access
+- Marine lifestyle amenities`,
+    typology: ['Residential', 'Marina Living'],
+    status: 'Phase 1 Complete',
+    year: 2023,
+    location: 'HMR Marina District',
+    area: '32,000 m2'
+  },
+  
+  'saima-waterfront': {
+    description: 'Saima Waterfront combines elegant design with waterfront living, offering residents serene views and premium lifestyle amenities.',
+    aboutProject: `Saima Waterfront epitomizes elegant waterfront living with its sophisticated design and tranquil location. This development offers residents a peaceful retreat while maintaining access to urban conveniences.
+
+The project emphasizes wellness and relaxation, featuring spa facilities, meditation gardens, and wellness programs designed to enhance residents' quality of life.
+
+Key Features:
+- Elegant waterfront architecture
+- Wellness and spa facilities
+- Meditation and zen gardens
+- Waterfront promenades
+- Organic lifestyle amenities
+- Holistic wellness programs
+- Sustainable living features`,
+    typology: ['Residential', 'Wellness Living'],
+    status: 'Now Available',
+    year: 2023,
+    location: 'HMR Wellness District',
+    area: '19,000 m2'
+  },
+  
+  'beach-terraces-by-metro': {
+    description: 'Beach Terraces by Metro offers convenient beachfront living with excellent connectivity and modern urban amenities.',
+    aboutProject: `Beach Terraces by Metro combines the best of beachfront living with urban convenience. Located near major transportation hubs, this development offers residents easy access to the city while enjoying beach lifestyle benefits.
+
+The project features terraced design that maximizes ocean views while creating private outdoor spaces for each residence.
+
+Key Features:
+- Beachfront location with city connectivity
+- Terraced architecture for optimal views
+- Metro and transportation access
+- Urban convenience amenities
+- Beach lifestyle facilities
+- Modern connectivity features
+- Mixed-use development benefits`,
+    typology: ['Residential', 'Mixed-Use'],
+    status: 'Pre-Launch',
+    year: 2024,
+    location: 'HMR Transit District',
+    area: '24,000 m2'
+  }
+};
 
 // Generate static paths for all projects
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -114,24 +392,9 @@ if (galleryImages.length === 0) {
   });
 }
 
-const projectData: ProjectData = {
-  id: projectId,
-  name: projectInfo.name,
-  location: projectInfo.location,
-  description: 'A luxurious residential development offering modern living spaces with stunning views and world-class amenities.',
-  heroImage: {
-    src: heroImage,
-    alt: `${projectInfo.name} - Main View`,
-    width: 1920,
-    height: 1080
-  },
-  info: {
-    typology: ['Architecture', 'Residential'],
-    status: 'Available',
-    yearOfDesign: 2023,
-    location: `${projectInfo.location} Oceanfront`,
-    square: '15,000 m2'
-  },
+// Get project-specific content
+const content = projectContent[projectId] || {
+  description: `A luxurious residential development offering modern living spaces with stunning views and world-class amenities.`,
   aboutProject: `${projectInfo.name} represents a pinnacle of modern architectural design, seamlessly blending luxury living with sustainable practices. This prestigious development offers residents an unparalleled lifestyle experience with its thoughtfully designed spaces and premium amenities.
 
 The project features state-of-the-art facilities including infinity pools, landscaped gardens, fitness centers, and 24/7 concierge services. Each unit has been meticulously planned to maximize natural light and ventilation while offering breathtaking views of the surrounding landscape.
@@ -143,6 +406,32 @@ Key Features:
 - Smart home integration
 - Dedicated parking spaces
 - Community spaces for social gatherings`,
+  typology: ['Architecture', 'Residential'],
+  status: 'Available',
+  year: 2023,
+  location: `${projectInfo.location} Oceanfront`,
+  area: '15,000 m2'
+};
+
+const projectData: ProjectData = {
+  id: projectId,
+  name: projectInfo.name,
+  location: projectInfo.location,
+  description: content.description,
+  heroImage: {
+    src: heroImage,
+    alt: `${projectInfo.name} - Main View`,
+    width: 1920,
+    height: 1080
+  },
+  info: {
+    typology: content.typology,
+    status: content.status,
+    yearOfDesign: content.year,
+    location: content.location,
+    square: content.area
+  },
+  aboutProject: content.aboutProject,
   galleryImages: galleryImages
 };
 ---

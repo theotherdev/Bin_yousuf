@@ -94,7 +94,7 @@ const allProjects = projects;
             <div class="info-container">
                 <div class="info-layout">
                     <!-- Left: Project Image -->
-                    <div class="info-image-container" onclick="openGalleryModal(0)">
+                    <div class="info-image-container">
                         <Image 
                             src={project.heroImage.src} 
                             alt={project.heroImage.alt}
@@ -102,14 +102,6 @@ const allProjects = projects;
                             height={400}
                             class="info-image"
                         />
-                        <div class="image-overlay">
-                            <div class="overlay-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                    <circle cx="11" cy="11" r="8"/>
-                                    <path d="M21 21l-4.35-4.35"/>
-                                </svg>
-                            </div>
-                        </div>
                     </div>
                     
                     <!-- Right: Project Details -->
@@ -156,7 +148,7 @@ const allProjects = projects;
                     const isEven = index % 2 === 0;
                     return (
                         <div class={`gallery-item ${isEven ? 'gallery-left' : 'gallery-right'}`}>
-                            <div class="gallery-image-wrapper" onclick={`openGalleryModal(${index + 1})`}>
+                            <div class="gallery-image-wrapper">
                                 <Image 
                                     src={image.src} 
                                     alt={image.alt}
@@ -165,14 +157,6 @@ const allProjects = projects;
                                     class="gallery-image"
                                     loading={index < 2 ? "eager" : "lazy"}
                                 />
-                                <div class="image-overlay">
-                                    <div class="overlay-icon">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                            <circle cx="11" cy="11" r="8"/>
-                                            <path d="M21 21l-4.35-4.35"/>
-                                        </svg>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     );
@@ -466,9 +450,7 @@ const allProjects = projects;
         cursor: pointer;
     }
 
-    .hero-image-container:hover .image-overlay,
-    .info-image-container:hover .image-overlay,
-    .gallery-image-wrapper:hover .image-overlay {
+    .hero-image-container:hover .image-overlay {
         opacity: 1;
     }
 
@@ -564,7 +546,6 @@ const allProjects = projects;
     .info-image-container {
         position: sticky;
         top: 120px;
-        cursor: pointer;
     }
 
     .info-image {
@@ -689,7 +670,6 @@ const allProjects = projects;
         border-radius: 12px;
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        cursor: pointer;
     }
 
     .gallery-item:hover .gallery-image-wrapper {

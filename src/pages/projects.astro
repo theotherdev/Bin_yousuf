@@ -337,4 +337,78 @@ const allProjects = [...emaarProjects, ...hmrProjects];
     width: 0px;
     background: transparent;
   }
+  /* Add this to the end of your existing <style> section in projects.astro */
+
+/* Mobile button visibility fix */
+@media (max-width: 768px) {
+  .project-details {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative;
+    z-index: 10;
+  }
+  
+  .view-details-btn {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    background: #333 !important;
+    color: white !important;
+    padding: 14px 30px;
+    font-size: 15px;
+    min-height: 44px;
+    line-height: 1.2;
+  }
+}
+/* Add this to your existing projects.astro style section */
+
+/* Desktop/Laptop button visibility fix */
+@media (min-width: 769px) {
+  .project-details {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative;
+    z-index: 10;
+    grid-column: 1 / -1;
+    text-align: center;
+    margin-top: 40px;
+  }
+  
+  .view-details-btn {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    padding: 16px 40px;
+    background: #333 !important;
+    color: white !important;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 20;
+  }
+  
+  .view-details-btn:hover {
+    background: #000 !important;
+    transform: translateY(-2px);
+  }
+}
+
+/* Ensure button is always visible regardless of scroll position */
+.project-section {
+  position: relative;
+}
+
+.project-content {
+  position: relative;
+  z-index: 1;
+}
+
+.project-details {
+  position: relative;
+  z-index: 10;
+}
 </style>

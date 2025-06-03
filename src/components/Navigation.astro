@@ -1,5 +1,5 @@
 ---
-// src/components/Navigation.astro
+// src/components/Navigation.astro - Mobile optimized navigation
 import { getProjectCounts } from '../data/projects.js';
 
 const projectCounts = getProjectCounts();
@@ -9,15 +9,48 @@ const isProjectDetailPage = currentPath.startsWith('/projects/') && currentPath 
 ---
 
 <nav class="nav">
-  <div class="nav-left">
-    <a href="/" class="nav-link logo">BYG</a>
-    <a href="/projects" class="nav-link {isProjectsListPage || isProjectDetailPage ? 'active' : ''}">Projects</a>
+  <div class="nav-container">
+    <div class="nav-left">
+      <a href="/" class="nav-link logo">BYG</a>
+    </div>
+    
+    <!-- Desktop Navigation -->
+    <div class="nav-center desktop-only">
+      <a href="/projects" class="nav-link {isProjectsListPage || isProjectDetailPage ? 'active' : ''}">Projects</a>
+      <a href="/projects?section=emaar" class="nav-link">Emaar</a>
+      <a href="/projects#project-6" class="nav-link">HMR Waterfront</a>
+    </div>
+    
+    <div class="nav-right desktop-only">
+      <a href="/#about" class="nav-link">About</a>
+      <a href="/#contact" class="nav-link">Contact</a>
+    </div>
+    
+    <!-- Mobile Hamburger Menu -->
+    <div class="mobile-nav mobile-only">
+      <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle navigation">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+    </div>
   </div>
-  <div class="nav-right">
-    <a href="/projects?section=emaar" class="nav-link">Emaar</a>
-    <a href="/projects#project-6" class="nav-link">HMR Waterfront</a>
-    <a href="/#about" class="nav-link">About</a>
-    <a href="/#contact" class="nav-link">Contact</a>
+  
+  <!-- Mobile Menu Overlay -->
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-menu-content">
+      <a href="/projects" class="mobile-nav-link {isProjectsListPage || isProjectDetailPage ? 'active' : ''}">
+        Projects
+      </a>
+      <a href="/projects?section=emaar" class="mobile-nav-link">
+        Emaar <span class="nav-count">{projectCounts.emaar}</span>
+      </a>
+      <a href="/projects#project-6" class="mobile-nav-link">
+        HMR Waterfront <span class="nav-count">{projectCounts.hmr}</span>
+      </a>
+      <a href="/#about" class="mobile-nav-link">About</a>
+      <a href="/#contact" class="mobile-nav-link">Contact</a>
+    </div>
   </div>
 </nav>
 
@@ -27,20 +60,27 @@ const isProjectDetailPage = currentPath.startsWith('/projects/') && currentPath 
     top: 0;
     left: 0;
     right: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .nav-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
     padding: 20px 40px;
-    z-index: 100;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
   }
 
   .nav-left,
+  .nav-center,
   .nav-right {
     display: flex;
-    gap: 30px;
     align-items: center;
+    gap: 30px;
   }
 
   .nav-link {
@@ -49,6 +89,7 @@ const isProjectDetailPage = currentPath.startsWith('/projects/') && currentPath 
     font-size: 14px;
     font-weight: 400;
     transition: color 0.3s ease;
+    font-family: 'Poppins', sans-serif;
   }
 
   .nav-link:hover,
@@ -59,16 +100,234 @@ const isProjectDetailPage = currentPath.startsWith('/projects/') && currentPath 
   .logo {
     font-weight: 600;
     font-size: 18px;
-    color: #000;
+    color: #000 !important;
   }
 
+  /* Desktop/Mobile Toggle */
+  .desktop-only {
+    display: flex;
+  }
+
+  .mobile-only {
+    display: none;
+  }
+
+  /* Mobile Hamburger */
+  .hamburger-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    transition: all 0.3s ease;
+  }
+
+  .hamburger-line {
+    width: 20px;
+    height: 2px;
+    background: #333;
+    transition: all 0.3s ease;
+    border-radius: 1px;
+  }
+
+  .hamburger-btn.active .hamburger-line:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+  }
+
+  .hamburger-btn.active .hamburger-line:nth-child(2) {
+    opacity: 0;
+  }
+
+  .hamburger-btn.active .hamburger-line:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+  }
+
+  /* Mobile Menu */
+  .mobile-menu {
+    position: fixed;
+    top: 80px;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    transform: translateY(-100%);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+
+  .mobile-menu.open {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .mobile-menu-content {
+    padding: 30px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .mobile-nav-link {
+    text-decoration: none;
+    color: #666;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .mobile-nav-link:hover,
+  .mobile-nav-link.active {
+    color: #000;
+    transform: translateX(5px);
+  }
+
+  .nav-count {
+    background: #667eea;
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 12px;
+    min-width: 20px;
+    text-align: center;
+  }
+
+  /* Mobile Responsive */
   @media (max-width: 768px) {
-    .nav {
+    .nav-container {
       padding: 15px 20px;
     }
 
-    .nav-right {
-      gap: 15px;
+    .desktop-only {
+      display: none;
+    }
+
+    .mobile-only {
+      display: block;
+    }
+
+    .mobile-menu {
+      top: 70px;
+    }
+
+    .mobile-menu-content {
+      padding: 25px 20px;
+      gap: 18px;
+    }
+
+    .mobile-nav-link {
+      font-size: 15px;
+      padding: 10px 0;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .nav-container {
+      padding: 12px 15px;
+    }
+
+    .logo {
+      font-size: 16px;
+    }
+
+    .mobile-menu {
+      top: 65px;
+    }
+
+    .mobile-menu-content {
+      padding: 20px 15px;
+    }
+
+    .hamburger-line {
+      width: 18px;
     }
   }
 </style>
+
+<script>
+  class MobileNavigation {
+    constructor() {
+      this.hamburgerBtn = document.getElementById('hamburgerBtn');
+      this.mobileMenu = document.getElementById('mobileMenu');
+      this.isOpen = false;
+      
+      this.init();
+    }
+    
+    init() {
+      if (!this.hamburgerBtn || !this.mobileMenu) return;
+      
+      // Toggle menu on hamburger click
+      this.hamburgerBtn.addEventListener('click', () => {
+        this.toggleMenu();
+      });
+      
+      // Close menu when clicking on links
+      this.mobileMenu.querySelectorAll('.mobile-nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+          this.closeMenu();
+        });
+      });
+      
+      // Close menu when clicking outside
+      document.addEventListener('click', (e) => {
+        if (this.isOpen && !this.mobileMenu.contains(e.target) && !this.hamburgerBtn.contains(e.target)) {
+          this.closeMenu();
+        }
+      });
+      
+      // Close menu on escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && this.isOpen) {
+          this.closeMenu();
+        }
+      });
+      
+      // Close menu on window resize to desktop
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > 768 && this.isOpen) {
+          this.closeMenu();
+        }
+      });
+    }
+    
+    toggleMenu() {
+      if (this.isOpen) {
+        this.closeMenu();
+      } else {
+        this.openMenu();
+      }
+    }
+    
+    openMenu() {
+      this.isOpen = true;
+      this.hamburgerBtn.classList.add('active');
+      this.mobileMenu.classList.add('open');
+      document.body.style.overflow = 'hidden'; // Prevent background scroll
+    }
+    
+    closeMenu() {
+      this.isOpen = false;
+      this.hamburgerBtn.classList.remove('active');
+      this.mobileMenu.classList.remove('open');
+      document.body.style.overflow = ''; // Restore scroll
+    }
+  }
+  
+  // Initialize mobile navigation
+  document.addEventListener('DOMContentLoaded', () => {
+    new MobileNavigation();
+  });
+</script>
