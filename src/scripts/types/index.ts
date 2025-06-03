@@ -1,12 +1,8 @@
-// src/scripts/types/index.ts
+// src/scripts/types/index.ts - Updated to use Astro's ImageMetadata
+import type { ImageMetadata } from 'astro';
 
-// Image metadata interface
-export interface ImageMetadata {
-  src: string;
-  alt: string;
-  width?: number;
-  height?: number;
-}
+// Use Astro's ImageMetadata directly instead of custom interface
+export type ProjectImageMetadata = ImageMetadata;
 
 // Project interface - matches your data structure
 export interface Project {
@@ -14,7 +10,7 @@ export interface Project {
   number: string;
   name: string;
   location: string;
-  image: ImageMetadata;
+  image: ImageMetadata; // Use Astro's ImageMetadata directly
 }
 
 // Animation elements interface

@@ -1,3 +1,4 @@
+// src/data/projects.js - Fixed to work with Astro's ImageMetadata
 // Import your images - these paths need to match your actual file structure
 import panoramaImg from '../assets/projects/emaar/panorama/main-image.webp';
 import theViewsImg from '../assets/projects/emaar/the-views/main-image.webp';
@@ -18,7 +19,7 @@ export const projects = [
     number: '001',
     name: 'Panorama',
     location: 'Emaar',
-    image: panoramaImg,
+    image: panoramaImg, // This is now properly typed as ImageMetadata
   },
   {
     id: 2,

@@ -1,8 +1,8 @@
-// src/types/project.ts
+// src/types/project.ts - Fixed types to match Astro's ImageMetadata
 import type { ImageMetadata } from 'astro';
 
 export interface ProjectImage {
-    src: ImageMetadata;  // Changed from string to ImageMetadata
+    src: ImageMetadata;
     alt: string;
     width: number;
     height: number;
