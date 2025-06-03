@@ -14,8 +14,8 @@ import { Image } from 'astro:assets';
   <HeroSection />
   <BottomNavigation />
   
-  <!-- Fullscreen Project Image Animation Container -->
-  <div class="fixed top-0 left-0 w-screen h-screen pointer-events-none z-[999]">
+  <!-- Fullscreen Project Image Animation Container - Desktop Only -->
+  <div class="fixed top-0 left-0 w-screen h-screen pointer-events-none z-[999] desktop-only">
     <div 
       class="absolute top-full left-0 w-screen h-screen overflow-hidden opacity-0 transition-none will-change-transform"
       id="animatedProjectImage"
@@ -36,11 +36,48 @@ import { Image } from 'astro:assets';
     </div>
   </div>
   
-  <div class="h-[110vh] bg-white" id="scrollSpacer"></div>
+  <div class="h-[110vh] bg-white desktop-only" id="scrollSpacer"></div>
   
-  <section class="min-h-screen relative flex pt-[12vh]">
+  <!-- Desktop Section -->
+  <section class="min-h-screen relative flex pt-[12vh] desktop-only">
     <ProjectsSidebar />
     <ProjectsGrid />
+  </section>
+
+  <!-- Mobile Projects Section -->
+  <section class="mobile-projects-section mobile-only">
+    <div class="mobile-projects-container">
+      <h2 class="mobile-section-title">Our Projects</h2>
+      <div class="mobile-projects-list">
+        {projects.map((project, index) => (
+          <a 
+            href={`/projects#project-${project.id}`}
+            class="mobile-project-item"
+            data-project={project.id}
+          >
+            <div class="mobile-project-image-container">
+              <Image
+                src={project.image}
+                alt={project.name}
+                width={800}
+                height={600}
+                quality={85}
+                format="webp"
+                loading={index < 2 ? "eager" : "lazy"}
+                class="mobile-project-image"
+              />
+            </div>
+            
+            <!-- Always visible project info on mobile -->
+            <div class="mobile-project-info">
+              <span class="mobile-project-number">{project.number}</span>
+              <h3 class="mobile-project-title">{project.name}</h3>
+              <p class="mobile-project-location">{project.location}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
   </section>
 </Layout>
 
@@ -50,13 +87,152 @@ import { Image } from 'astro:assets';
 </script>
 
 <style>
-  /* Ensure smooth animations */
+  /* Desktop styles (existing) */
   #animatedProjectImage {
     transition: none !important;
   }
   
-  /* Hide scrollbars during animation */
   body.animating {
     overflow-x: hidden;
+  }
+
+  /* Show/Hide based on screen size */
+  .desktop-only {
+    display: block;
+  }
+
+  .mobile-only {
+    display: none;
+  }
+
+  /* Mobile Projects Section */
+  .mobile-projects-section {
+    padding: 60px 0 80px;
+    background: #fff;
+    min-height: 100vh;
+  }
+
+  .mobile-projects-container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .mobile-section-title {
+    font-size: 32px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 40px;
+    color: #333;
+  }
+
+  .mobile-projects-list {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .mobile-project-item {
+    display: block;
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .mobile-project-item:active {
+    transform: scale(0.98);
+  }
+
+  .mobile-project-image-container {
+    width: 100%;
+    height: 250px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .mobile-project-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .mobile-project-item:active .mobile-project-image {
+    transform: scale(1.05);
+  }
+
+  .mobile-project-info {
+    padding: 20px;
+    background: #fff;
+  }
+
+  .mobile-project-number {
+    font-size: 12px;
+    color: #999;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .mobile-project-title {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    line-height: 1.3;
+    color: #333;
+  }
+
+  .mobile-project-location {
+    font-size: 14px;
+    color: #666;
+    font-weight: 400;
+    margin-bottom: 0;
+  }
+
+  /* Media Queries */
+  @media (max-width: 768px) {
+    .desktop-only {
+      display: none !important;
+    }
+
+    .mobile-only {
+      display: block;
+    }
+
+    /* Adjust hero section spacing for mobile */
+    body {
+      padding-top: 0;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .mobile-projects-container {
+      padding: 0 15px;
+    }
+
+    .mobile-section-title {
+      font-size: 28px;
+      margin-bottom: 30px;
+    }
+
+    .mobile-projects-list {
+      gap: 25px;
+    }
+
+    .mobile-project-image-container {
+      height: 220px;
+    }
+
+    .mobile-project-info {
+      padding: 18px;
+    }
+
+    .mobile-project-title {
+      font-size: 20px;
+    }
   }
 </style>

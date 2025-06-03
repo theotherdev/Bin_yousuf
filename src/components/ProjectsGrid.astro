@@ -24,7 +24,7 @@ import { projects } from '../data/projects.js';
         class="project-image"
       />
       
-      <!-- Project overlay info -->
+      <!-- Project overlay info - hover on desktop, always visible on mobile -->
       <div class="project-overlay">
         <div class="project-info">
           <span class="project-number">{project.number}</span>
@@ -85,7 +85,7 @@ import { projects } from '../data/projects.js';
     transform: scale(1.05);
   }
 
-  /* Project overlay */
+  /* Project overlay - Desktop: hover to show, Mobile: always visible */
   .project-overlay {
     position: absolute;
     bottom: 0;
@@ -130,6 +130,7 @@ import { projects } from '../data/projects.js';
     }
   }
 
+  /* Mobile styles - overlay always visible */
   @media (max-width: 768px) {
     .images-container {
       margin-left: 5vw;
@@ -142,6 +143,23 @@ import { projects } from '../data/projects.js';
 
     .project-overlay {
       padding: 20px;
+      transform: translateY(0); /* Always visible on mobile */
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+    }
+
+    /* Remove hover effects on mobile */
+    .project-image-item:hover {
+      transform: none;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    }
+
+    .project-image-item:hover .project-image {
+      transform: none;
+    }
+
+    /* Add touch feedback instead */
+    .project-image-item:active {
+      transform: scale(0.98);
     }
 
     .project-title {
