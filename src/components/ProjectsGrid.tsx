@@ -31,27 +31,27 @@ const ProjectsGrid: React.FC = () => {
 
           {/* Project overlay info */}
           <div className={`
-            absolute bottom-0 left-0 right-0 
-            bg-gradient-to-t from-black/70 to-transparent
-            p-[40px_30px_30px] transform transition-transform duration-300
-            text-white
-            ${/* Desktop: hover to show */''} 
-            translate-y-full group-hover:translate-y-0
-            ${/* Mobile: always visible */''}
-            md:translate-y-0
-          `}>
-            <div className="project-info">
-              <span className="block text-xs text-white/70 font-medium mb-1.5">
-                {project.number}
-              </span>
-              <h3 className="text-xl font-semibold mb-1.5 leading-tight">
-                {project.name}
-              </h3>
-              <p className="text-sm text-white/80 font-normal">
-                {project.location}
-              </p>
-            </div>
-          </div>
+  absolute bottom-0 left-0 right-0 
+  bg-gradient-to-t from-black/70 to-transparent
+  p-[40px_30px_30px] transform transition-transform duration-300
+  text-white
+  ${/* Desktop: hover to show */''} 
+  translate-y-full group-hover:translate-y-0
+  ${/* Mobile: always visible */''}
+  md:translate-y-0
+`}>
+  <div className="project-info">
+    <span className="block text-xs text-white/80 font-medium mb-1.5">
+      {project.number}
+    </span>
+    <h3 className="text-xl font-semibold mb-1.5 leading-tight text-white">
+      {project.name}
+    </h3>
+    <p className="text-sm text-white/90 font-normal">
+      {project.location}
+    </p>
+  </div>
+</div>
         </a>
       ))}
 
