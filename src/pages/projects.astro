@@ -5,23 +5,16 @@ import { projects } from '../data/projects.js';
 import { Image } from 'astro:assets';
 import Navigation from '../components/Navigation.astro';
 import BottomNavigation from '../components/BottomNavigation.astro';
-import ProjectsSidebar from '../components/ProjectsSidebar.astro';
 
 // Group projects by location
 const emaarProjects = projects.filter(p => p.location === 'Emaar');
 const hmrProjects = projects.filter(p => p.location === 'HMR');
 const allProjects = [...emaarProjects, ...hmrProjects];
-
-// Get initial project from URL query param
-const url = new URL(Astro.request.url);
-const initialProjectId = url.searchParams.get('project');
-const initialSection = url.searchParams.get('section'); // 'emaar' or 'hmr'
 ---
 
 <Layout title="Projects - BYG">
   <Navigation />
   <BottomNavigation />
-  <ProjectsSidebar />
   
   <div class="projects-list-container" id="projectsListContainer">
     {allProjects.map((project, index) => (
@@ -64,7 +57,7 @@ const initialSection = url.searchParams.get('section'); // 'emaar' or 'hmr'
   </div>
 </Layout>
 
-<script define:vars={{ initialProjectId, initialSection, projects }}>
+<script define:vars={{ projects }}>
   class ProjectsListController {
     constructor() {
       this.sections = document.querySelectorAll('.project-section');
@@ -76,14 +69,13 @@ const initialSection = url.searchParams.get('section'); // 'emaar' or 'hmr'
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => this.init());
       } else {
-        // Add a small delay to ensure everything is rendered
         setTimeout(() => this.init(), 50);
       }
     }
     
     init() {
-      // Set initial scroll position based on URL params
-      this.setInitialPosition();
+      // Check if we need to scroll to a specific project based on URL hash
+      this.handleInitialScroll();
       
       // Setup intersection observer for URL updates
       this.setupIntersectionObserver();
@@ -93,54 +85,24 @@ const initialSection = url.searchParams.get('section'); // 'emaar' or 'hmr'
       
       // Handle navigation clicks
       this.setupNavigationHandlers();
-      
-      // Show sidebar after initialization
-      const sidebar = document.getElementById('projectsSidebar');
-      if (sidebar) {
-        setTimeout(() => {
-          sidebar.classList.add('visible');
-        }, 300);
-      }
     }
     
-    setInitialPosition() {
-      let targetIndex = 0;
-      
-      console.log('Initial params:', { initialProjectId, initialSection });
-      console.log('All sections:', this.sections.length);
-      
-      if (initialProjectId) {
-        // Find project by ID - iterate through sections to find matching project
-        this.sections.forEach((section, index) => {
-          if (section.dataset.projectId === initialProjectId) {
-            targetIndex = index;
-            console.log(`Found project ${initialProjectId} at index ${index}`);
-          }
-        });
-      } else if (initialSection === 'hmr') {
-        // Find first HMR project
-        this.sections.forEach((section, index) => {
-          if (section.dataset.projectLocation === 'hmr' && targetIndex === 0) {
-            targetIndex = index;
-            console.log(`Found first HMR project at index ${index}`);
-          }
-        });
-      } else if (initialSection === 'emaar') {
-        // Explicitly handle emaar section (should be 0, but let's be sure)
-        targetIndex = 0;
-      }
-      
-      // Perform the scroll
-      if (targetIndex >= 0 && targetIndex < this.sections.length) {
-        const targetSection = this.sections[targetIndex];
-        if (targetSection) {
-          console.log('Scrolling to section at index:', targetIndex);
-          // Use a longer delay to ensure everything is loaded
+    handleInitialScroll() {
+      // Check for URL hash (e.g., #project-1)
+      const hash = window.location.hash;
+      if (hash) {
+        const targetElement = document.querySelector(hash);
+        if (targetElement) {
+          // Small delay to ensure page is fully loaded
           setTimeout(() => {
-            targetSection.scrollIntoView({ behavior: 'instant', block: 'start' });
+            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            
             // Update current index
-            this.currentIndex = targetIndex;
-          }, 200);
+            const projectIndex = parseInt(targetElement.dataset.projectIndex);
+            if (!isNaN(projectIndex)) {
+              this.currentIndex = projectIndex;
+            }
+          }, 100);
         }
       }
     }
@@ -150,7 +112,7 @@ const initialSection = url.searchParams.get('section'); // 'emaar' or 'hmr'
       let observerActive = false;
       setTimeout(() => {
         observerActive = true;
-      }, 1000); // Wait 1 second before activating URL updates
+      }, 1000);
       
       const options = {
         root: null,
@@ -165,12 +127,10 @@ const initialSection = url.searchParams.get('section'); // 'emaar' or 'hmr'
             const projectName = entry.target.dataset.projectName;
             const projectLocation = entry.target.dataset.projectLocation;
             
-            // Update URL without page reload
-            const newUrl = `/projects?project=${projectId}&section=${projectLocation}`;
-            const state = { projectId, projectName, projectLocation };
-            
-            if (window.location.search !== `?project=${projectId}&section=${projectLocation}`) {
-              window.history.replaceState(state, '', newUrl);
+            // Update URL hash without page reload
+            const newHash = `#project-${projectId}`;
+            if (window.location.hash !== newHash) {
+              window.history.replaceState(null, '', newHash);
             }
             
             // Update current index
@@ -243,7 +203,6 @@ const initialSection = url.searchParams.get('section'); // 'emaar' or 'hmr'
   }
   
   // Initialize controller when DOM is ready
-  // Don't initialize immediately - wait for page to be fully loaded
   if (document.readyState === 'complete') {
     new ProjectsListController();
   } else {

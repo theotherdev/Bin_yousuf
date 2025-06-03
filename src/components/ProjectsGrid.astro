@@ -7,7 +7,7 @@ import { projects } from '../data/projects.js';
 <div class="images-container" id="imagesContainer">
   {projects.map((project, index) => (
     <a 
-      href={`/projects?project=${project.id}`}
+      href={`/projects#project-${project.id}`}
       class="project-image-item" 
       data-project={project.id} 
       id={`project-${project.id}`}
