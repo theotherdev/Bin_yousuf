@@ -251,55 +251,72 @@ private handleScroll(): void {
   const gsap = window.gsap;
   
   // SIDEBAR VISIBILITY
-  const sidebarThreshold = windowHeight * 0.2;
-  
-  if (scrollY > sidebarThreshold) {
-    if (this.elements.projectsSidebar && !this.elements.projectsSidebar.classList.contains('visible')) {
-      this.elements.projectsSidebar.style.transition = 'none';
-      
-      if (gsap) {
-        gsap.killTweensOf(this.elements.projectsSidebar);
-        gsap.fromTo(this.elements.projectsSidebar, 
-          {
-            opacity: 0,
-            x: -100
-          },
-          {
-            opacity: 1,
-            x: 0,
-            duration: 0.5,
-            ease: "power2.out",
-            onComplete: () => {
-              if (this.elements.projectsSidebar) {
-                this.elements.projectsSidebar.style.transition = '';
-              }
-            }
-          }
-        );
-      }
-      this.elements.projectsSidebar.classList.add('visible');
-    }
-  } else {
-    if (this.elements.projectsSidebar && this.elements.projectsSidebar.classList.contains('visible')) {
-      this.elements.projectsSidebar.style.transition = 'none';
-      
-      if (gsap) {
-        gsap.killTweensOf(this.elements.projectsSidebar);
-        gsap.to(this.elements.projectsSidebar, {
+  const sidebarThreshold = scrollStart + (scrollRange * 0.85); // When crossfade starts
+
+if (scrollY > sidebarThreshold) {
+  if (this.elements.projectsSidebar && !this.elements.projectsSidebar.classList.contains('visible')) {
+    this.elements.projectsSidebar.style.transition = 'none';
+    
+    if (gsap) {
+      gsap.killTweensOf(this.elements.projectsSidebar);
+      gsap.fromTo(this.elements.projectsSidebar, 
+        {
           opacity: 0,
-          x: -100,
-          duration: 0.3,
-          ease: "power2.in",
+          x: -100
+        },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.8, // Slightly longer animation
+          ease: "power2.out",
           onComplete: () => {
             if (this.elements.projectsSidebar) {
               this.elements.projectsSidebar.style.transition = '';
             }
           }
-        });
-      }
-      this.elements.projectsSidebar.classList.remove('visible');
+        }
+      );
+    } else {
+      this.elements.projectsSidebar.style.opacity = '1';
+      this.elements.projectsSidebar.style.transform = 'translateX(0)';
+      setTimeout(() => {
+        if (this.elements.projectsSidebar) {
+          this.elements.projectsSidebar.style.transition = '';
+        }
+      }, 50);
     }
+    this.elements.projectsSidebar.classList.add('visible');
   }
+} else {
+  if (this.elements.projectsSidebar && this.elements.projectsSidebar.classList.contains('visible')) {
+    this.elements.projectsSidebar.style.transition = 'none';
+    
+    if (gsap) {
+      gsap.killTweensOf(this.elements.projectsSidebar);
+      gsap.to(this.elements.projectsSidebar, {
+        opacity: 0,
+        x: -100,
+        duration: 0.4,
+        ease: "power2.in",
+        onComplete: () => {
+          if (this.elements.projectsSidebar) {
+            this.elements.projectsSidebar.style.transition = '';
+          }
+        }
+      });
+    } else {
+      this.elements.projectsSidebar.style.opacity = '0';
+      this.elements.projectsSidebar.style.transform = 'translateX(-100px)';
+      setTimeout(() => {
+        if (this.elements.projectsSidebar) {
+          this.elements.projectsSidebar.style.transition = '';
+        }
+      }, 50);
+    }
+    this.elements.projectsSidebar.classList.remove('visible');
+  }
+}
+
   
   if (!this.elements.animatedProjectImage) return;
   
