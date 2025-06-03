@@ -1,6 +1,6 @@
 ---
-// src/pages/projects/[id].astro - Fixed with proper TypeScript types and project content
-import type { GetStaticPaths } from "astro";
+// src/pages/projects/[id].astro - Alternative approach without type assertion
+import type { GetStaticPaths, GetStaticPathsResult } from "astro";
 import ProjectLayout from '../../layouts/ProjectLayout.astro';
 import type { ProjectData } from '../../types/project';
 import { projects } from '../../data/projects.js';
@@ -15,13 +15,23 @@ interface ProjectInfo {
   image: ImageMetadata;
 }
 
-interface PageProps {
-  projectInfo: ProjectInfo;
-  projectId: string;
+// Project-specific content data with proper typing
+interface ProjectContent {
+  description: string;
+  aboutProject: string;
+  typology: string[];
+  status: string;
+  year: number;
+  location: string;
+  area: string;
+  priceFrom?: string;
 }
 
-// Project-specific content data
-const projectContent = {
+type ProjectContentMap = {
+  [key: string]: ProjectContent;
+};
+
+const projectContent: ProjectContentMap = {
   'panorama': {
     description: 'Elevated lifestyle. Karachi address. Panorama residences exude an aura of luxury, and are elegantly designed keeping you and your family in mind.',
     aboutProject: `Panorama is strategically located in the heart of DHA Phase 8 and is only minutes away from Karachi's top hotspots.
@@ -299,7 +309,7 @@ Key Features:
 };
 
 // Generate static paths for all projects
-export const getStaticPaths: GetStaticPaths = async () => {
+export const getStaticPaths: GetStaticPaths = async (): Promise<GetStaticPathsResult> => {
   const paths = projects.map((project) => {
     const projectId = project.name.toLowerCase().replace(/[\s&]/g, '-').replace(/--+/g, '-');
     
@@ -310,14 +320,16 @@ export const getStaticPaths: GetStaticPaths = async () => {
       props: { 
         projectInfo: project,
         projectId: projectId
-      } as PageProps
+      }
     };
   });
   
   return paths;
 };
 
-const { projectInfo, projectId }: PageProps = Astro.props;
+// Extract props safely without type assertion
+const projectInfo = Astro.props.projectInfo as ProjectInfo;
+const projectId = Astro.props.projectId as string;
 
 // Helper function to safely import images with proper typing
 async function safeImageImport(imagePath: string): Promise<ImageMetadata | null> {
@@ -392,8 +404,8 @@ if (galleryImages.length === 0) {
   });
 }
 
-// Get project-specific content
-const content = projectContent[projectId] || {
+// Get project-specific content with proper type checking
+const content: ProjectContent = projectContent[projectId] || {
   description: `A luxurious residential development offering modern living spaces with stunning views and world-class amenities.`,
   aboutProject: `${projectInfo.name} represents a pinnacle of modern architectural design, seamlessly blending luxury living with sustainable practices. This prestigious development offers residents an unparalleled lifestyle experience with its thoughtfully designed spaces and premium amenities.
 

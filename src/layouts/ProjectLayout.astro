@@ -1,5 +1,5 @@
 ---
-// src/layouts/ProjectLayout.astro - Enhanced with Gallery Modal and Project Navigation
+// src/layouts/ProjectLayout.astro - Enhanced with Smart Navigation
 import type { ProjectData } from '../types/project';
 import { Image } from 'astro:assets';
 import { projects } from '../data/projects.js';
@@ -30,7 +30,7 @@ const allProjects = projects;
     <header class="project-header">
         <div class="header-content">
             <div class="header-left">
-                <button class="close-btn" onclick="window.history.back()">×</button>
+                <button class="close-btn" id="closeBtn">×</button>
                 <div class="project-dropdown">
                     <button class="project-title-btn" id="projectDropdownBtn">
                         {project.name}
@@ -197,7 +197,7 @@ const allProjects = projects;
         <!-- Back Navigation -->
         <section class="navigation-section">
             <div class="nav-container">
-                <a href="/projects" class="back-link">← Back to Projects</a>
+                <button class="back-link" id="backToProjectsBtn">← Back to Projects</button>
             </div>
         </section>
     </main>
@@ -812,10 +812,6 @@ const allProjects = projects;
         padding: 60px 0;
         background: #fff;
     }
-    .navigation-section {
-        padding: 60px 0;
-        background: #fff;
-    }
 
     .nav-container {
         max-width: 1400px;
@@ -826,11 +822,14 @@ const allProjects = projects;
     .back-link {
         display: inline-block;
         color: #666;
-        text-decoration: none;
+        background: none;
+        border: none;
         font-weight: 400;
         font-size: 14px;
         transition: color 0.3s ease;
         font-family: 'Poppins', sans-serif;
+        cursor: pointer;
+        text-decoration: none;
     }
 
     .back-link:hover {
@@ -1280,6 +1279,54 @@ const allProjects = projects;
         ];
     }
 
+    // Smart navigation function - remembers where user came from
+    function getReturnUrl() {
+        const projectLocation = project.location.toLowerCase();
+        const referrer = document.referrer;
+        
+        // Check if user came from projects page with specific section
+        if (referrer.includes('/projects')) {
+            if (referrer.includes('section=emaar') || referrer.includes('#project-') && projectLocation === 'emaar') {
+                return '/projects?section=emaar';
+            } else if (referrer.includes('#project-') && projectLocation === 'hmr') {
+                return '/projects#project-6'; // First HMR project
+            } else {
+                return '/projects';
+            }
+        }
+        
+        // Default navigation based on project location
+        if (projectLocation === 'emaar') {
+            return '/projects?section=emaar';
+        } else if (projectLocation === 'hmr') {
+            return '/projects#project-6';
+        } else {
+            return '/projects';
+        }
+    }
+
+    // Close button functionality with smart navigation
+    function initializeCloseButton() {
+        const closeBtn = document.getElementById('closeBtn');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                const returnUrl = getReturnUrl();
+                window.location.href = returnUrl;
+            });
+        }
+    }
+
+    // Back to projects button functionality
+    function initializeBackButton() {
+        const backBtn = document.getElementById('backToProjectsBtn');
+        if (backBtn) {
+            backBtn.addEventListener('click', () => {
+                const returnUrl = getReturnUrl();
+                window.location.href = returnUrl;
+            });
+        }
+    }
+
     // Project dropdown functionality
     function initializeDropdown() {
         const dropdownBtn = document.getElementById('projectDropdownBtn');
@@ -1579,6 +1626,8 @@ const allProjects = projects;
         // You could also open a contact form or email
         // window.location.href = `mailto:info@bygproperties.com?subject=Brochure Request for ${projectName}&body=I would like to receive the brochure for ${projectName}.`;
     };
+
+    // Main initialization function
     function initialize() {
         initializeGallery();
         initializeDropdown();
@@ -1588,6 +1637,8 @@ const allProjects = projects;
         initializeAnimations();
         initializeSmoothScroll();
         initializeTouchSupport();
+        initializeCloseButton(); // Smart close button
+        initializeBackButton(); // Smart back button
     }
 
     // Run initialization
