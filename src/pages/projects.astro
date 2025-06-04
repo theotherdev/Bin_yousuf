@@ -1,5 +1,5 @@
 ---
-// src/pages/projects.astro
+// src/pages/projects.astro - Fixed version
 import Layout from '../layouts/Layout.astro';
 import Navigation from '../components/Navigation.tsx';
 import BottomNavigation from '../components/BottomNavigation.tsx';
@@ -17,10 +17,57 @@ const hmrProjects = projects.filter(p => p.location === 'HMR');
   <Navigation currentPath={currentPath} client:load />
   <BottomNavigation currentPath={currentPath} client:load />
   
-  <ProjectsList 
-    projects={projects}
-    emaarProjects={emaarProjects}
-    hmrProjects={hmrProjects}
-    client:load 
-  />
+  <!-- Main Projects Content -->
+  <main class="pt-20">
+    <ProjectsList 
+      projects={projects}
+      emaarProjects={emaarProjects}
+      hmrProjects={hmrProjects}
+      client:load 
+    />
+  </main>
 </Layout>
+
+<style>
+  /* Ensure smooth scrolling without conflicts */
+  html {
+    scroll-behavior: auto; /* Let GSAP handle smooth scrolling */
+  }
+  
+  /* Prevent layout shifts during loading */
+  main {
+    min-height: 100vh;
+  }
+  
+  /* Optimize for performance */
+  * {
+    will-change: auto;
+  }
+  
+  /* Reduce motion for users who prefer it */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+
+<script>
+  // Prevent the main TypeScript animations from running on projects page
+  // This ensures no conflicts between React components and TS scroll handlers
+  
+  // Remove any existing scroll listeners from main.ts
+  if (typeof window !== 'undefined') {
+    // Clean up any existing main.ts scroll listeners
+    const existingHandlers = (window as any).__scrollHandlers || [];
+    existingHandlers.forEach((handler: EventListener) => {
+      window.removeEventListener('scroll', handler);
+    });
+    (window as any).__scrollHandlers = [];
+    
+    // Mark this page as projects page to prevent main.ts initialization
+    (window as any).__isProjectsPage = true;
+  }
+</script>

@@ -1,68 +1,54 @@
 // src/components/HeroSection.tsx
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { projects } from '../data/projects.js';
 
 const HeroSection: React.FC = () => {
-  const [currentWordIndex, setCurrentWordIndex] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
   const animatedTextRef = useRef<HTMLSpanElement>(null);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
   
   const heroWords = projects.map(project => project.name.toUpperCase());
-
-  useEffect(() => {
-    // Clear any existing interval
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-    }
-
-    // Initial delay before starting animation
-    const initialTimeout = setTimeout(() => {
-      // Start the word cycling
-      intervalRef.current = setInterval(() => {
-        if (!isAnimating) { // Only change word if not currently animating
-          changeWord();
-        }
-      }, 4000); // Increased interval time for better readability
-    }, 2000);
-
-    return () => {
-      clearTimeout(initialTimeout);
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, []); // Remove currentWordIndex dependency to prevent interval reset
+  let currentIndex = 0;
 
   const changeWord = () => {
-    if (isAnimating) return; // Prevent overlapping animations
+    if (!animatedTextRef.current) return;
     
-    setIsAnimating(true);
-
+    const animatedText = animatedTextRef.current;
+    
     // Start blur-out animation
-    if (animatedTextRef.current) {
-      animatedTextRef.current.classList.remove('blur-in');
-      animatedTextRef.current.classList.add('blur-out');
+    animatedText.classList.add("blur-out");
+
+    setTimeout(() => {
+      // Change the word
+      currentIndex = (currentIndex + 1) % heroWords.length;
+      animatedText.textContent = heroWords[currentIndex];
+      
+      // Remove blur-out and add blur-in
+      animatedText.classList.remove("blur-out");
+      animatedText.classList.add("blur-in");
+
+      setTimeout(() => {
+        // Remove blur-in class after animation completes
+        animatedText.classList.remove("blur-in");
+      }, 800); // Duration matches the blur-in animation
+    }, 400); // Duration matches the blur-out animation
+  };
+
+  useEffect(() => {
+    // Set initial word
+    if (animatedTextRef.current && heroWords.length > 0) {
+      animatedTextRef.current.textContent = heroWords[0];
     }
 
-    // After blur-out animation completes, change word and blur-in
-    setTimeout(() => {
-      setCurrentWordIndex((prev) => (prev + 1) % heroWords.length);
+    // Start the animation cycle after initial delay
+    const initialTimeout = setTimeout(() => {
+      const interval = setInterval(changeWord, 3000); // Change word every 3 seconds
       
-      if (animatedTextRef.current) {
-        animatedTextRef.current.classList.remove('blur-out');
-        animatedTextRef.current.classList.add('blur-in');
-      }
+      // Cleanup function
+      return () => clearInterval(interval);
+    }, 2000); // Initial delay of 2 seconds
 
-      // After blur-in animation completes, reset animation state
-      setTimeout(() => {
-        if (animatedTextRef.current) {
-          animatedTextRef.current.classList.remove('blur-in');
-        }
-        setIsAnimating(false);
-      }, 800); // Match the blur-in animation duration
-    }, 600); // Increased blur-out duration for smoother transition
-  };
+    // Cleanup timeout on unmount
+    return () => clearTimeout(initialTimeout);
+  }, []);
 
   return (
     <main className="h-[110vh] flex items-center justify-start relative pl-[10vw]">
@@ -70,10 +56,10 @@ const HeroSection: React.FC = () => {
         <span className="mr-[0.1em]">BYG </span>
         <span
           ref={animatedTextRef}
-          className="relative inline-block min-w-[1em] transition-all duration-[800ms] ease-out"
+          className="relative inline-block min-w-[1em] transition-all duration-[800ms] ease-[cubic-bezier(0.4,0,0.2,1)]"
           id="animatedText"
         >
-          {heroWords[currentWordIndex]}
+          {heroWords[0] || 'PANORAMA'}
         </span>
         <div className="block text-[0.15em] font-semibold text-gray-500 mt-[0.4em] tracking-[0.18em] uppercase">
           Official Partners With EMAAR® Oceanfront & HMR® Waterfront
