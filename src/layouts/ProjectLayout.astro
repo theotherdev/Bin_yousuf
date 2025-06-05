@@ -3,6 +3,8 @@
 import type { ProjectData } from '../types/project';
 import { Image } from 'astro:assets';
 import { projects } from '../data/projects.js';
+import ContactForm from '../components/ContactForm.tsx';
+
 
 export interface Props {
     project: ProjectData;
@@ -193,6 +195,9 @@ const allProjects = projects;
                 </div>
             </div>
         </section>
+        
+        <!-- Contact Form Section -->
+        <ContactForm projectName={project.name} client:load />
 
         <!-- Back Navigation -->
         <section class="navigation-section">
@@ -1648,3 +1653,5 @@ const allProjects = projects;
         initialize();
     }
 </script>
+
+
