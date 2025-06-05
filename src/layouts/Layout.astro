@@ -1,4 +1,7 @@
 ---
+// src/layouts/Layout.astro - Updated with Footer
+import Footer from '../components/Footer.tsx';
+
 export interface Props {
   title: string;
   description?: string;
@@ -19,6 +22,10 @@ const { title, description = "IND Design Studio - Architecture Portfolio" } = As
   </head>
   <body>
     <slot />
+    
+    <!-- Footer Component -->
+    <Footer client:load />
+    
     <style is:global>
       @import '../styles/global.css';
     </style>
