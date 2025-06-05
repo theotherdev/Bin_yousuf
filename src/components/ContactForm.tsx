@@ -1,7 +1,23 @@
-// src/App.tsx (or any component you use for testing)
-// This file includes Tailwind CSS for styling.
+// FINAL-FINAL CORRECTED CODE - June 5, 2025
+// This version includes the missing required field: entry.1168048118
 
 import React, { useState, useEffect } from 'react';
+
+// --- WRAPPER APP TO RUN THE FORM AND LOAD STYLES ---
+const App = () => {
+  const exampleProjectName = "Panorama Residences"; 
+  
+  return (
+    <>
+      {/* This script loads the Tailwind CSS library to style the component */}
+      <script src="https://cdn.tailwindcss.com"></script>
+      
+      {/* This is your actual form component */}
+      <ContactForm projectName={exampleProjectName} />
+    </>
+  );
+};
+
 
 // --- THE CORRECTED CONTACT FORM COMPONENT ---
 interface ContactFormProps {
@@ -9,22 +25,12 @@ interface ContactFormProps {
 }
 
 interface FormData {
-  name: string;
-  email: string;
-  phone: string;
-  beds: string;
-  project: string;
-  information: string[];
-  howHeard: string;
-  message: string;
+  name: string; email: string; phone: string; beds: string;
+  project: string; information: string[]; howHeard: string; message: string;
 }
 
 interface FormErrors {
-  name?: string;
-  email?: string;
-  phone?: string;
-  beds?: string;
-  information?: string;
+  name?: string; email?: string; phone?: string; beds?: string; information?: string;
 }
 
 const ContactForm: React.FC<ContactFormProps> = ({ projectName }) => {
@@ -36,7 +42,6 @@ const ContactForm: React.FC<ContactFormProps> = ({ projectName }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
-  // --- FIELD OPTIONS ---
   const bedsOptions = ['Studio', '1BR', '2BR', '3BR', '4BR+', 'Not decided'];
   const informationOptions = [ 'Floor plans & layouts', 'Pricing information', 'Payment plans', 'Site visit', 'Investment opportunities', 'Other' ];
   const howHeardOptions = [ 'Website', 'Social Media', 'Referral', 'Advertisement', 'Other' ];
@@ -49,7 +54,6 @@ const ContactForm: React.FC<ContactFormProps> = ({ projectName }) => {
     setFormData(prev => ({ ...prev, project: projectName }));
   }, [projectName]);
 
-  // --- VALIDATION ---
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -75,21 +79,24 @@ const ContactForm: React.FC<ContactFormProps> = ({ projectName }) => {
     if (errors.information) { setErrors(prev => ({ ...prev, information: undefined })); }
   };
 
-  // --- SUBMISSION LOGIC ---
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
     setIsSubmitting(true);
     setSubmitStatus('idle');
     const googleFormUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSeXbvhQpRj0GU9OqbL5_MQ8jRRj2yukrHX8e2bFvPOoXrzjmw/formResponse';
+    
+    // *** FINAL CORRECTION ***
+    // Added the missing required field 'entry.1168048118'
     const formBody = new URLSearchParams({
-      'entry.1195041335': formData.name,       // Correct ID for Name
-      'entry.79234155':   formData.email,      // Correct ID for Email
-      'entry.1708096009': formData.phone,      // Correct ID for Phone
-      'entry.2092815482': formData.beds,       // Correct ID for Beds
-      'entry.1777513188': formData.project,    // Correct ID for Project
-      'entry.388465524':  formData.information.join(', '), // Correct ID for Information
-      'entry.2089179122': formData.howHeard,   // Correct ID for How Heard
+      'entry.1195041335': formData.name,       
+      'entry.79234155':   formData.email,      
+      'entry.1708096009': formData.phone,      
+      'entry.2092815482': formData.beds,       
+      'entry.1777513188': formData.project,    
+      'entry.388465524':  formData.information.join(', '), 
+      'entry.2089179122': formData.howHeard,   
+      'entry.1168048118': '1', // The missing required field, defaulted to "1"
     });
 
     try {
@@ -108,6 +115,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ projectName }) => {
     }
   };
 
+  // --- JSX for the Form (No Changes Needed) ---
   return (
       <section className="py-20 bg-gray-50 font-sans">
           <div className="max-w-4xl mx-auto px-4">
@@ -118,6 +126,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ projectName }) => {
               <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
                   <div className="p-8 md:p-12">
                       <form onSubmit={handleSubmit} className="space-y-8">
+                          {/* All form inputs are here, no changes needed */}
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                               <div>
                                   <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Name <span className="text-red-500">*</span></label>
@@ -184,27 +193,10 @@ const ContactForm: React.FC<ContactFormProps> = ({ projectName }) => {
                   </div>
               </div>
               <div className="mt-12 text-center">
-                  <p className="text-gray-600">Prefer to talk? Call us at <a href="tel:+923001234567" className="text-indigo-600 font-semibold hover:underline">+92 300 1234567</a></p>
+                  <p className="text-gray-600">Prefer to talk? Call us at <a href="tel:+923360878079" className="text-indigo-600 font-semibold hover:underline">+92 336 0878079</a></p>
               </div>
           </div>
       </section>
-  );
-};
-
-
-// --- WRAPPER APP TO RUN THE FORM AND LOAD STYLES ---
-const App = () => {
-  // You would typically get this from page props or a router
-  const exampleProjectName = "Panorama Residences"; 
-  
-  return (
-    <>
-      {/* This script loads the Tailwind CSS library to style the component */}
-      <script src="https://cdn.tailwindcss.com"></script>
-      
-      {/* This is your actual form component */}
-      <ContactForm projectName={exampleProjectName} />
-    </>
   );
 };
 
