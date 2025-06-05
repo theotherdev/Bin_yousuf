@@ -1,10 +1,9 @@
 ---
-// src/layouts/ProjectLayout.astro - Enhanced with Smart Navigation
+// src/layouts/ProjectLayout.astro - Enhanced with Minimal Gallery Slideshow
 import type { ProjectData } from '../types/project';
 import { Image } from 'astro:assets';
 import { projects } from '../data/projects.js';
 import ContactForm from '../components/ContactForm.tsx';
-
 
 export interface Props {
     project: ProjectData;
@@ -132,18 +131,18 @@ const allProjects = projects;
                         </div>
                         
                         <!-- View Brochure Button -->
-<div class="brochure-button-section">
-    <button class="brochure-btn" onclick="openWhatsApp()">
-        <svg class="brochure-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-            <polyline points="14,2 14,8 20,8"/>
-            <line x1="16" y1="13" x2="8" y2="13"/>
-            <line x1="16" y1="17" x2="8" y2="17"/>
-            <polyline points="10,9 9,9 8,9"/>
-        </svg>
-        View Brochure
-    </button>
-</div>
+                        <div class="brochure-button-section">
+                            <button class="brochure-btn" onclick="openWhatsApp()">
+                                <svg class="brochure-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14,2 14,8 20,8"/>
+                                    <line x1="16" y1="13" x2="8" y2="13"/>
+                                    <line x1="16" y1="17" x2="8" y2="17"/>
+                                    <polyline points="10,9 9,9 8,9"/>
+                                </svg>
+                                View Brochure
+                            </button>
+                        </div>
                         <div class="about-section">
                             <h3 class="about-title">About project:</h3>
                             <div class="about-text">
@@ -154,7 +153,6 @@ const allProjects = projects;
                     </div>
                 </div>
             </div>
-            
         </section>
 
         <!-- ZigZag Gallery Section -->
@@ -163,7 +161,7 @@ const allProjects = projects;
                 {project.galleryImages.map((image, index) => {
                     const isEven = index % 2 === 0;
                     return (
-                        <div class={`gallery-item ${isEven ? 'gallery-left' : 'gallery-right'}`}>
+                        <div class={`gallery-item ${isEven ? 'gallery-left' : 'gallery-right'}`} onclick={`openGalleryModal(${index + 1})`}>
                             <div class="gallery-image-wrapper">
                                 <Image 
                                     src={image.src} 
@@ -173,14 +171,18 @@ const allProjects = projects;
                                     class="gallery-image"
                                     loading={index < 2 ? "eager" : "lazy"}
                                 />
+                                <div class="image-overlay">
+                                    <div class="overlay-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                            <circle cx="11" cy="11" r="8"/>
+                                            <path d="M21 21l-4.35-4.35"/>
+                                        </svg>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     );
                 })}
-                
-                
-                    </div>
-                </div>
             </div>
         </section>
         
@@ -195,28 +197,35 @@ const allProjects = projects;
         </section>
     </main>
 
-    <!-- Gallery Modal -->
+    <!-- Minimal Gallery Modal -->
     <div class="gallery-modal" id="galleryModal">
         <div class="modal-overlay" onclick="closeGalleryModal()">
             <div class="modal-content" onclick="event.stopPropagation()">
+                <!-- Modal Header -->
                 <div class="modal-header">
                     <h3 id="modalTitle">{project.name} Gallery</h3>
-                    <button class="modal-close" onclick="closeGalleryModal()">×</button>
+                    <button class="modal-close" onclick="closeGalleryModal()">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
                 </div>
                 
+                <!-- Main Image Display -->
                 <div class="modal-body">
-                    <div class="main-image-container">
-                        <img id="modalMainImage" src="" alt="" />
+                    <div class="slideshow-container">
+                        <img id="modalMainImage" src="" alt="" class="slideshow-image" />
                         
                         <!-- Navigation Arrows -->
-                        <button class="nav-arrow nav-prev" onclick="previousImage()">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <button class="nav-arrow nav-prev" onclick="previousImage()" aria-label="Previous image">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <polyline points="15,18 9,12 15,6"></polyline>
                             </svg>
                         </button>
-                        <button class="nav-arrow nav-next" onclick="nextImage()">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <button class="nav-arrow nav-next" onclick="nextImage()" aria-label="Next image">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <polyline points="9,18 15,12 9,6"></polyline>
                             </svg>
                         </button>
                         
@@ -224,12 +233,10 @@ const allProjects = projects;
                         <div class="image-counter">
                             <span id="currentImageIndex">1</span> / <span id="totalImages">1</span>
                         </div>
-                    </div>
-                    
-                    <!-- Thumbnails -->
-                    <div class="thumbnails-container">
-                        <div class="thumbnails-scroll" id="thumbnailsContainer">
-                            <!-- Thumbnails will be populated by JavaScript -->
+                        
+                        <!-- Progress Indicators -->
+                        <div class="progress-indicators" id="progressIndicators">
+                            <!-- Generated by JavaScript -->
                         </div>
                     </div>
                 </div>
@@ -443,7 +450,8 @@ const allProjects = projects;
         cursor: pointer;
     }
 
-    .hero-image-container:hover .image-overlay {
+    .hero-image-container:hover .image-overlay,
+    .gallery-image-wrapper:hover .image-overlay {
         opacity: 1;
     }
 
@@ -619,6 +627,41 @@ const allProjects = projects;
         color: #333;
     }
 
+    .brochure-button-section {
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #f0f0f0;
+    }
+
+    .brochure-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        background: linear-gradient(135deg, #4c4c4c 0%, #666 100%);
+        color: white;
+        border: none;
+        padding: 14px 28px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: 'Poppins', sans-serif;
+        box-shadow: 0 4px 15px rgba(76, 76, 76, 0.3);
+    }
+
+    .brochure-btn:hover {
+        background: linear-gradient(135deg, #333 0%, #555 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(76, 76, 76, 0.4);
+    }
+
+    .brochure-icon {
+        width: 18px;
+        height: 18px;
+        stroke-width: 2;
+    }
+
     /* ZigZag Gallery Section */
     .gallery-section {
         padding: 100px 0;
@@ -637,6 +680,7 @@ const allProjects = projects;
     .gallery-item {
         width: 100%;
         display: flex;
+        cursor: pointer;
     }
 
     .gallery-left {
@@ -681,125 +725,6 @@ const allProjects = projects;
         transform: scale(1.05);
     }
 
-    /* Brochure Section */
-    .brochure-section {
-        margin-top: 100px;
-        padding: 80px 0;
-        background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-        border-radius: 20px;
-        margin-bottom: 40px;
-    }
-
-    .brochure-container {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 60px;
-        align-items: center;
-        max-width: 1000px;
-        margin: 0 auto;
-        padding: 0 40px;
-    }
-
-    .brochure-content {
-        text-align: left;
-    }
-
-    .brochure-title {
-        font-size: clamp(24px, 3vw, 32px);
-        font-weight: 600;
-        color: #333;
-        margin-bottom: 20px;
-        font-family: 'Poppins', sans-serif;
-    }
-
-    .brochure-description {
-        font-size: 16px;
-        color: #666;
-        line-height: 1.6;
-        margin-bottom: 30px;
-        font-family: 'Poppins', sans-serif;
-    }
-
-    .brochure-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 12px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border: none;
-        padding: 16px 32px;
-        border-radius: 12px;
-        font-size: 16px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        font-family: 'Poppins', sans-serif;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-    }
-
-    .brochure-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-    }
-
-    .brochure-icon {
-        width: 20px;
-        height: 20px;
-        stroke-width: 2;
-    }
-
-    .brochure-visual {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .brochure-mockup {
-        width: 200px;
-        height: 280px;
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-        overflow: hidden;
-        position: relative;
-        transform: perspective(1000px) rotateY(-10deg) rotateX(5deg);
-        transition: transform 0.3s ease;
-    }
-
-    .brochure-mockup:hover {
-        transform: perspective(1000px) rotateY(-5deg) rotateX(2deg) scale(1.05);
-    }
-
-    .mockup-cover {
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        padding: 30px 20px;
-        color: white;
-        position: relative;
-    }
-
-    .mockup-cover::before {
-        content: '';
-        position: absolute;
-        top: 20px;
-        left: 20px;
-        right: 20px;
-        height: 120px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 8px;
-    }
-
-    .mockup-title {
-        font-size: 18px;
-        font-weight: 600;
-        margin-bottom: 8px;
-        font-family: 'Poppins', sans-serif;
-    }
-
     /* Navigation Section */
     .navigation-section {
         padding: 60px 0;
@@ -829,7 +754,7 @@ const allProjects = projects;
         color: #333;
     }
 
-    /* Gallery Modal */
+    /* MINIMAL GALLERY MODAL STYLES */
     .gallery-modal {
         position: fixed;
         top: 0;
@@ -838,12 +763,13 @@ const allProjects = projects;
         height: 100vh;
         z-index: 2000;
         display: none;
-        align-items: center;
-        justify-content: center;
+        background: rgba(0, 0, 0, 0.95);
     }
 
     .gallery-modal.show {
         display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .modal-overlay {
@@ -852,20 +778,26 @@ const allProjects = projects;
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.9);
-        backdrop-filter: blur(10px);
+        background: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .modal-content {
         position: relative;
-        max-width: 95vw;
-        max-height: 95vh;
+        width: 90vw;
+        height: 85vh;
+        max-width: 1200px;
+        max-height: 800px;
         background: white;
-        border-radius: 16px;
+        border-radius: 20px;
         overflow: hidden;
-        box-shadow: 0 40px 100px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
         display: flex;
         flex-direction: column;
+        margin: auto;
+        z-index: 2001;
     }
 
     .modal-header {
@@ -873,14 +805,15 @@ const allProjects = projects;
         justify-content: space-between;
         align-items: center;
         padding: 20px 30px;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
         background: white;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        flex-shrink: 0;
     }
 
     .modal-header h3 {
         margin: 0;
         font-size: 18px;
-        font-weight: 500;
+        font-weight: 600;
         color: #333;
         font-family: 'Poppins', sans-serif;
     }
@@ -888,13 +821,14 @@ const allProjects = projects;
     .modal-close {
         background: none;
         border: none;
-        font-size: 24px;
         cursor: pointer;
         color: #666;
-        padding: 5px;
+        padding: 8px;
         border-radius: 50%;
         transition: all 0.3s ease;
-        font-family: inherit;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .modal-close:hover {
@@ -903,34 +837,39 @@ const allProjects = projects;
     }
 
     .modal-body {
-        display: flex;
-        flex-direction: column;
-        flex: 1;
-        min-height: 0;
-    }
-
-    .main-image-container {
-        position: relative;
         flex: 1;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: #f8f9fa;
-        min-height: 400px;
+        background: #fafafa;
+        min-height: 0;
     }
 
-    #modalMainImage {
-        max-width: 100%;
-        max-height: 100%;
+    .slideshow-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .slideshow-image {
+        max-width: 90%;
+        max-height: 90%;
         object-fit: contain;
+        border-radius: 8px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
         user-select: none;
+        pointer-events: none;
     }
 
+    /* Navigation Arrows */
     .nav-arrow {
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
-        background: rgba(255, 255, 255, 0.9);
+        background: rgba(255, 255, 255, 0.95);
         border: none;
         width: 50px;
         height: 50px;
@@ -940,29 +879,30 @@ const allProjects = projects;
         justify-content: center;
         cursor: pointer;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         color: #333;
+        z-index: 10;
     }
 
     .nav-arrow:hover {
         background: white;
         transform: translateY(-50%) scale(1.1);
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 6px 30px rgba(0, 0, 0, 0.2);
     }
 
     .nav-prev {
-        left: 20px;
+        left: 30px;
     }
 
     .nav-next {
-        right: 20px;
+        right: 30px;
     }
 
+    /* Image Counter */
     .image-counter {
         position: absolute;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
+        top: 20px;
+        right: 20px;
         background: rgba(0, 0, 0, 0.7);
         color: white;
         padding: 8px 16px;
@@ -970,44 +910,37 @@ const allProjects = projects;
         font-size: 14px;
         font-weight: 500;
         font-family: 'Poppins', sans-serif;
+        backdrop-filter: blur(10px);
     }
 
-    .thumbnails-container {
-        background: white;
-        border-top: 1px solid rgba(0, 0, 0, 0.1);
-        padding: 20px;
-        max-height: 150px;
-        overflow: hidden;
-    }
-
-    .thumbnails-scroll {
+    /* Progress Indicators */
+    .progress-indicators {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
         display: flex;
-        gap: 12px;
-        overflow-x: auto;
-        padding-bottom: 10px;
+        gap: 8px;
+        z-index: 10;
     }
 
-    .thumbnail {
-        flex-shrink: 0;
-        width: 80px;
-        height: 60px;
-        border-radius: 6px;
-        overflow: hidden;
+    .progress-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.5);
         cursor: pointer;
-        border: 2px solid transparent;
         transition: all 0.3s ease;
     }
 
-    .thumbnail:hover,
-    .thumbnail.active {
-        border-color: #667eea;
-        transform: scale(1.05);
+    .progress-dot.active {
+        background: white;
+        transform: scale(1.2);
     }
 
-    .thumbnail img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+    .progress-dot:hover {
+        background: rgba(255, 255, 255, 0.8);
+        transform: scale(1.1);
     }
 
     /* Responsive Design */
@@ -1041,20 +974,23 @@ const allProjects = projects;
             min-width: 280px;
         }
 
-        .brochure-container {
-            grid-template-columns: 1fr;
-            gap: 40px;
-            text-align: center;
-            padding: 0 30px;
+        .modal-content {
+            width: 95vw;
+            height: 90vh;
+            margin: auto;
         }
 
-        .brochure-content {
-            text-align: center;
+        .nav-arrow {
+            width: 45px;
+            height: 45px;
         }
 
-        .brochure-section {
-            margin-top: 60px;
-            padding: 60px 0;
+        .nav-prev {
+            left: 20px;
+        }
+
+        .nav-next {
+            right: 20px;
         }
     }
 
@@ -1120,43 +1056,37 @@ const allProjects = projects;
             min-width: 250px;
         }
 
-        .brochure-container {
-            padding: 0 20px;
-        }
-
-        .brochure-mockup {
-            width: 160px;
-            height: 220px;
-        }
-
-        .mockup-title {
-            font-size: 16px;
-        }
-
-        .mockup-subtitle {
-            font-size: 12px;
-        }
-
         .nav-arrow {
             width: 40px;
             height: 40px;
         }
 
         .nav-prev {
-            left: 10px;
+            left: 15px;
         }
 
         .nav-next {
-            right: 10px;
+            right: 15px;
         }
 
-        .modal-content {
-            max-width: 98vw;
-            max-height: 98vh;
+        .modal-header {
+            padding: 15px 20px;
         }
 
-        .thumbnails-container {
-            padding: 15px;
+        .image-counter {
+            top: 15px;
+            right: 15px;
+            font-size: 12px;
+            padding: 6px 12px;
+        }
+
+        .progress-indicators {
+            bottom: 15px;
+        }
+
+        .progress-dot {
+            width: 6px;
+            height: 6px;
         }
     }
 
@@ -1197,27 +1127,35 @@ const allProjects = projects;
             min-width: 220px;
         }
 
-        .brochure-container {
-            padding: 0 15px;
-        }
-
-        .brochure-section {
-            margin-top: 40px;
-            padding: 40px 0;
-        }
-
-        .brochure-mockup {
-            width: 140px;
-            height: 200px;
-        }
-
         .brochure-btn {
-            padding: 14px 24px;
-            font-size: 15px;
+            padding: 12px 20px;
+            font-size: 13px;
         }
 
         .modal-header {
-            padding: 15px 20px;
+            padding: 12px 15px;
+        }
+
+        .modal-header h3 {
+            font-size: 16px;
+        }
+
+        .nav-arrow {
+            width: 35px;
+            height: 35px;
+        }
+
+        .nav-prev {
+            left: 10px;
+        }
+
+        .nav-next {
+            right: 10px;
+        }
+
+        .slideshow-image {
+            max-width: 95%;
+            max-height: 85%;
         }
     }
 
@@ -1250,40 +1188,15 @@ const allProjects = projects;
     html {
         scroll-behavior: smooth;
     }
-    .brochure-button-section {
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 1px solid #f0f0f0;
-}
 
-.brochure-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    background: linear-gradient(135deg, #4c4c4c 0%, #666 100%);
-    color: white;
-    border: none;
-    padding: 14px 28px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-family: 'Poppins', sans-serif;
-    box-shadow: 0 4px 15px rgba(76, 76, 76, 0.3);
-}
+    /* Loading animation for slideshow */
+    .slideshow-image {
+        transition: opacity 0.3s ease;
+    }
 
-.brochure-btn:hover {
-    background: linear-gradient(135deg, #333 0%, #555 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(76, 76, 76, 0.4);
-}
-
-.brochure-icon {
-    width: 18px;
-    height: 18px;
-    stroke-width: 2;
-}
+    .slideshow-image.loading {
+        opacity: 0.7;
+    }
 </style>
 
 <script define:vars={{ allProjects, project }}>
@@ -1415,7 +1328,7 @@ const allProjects = projects;
         document.body.style.overflow = 'hidden';
         
         updateModalImage();
-        createThumbnails();
+        createProgressIndicators();
         
         // Add keyboard navigation
         document.addEventListener('keydown', handleKeyboardNavigation);
@@ -1440,8 +1353,17 @@ const allProjects = projects;
         
         if (!modalImage || !galleryImages[currentImageIndex]) return;
 
-        modalImage.src = galleryImages[currentImageIndex].src;
-        modalImage.alt = galleryImages[currentImageIndex].alt;
+        // Add loading state
+        modalImage.classList.add('loading');
+
+        // Preload image for smoother transition
+        const img = new Image();
+        img.onload = function() {
+            modalImage.src = galleryImages[currentImageIndex].src;
+            modalImage.alt = galleryImages[currentImageIndex].alt;
+            modalImage.classList.remove('loading');
+        };
+        img.src = galleryImages[currentImageIndex].src;
         
         if (currentIndexEl) {
             currentIndexEl.textContent = currentImageIndex + 1;
@@ -1451,28 +1373,30 @@ const allProjects = projects;
             totalImagesEl.textContent = galleryImages.length;
         }
 
-        updateActiveThumbnail();
+        updateProgressIndicators();
     }
 
-    function createThumbnails() {
-        const container = document.getElementById('thumbnailsContainer');
+    function createProgressIndicators() {
+        const container = document.getElementById('progressIndicators');
         if (!container) return;
 
         container.innerHTML = '';
         
-        galleryImages.forEach((image, index) => {
-            const thumbnail = document.createElement('div');
-            thumbnail.className = `thumbnail ${index === currentImageIndex ? 'active' : ''}`;
-            thumbnail.innerHTML = `<img src="${image.src}" alt="${image.alt}" />`;
-            thumbnail.onclick = () => selectImage(index);
-            container.appendChild(thumbnail);
+        // Only show indicators if there are multiple images
+        if (galleryImages.length <= 1) return;
+        
+        galleryImages.forEach((_, index) => {
+            const dot = document.createElement('div');
+            dot.className = `progress-dot ${index === currentImageIndex ? 'active' : ''}`;
+            dot.onclick = () => selectImage(index);
+            container.appendChild(dot);
         });
     }
 
-    function updateActiveThumbnail() {
-        const thumbnails = document.querySelectorAll('.thumbnail');
-        thumbnails.forEach((thumb, index) => {
-            thumb.classList.toggle('active', index === currentImageIndex);
+    function updateProgressIndicators() {
+        const dots = document.querySelectorAll('.progress-dot');
+        dots.forEach((dot, index) => {
+            dot.classList.toggle('active', index === currentImageIndex);
         });
     }
 
@@ -1588,37 +1512,20 @@ const allProjects = projects;
         });
     }
 
-    // Smooth scroll for internal links
-    function initializeSmoothScroll() {
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    const offsetTop = target.offsetTop - 100;
-                    window.scrollTo({
-                        top: offsetTop,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-    }
-
     // Touch/swipe support for mobile
     function initializeTouchSupport() {
         let startX = 0;
         let startY = 0;
         
-        const modalImage = document.getElementById('modalMainImage');
-        if (!modalImage) return;
+        const modalBody = document.querySelector('.modal-body');
+        if (!modalBody) return;
 
-        modalImage.addEventListener('touchstart', function(e) {
+        modalBody.addEventListener('touchstart', function(e) {
             startX = e.touches[0].clientX;
             startY = e.touches[0].clientY;
         }, { passive: true });
 
-        modalImage.addEventListener('touchend', function(e) {
+        modalBody.addEventListener('touchend', function(e) {
             if (!isModalOpen) return;
             
             const endX = e.changedTouches[0].clientX;
@@ -1627,7 +1534,7 @@ const allProjects = projects;
             const deltaX = endX - startX;
             const deltaY = endY - startY;
             
-            // Check if horizontal swipe is longer than vertical
+            // Check if horizontal swipe is longer than vertical and meets minimum distance
             if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
                 if (deltaX > 0) {
                     previousImage();
@@ -1639,12 +1546,12 @@ const allProjects = projects;
     }
 
     // WhatsApp brochure inquiry
-window.openWhatsApp = function() {
-    const projectName = project.name;
-    const message = `Hi, I would like to inquire about ${projectName}. Could you please share the brochure and more details about this project?`;
-    const whatsappUrl = `https://wa.me/923360878079?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
-};
+    window.openWhatsApp = function() {
+        const projectName = project.name;
+        const message = `Hi, I would like to inquire about ${projectName}. Could you please share the brochure and more details about this project?`;
+        const whatsappUrl = `https://wa.me/923360878079?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, '_blank');
+    };
 
     // Main initialization function
     function initialize() {
@@ -1654,10 +1561,9 @@ window.openWhatsApp = function() {
         initializeReadMore();
         initializeGalleryButton();
         initializeAnimations();
-        initializeSmoothScroll();
         initializeTouchSupport();
-        initializeCloseButton(); // Smart close button
-        initializeBackButton(); // Smart back button
+        initializeCloseButton();
+        initializeBackButton();
     }
 
     // Run initialization
