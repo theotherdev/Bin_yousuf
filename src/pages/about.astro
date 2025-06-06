@@ -1,0 +1,45 @@
+---
+// src/pages/about.astro - Redesigned inspired by Narkins Builders
+import Navigation from '../components/Navigation.tsx';
+import AboutUsPage from '../components/About/AboutUsPage.tsx';
+
+const currentPath = Astro.url.pathname;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="BinYousuf Group - Official sales partners of HMR Waterfront and Emaar Oceanfront. Specialists in waterfront properties in Karachi." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>About Us - BYG | Specialists in Waterfront Properties</title>
+    
+    <style is:global>
+      @import '../styles/global.css';
+    </style>
+  </head>
+  <body>
+    <Navigation currentPath={currentPath} client:load />
+    <AboutUsPage client:load />
+  </body>
+</html>
+
+<style>
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  main {
+    contain: layout style;
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
