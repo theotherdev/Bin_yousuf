@@ -1,9 +1,10 @@
 ---
-// src/pages/projects.astro - Fixed version
+// src/pages/projects.astro - Updated with slideshow
 import Layout from '../layouts/Layout.astro';
 import Navigation from '../components/Navigation.tsx';
 import BottomNavigation from '../components/BottomNavigation.tsx';
 import ProjectsList from '../components/ProjectsList.tsx';
+import ProjectsSlideshow from '../components/Slideshow.tsx';
 import { projects } from '../data/projects.js';
 
 const currentPath = Astro.url.pathname;
@@ -11,14 +12,35 @@ const currentPath = Astro.url.pathname;
 // Group projects by location
 const emaarProjects = projects.filter(p => p.location === 'Emaar');
 const hmrProjects = projects.filter(p => p.location === 'HMR');
+
+// Import slideshow images dynamically
+const slideshowImages = await Astro.glob('../assets/projects/slideshow/*.{webp,jpg,jpeg,png}');
+
+// Format images for the slideshow component
+const formattedSlideshowImages = slideshowImages.map((img, index) => ({
+  src: img.default.src || img.default,
+  alt: `Project Slideshow Image ${index + 1}`
+}));
 ---
 
 <Layout title="Projects - BYG">
   <Navigation currentPath={currentPath} client:load />
   <BottomNavigation currentPath={currentPath} client:load />
   
+  <!-- Slideshow Section - Below Navbar -->
+  <section class="w-full mt-20">
+    <ProjectsSlideshow 
+      images={formattedSlideshowImages}
+      autoPlayInterval={4000}
+      showDots={true}
+      showArrows={false}
+      height="60vh"
+      client:load 
+    />
+  </section>
+  
   <!-- Main Projects Content -->
-  <main class="pt-20">
+  <main class="pt-0">
     <ProjectsList 
       projects={projects}
       emaarProjects={emaarProjects}
@@ -51,6 +73,11 @@ const hmrProjects = projects.filter(p => p.location === 'HMR');
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
     }
+  }
+
+  /* Slideshow specific optimizations */
+  .slideshow-container {
+    contain: layout style paint;
   }
 </style>
 
