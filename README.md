@@ -309,7 +309,7 @@ This software is proprietary and confidential. Unauthorized copying, modificatio
 
 **OtherDev**
 - Website: [https://www.otherdev.com/](#)
-- Email: hellootherdev.com
+- Email: hello@otherdev.com
 - LinkedIn: [https://www.linkedin.com/company/theotherdev/](#)
 
 ---

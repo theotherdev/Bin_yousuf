@@ -1,5 +1,5 @@
 ---
-// src/layouts/ProjectLayout.astro - Enhanced with Minimal Gallery Slideshow
+// src/layouts/ProjectLayout.astro - Resolved version
 import type { ProjectData } from '../types/project';
 import { Image } from 'astro:assets';
 import { projects } from '../data/projects.js';
@@ -10,8 +10,6 @@ export interface Props {
 }
 
 const { project } = Astro.props;
-
-// Get all projects for navigation dropdown
 const allProjects = projects;
 ---
 
@@ -27,7 +25,6 @@ const allProjects = projects;
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Header -->
     <header class="project-header">
         <div class="header-content">
             <div class="header-left">
@@ -60,7 +57,6 @@ const allProjects = projects;
     </header>
 
     <main class="project-main">
-        <!-- Hero Section -->
         <section class="hero">
             <div class="hero-image-container" onclick="openGalleryModal(0)">
                 <Image 
@@ -81,31 +77,24 @@ const allProjects = projects;
             </div>
         </section>
 
-        <!-- Hero Text Overlay -->
         <section class="hero-text-section">
             <div class="hero-text-container">
-                <p class="hero-description">
-                    {project.description}
-                </p>
+                <p class="hero-description">{project.description}</p>
             </div>
         </section>
 
-        <!-- Project Info Section -->
         <section class="project-info-section">
             <div class="info-container">
                 <div class="info-layout">
-                    <!-- Left: Project Image -->
                     <div class="info-image-container">
                         <Image 
                             src={project.heroImage.src} 
-                            alt={project.heroImage.alt}
-                            width={600}
-                            height={400}
+                            alt={project.heroImage.alt} 
+                            width={600} 
+                            height={400} 
                             class="info-image"
                         />
                     </div>
-                    
-                    <!-- Right: Project Details -->
                     <div class="info-content">
                         <div class="info-specs">
                             <div class="spec-row">
@@ -143,11 +132,11 @@ const allProjects = projects;
                                 View Brochure
                             </button>
                         </div>
+                        
                         <div class="about-section">
                             <h3 class="about-title">About project:</h3>
                             <div class="about-text">
-                                <p>{project.aboutProject}</p>
-                                <button class="read-more-btn">Read more</button>
+                                <div id="about-project-content" class="prose-content"></div>
                             </div>
                         </div>
                     </div>
@@ -155,7 +144,6 @@ const allProjects = projects;
             </div>
         </section>
 
-        <!-- ZigZag Gallery Section -->
         <section class="gallery-section">
             <div class="gallery-container">
                 {project.galleryImages.map((image, index) => {
@@ -186,10 +174,8 @@ const allProjects = projects;
             </div>
         </section>
         
-        <!-- Contact Form Section -->
         <ContactForm projectName={project.name} client:load />
 
-        <!-- Back Navigation -->
         <section class="navigation-section">
             <div class="nav-container">
                 <button class="back-link" id="backToProjectsBtn">← Back to Projects</button>
@@ -603,28 +589,16 @@ const allProjects = projects;
         font-family: 'Poppins', sans-serif;
     }
 
-    .about-text p {
+    .prose-content p {
         font-size: 14px;
         line-height: 1.7;
         color: #666;
-        margin-bottom: 20px;
         font-family: 'Poppins', sans-serif;
+        margin-bottom: 1.2em;
     }
 
-    .read-more-btn {
-        background: none;
-        border: none;
-        color: #999;
-        font-size: 14px;
-        cursor: pointer;
-        text-decoration: underline;
-        padding: 0;
-        font-family: 'Poppins', sans-serif;
-        transition: color 0.3s ease;
-    }
-
-    .read-more-btn:hover {
-        color: #333;
+    .prose-content p:last-child {
+        margin-bottom: 0;
     }
 
     .brochure-button-section {
@@ -662,7 +636,7 @@ const allProjects = projects;
         stroke-width: 2;
     }
 
-    /* ZigZag Gallery Section */
+    /* Gallery Section */
     .gallery-section {
         padding: 100px 0;
         background: #fff;
@@ -681,6 +655,9 @@ const allProjects = projects;
         width: 100%;
         display: flex;
         cursor: pointer;
+        opacity: 0;
+        transform: translateY(40px);
+        animation: fadeInUp 0.8s ease-out forwards;
     }
 
     .gallery-left {
@@ -862,6 +839,11 @@ const allProjects = projects;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
         user-select: none;
         pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+
+    .slideshow-image.loading {
+        opacity: 0.7;
     }
 
     /* Navigation Arrows */
@@ -941,6 +923,25 @@ const allProjects = projects;
     .progress-dot:hover {
         background: rgba(255, 255, 255, 0.8);
         transform: scale(1.1);
+    }
+
+    /* Animation delays for gallery items */
+    .gallery-item:nth-child(1) { animation-delay: 0.1s; }
+    .gallery-item:nth-child(2) { animation-delay: 0.2s; }
+    .gallery-item:nth-child(3) { animation-delay: 0.3s; }
+    .gallery-item:nth-child(4) { animation-delay: 0.4s; }
+    .gallery-item:nth-child(5) { animation-delay: 0.5s; }
+    .gallery-item:nth-child(6) { animation-delay: 0.6s; }
+
+    @keyframes fadeInUp {
+        from { 
+            opacity: 0; 
+            transform: translateY(40px); 
+        }
+        to { 
+            opacity: 1; 
+            transform: translateY(0); 
+        }
     }
 
     /* Responsive Design */
@@ -1159,190 +1160,104 @@ const allProjects = projects;
         }
     }
 
-    /* Animation delays for gallery items */
-    .gallery-item {
-        opacity: 0;
-        transform: translateY(40px);
-        animation: fadeInUp 0.8s ease-out forwards;
-    }
-
-    .gallery-item:nth-child(1) { animation-delay: 0.1s; }
-    .gallery-item:nth-child(2) { animation-delay: 0.2s; }
-    .gallery-item:nth-child(3) { animation-delay: 0.3s; }
-    .gallery-item:nth-child(4) { animation-delay: 0.4s; }
-    .gallery-item:nth-child(5) { animation-delay: 0.5s; }
-    .gallery-item:nth-child(6) { animation-delay: 0.6s; }
-
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(40px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    /* Smooth Scrolling */
+    /* Smooth scrolling */
     html {
         scroll-behavior: smooth;
-    }
-
-    /* Loading animation for slideshow */
-    .slideshow-image {
-        transition: opacity 0.3s ease;
-    }
-
-    .slideshow-image.loading {
-        opacity: 0.7;
     }
 </style>
 
 <script define:vars={{ allProjects, project }}>
-    // Global variables
     let currentImageIndex = 0;
     let galleryImages = [];
     let isModalOpen = false;
 
-    // Initialize gallery images array (hero + gallery images)
+    function formatAndDisplayAboutText() {
+        const container = document.getElementById('about-project-content');
+        const rawText = project.aboutProject;
+        if (!container || !rawText) return;
+        const paragraphs = rawText.split('\n').filter(line => line.trim() !== '');
+        container.innerHTML = paragraphs.map(p => `<p>${p}</p>`).join('');
+    }
+
     function initializeGallery() {
         galleryImages = [
-            {
-                src: project.heroImage.src.src || project.heroImage.src,
-                alt: project.heroImage.alt
-            },
-            ...project.galleryImages.map(img => ({
-                src: img.src.src || img.src,
-                alt: img.alt
-            }))
+            { src: project.heroImage.src.src || project.heroImage.src, alt: project.heroImage.alt },
+            ...project.galleryImages.map(img => ({ src: img.src.src || img.src, alt: img.alt }))
         ];
     }
 
-    // Smart navigation function - remembers where user came from
     function getReturnUrl() {
         const projectLocation = project.location.toLowerCase();
         const referrer = document.referrer;
-        
-        // Check if user came from projects page with specific section
         if (referrer.includes('/projects')) {
-            if (referrer.includes('section=emaar') || referrer.includes('#project-') && projectLocation === 'emaar') {
-                return '/projects?section=emaar';
-            } else if (referrer.includes('#project-') && projectLocation === 'hmr') {
-                return '/projects#project-6'; // First HMR project
-            } else {
-                return '/projects';
-            }
-        }
-        
-        // Default navigation based on project location
-        if (projectLocation === 'emaar') {
-            return '/projects?section=emaar';
-        } else if (projectLocation === 'hmr') {
-            return '/projects#project-6';
-        } else {
+            if (referrer.includes('section=emaar') || (referrer.includes('#project-') && projectLocation === 'emaar')) return '/projects?section=emaar';
+            if (referrer.includes('#project-') && projectLocation === 'hmr') return '/projects#project-6';
             return '/projects';
         }
+        if (projectLocation === 'emaar') return '/projects?section=emaar';
+        if (projectLocation === 'hmr') return '/projects#project-6';
+        return '/projects';
     }
 
-    // Close button functionality with smart navigation
     function initializeCloseButton() {
         const closeBtn = document.getElementById('closeBtn');
-        if (closeBtn) {
-            closeBtn.addEventListener('click', () => {
-                const returnUrl = getReturnUrl();
-                window.location.href = returnUrl;
-            });
-        }
+        if (closeBtn) closeBtn.addEventListener('click', () => { window.location.href = getReturnUrl(); });
     }
 
-    // Back to projects button functionality
     function initializeBackButton() {
         const backBtn = document.getElementById('backToProjectsBtn');
-        if (backBtn) {
-            backBtn.addEventListener('click', () => {
-                const returnUrl = getReturnUrl();
-                window.location.href = returnUrl;
-            });
-        }
+        if (backBtn) backBtn.addEventListener('click', () => { window.location.href = getReturnUrl(); });
     }
 
-    // Project dropdown functionality
+    function initializeGalleryButton() {
+        const galleryBtn = document.getElementById('openGalleryBtn');
+        if (galleryBtn) galleryBtn.addEventListener('click', () => openGalleryModal(0));
+    }
+
     function initializeDropdown() {
         const dropdownBtn = document.getElementById('projectDropdownBtn');
         const dropdownMenu = document.getElementById('projectDropdownMenu');
-        
         if (!dropdownBtn || !dropdownMenu) return;
-
-        dropdownBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const isOpen = dropdownMenu.classList.contains('show');
-            
-            if (isOpen) {
-                closeDropdown();
-            } else {
-                openDropdown();
-            }
-        });
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!dropdownBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
-                closeDropdown();
-            }
-        });
-
-        // Close dropdown on escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeDropdown();
-            }
-        });
-    }
-
-    function openDropdown() {
-        const dropdownBtn = document.getElementById('projectDropdownBtn');
-        const dropdownMenu = document.getElementById('projectDropdownMenu');
         
-        dropdownBtn.classList.add('active');
-        dropdownMenu.classList.add('show');
-    }
-
-    function closeDropdown() {
-        const dropdownBtn = document.getElementById('projectDropdownBtn');
-        const dropdownMenu = document.getElementById('projectDropdownMenu');
+        const openDropdown = () => { 
+            dropdownBtn.classList.add('active'); 
+            dropdownMenu.classList.add('show'); 
+        };
+        const closeDropdown = () => { 
+            dropdownBtn.classList.remove('active'); 
+            dropdownMenu.classList.remove('show'); 
+        };
         
-        dropdownBtn.classList.remove('active');
-        dropdownMenu.classList.remove('show');
+        dropdownBtn.addEventListener('click', (e) => { 
+            e.stopPropagation(); 
+            dropdownMenu.classList.contains('show') ? closeDropdown() : openDropdown(); 
+        });
+        document.addEventListener('click', (e) => { 
+            if (!dropdownBtn.contains(e.target) && !dropdownMenu.contains(e.target)) closeDropdown(); 
+        });
+        document.addEventListener('keydown', (e) => { 
+            if (e.key === 'Escape') closeDropdown(); 
+        });
     }
 
-    // Gallery modal functionality
     window.openGalleryModal = function(imageIndex = 0) {
         const modal = document.getElementById('galleryModal');
         if (!modal) return;
-
         currentImageIndex = imageIndex;
         isModalOpen = true;
-        
         modal.classList.add('show');
         document.body.style.overflow = 'hidden';
-        
         updateModalImage();
         createProgressIndicators();
-        
-        // Add keyboard navigation
         document.addEventListener('keydown', handleKeyboardNavigation);
     };
 
     window.closeGalleryModal = function() {
         const modal = document.getElementById('galleryModal');
         if (!modal) return;
-
         isModalOpen = false;
         modal.classList.remove('show');
         document.body.style.overflow = '';
-        
-        // Remove keyboard navigation
         document.removeEventListener('keydown', handleKeyboardNavigation);
     };
 
@@ -1350,7 +1265,6 @@ const allProjects = projects;
         const modalImage = document.getElementById('modalMainImage');
         const currentIndexEl = document.getElementById('currentImageIndex');
         const totalImagesEl = document.getElementById('totalImages');
-        
         if (!modalImage || !galleryImages[currentImageIndex]) return;
 
         // Add loading state
@@ -1379,7 +1293,6 @@ const allProjects = projects;
     function createProgressIndicators() {
         const container = document.getElementById('progressIndicators');
         if (!container) return;
-
         container.innerHTML = '';
         
         // Only show indicators if there are multiple images
@@ -1408,105 +1321,45 @@ const allProjects = projects;
     }
 
     window.previousImage = function() {
-        const newIndex = currentImageIndex > 0 ? currentImageIndex - 1 : galleryImages.length - 1;
-        selectImage(newIndex);
+        selectImage((currentImageIndex > 0 ? currentImageIndex - 1 : galleryImages.length - 1));
     };
 
     window.nextImage = function() {
-        const newIndex = currentImageIndex < galleryImages.length - 1 ? currentImageIndex + 1 : 0;
-        selectImage(newIndex);
+        selectImage((currentImageIndex < galleryImages.length - 1 ? currentImageIndex + 1 : 0));
     };
 
     function handleKeyboardNavigation(e) {
         if (!isModalOpen) return;
-        
-        switch(e.key) {
-            case 'Escape':
-                closeGalleryModal();
-                break;
-            case 'ArrowLeft':
-                e.preventDefault();
-                previousImage();
-                break;
-            case 'ArrowRight':
-                e.preventDefault();
-                nextImage();
-                break;
-        }
+        if (e.key === 'Escape') closeGalleryModal();
+        if (e.key === 'ArrowLeft') { e.preventDefault(); previousImage(); }
+        if (e.key === 'ArrowRight') { e.preventDefault(); nextImage(); }
     }
 
-    // Parallax effect for hero
     function initializeParallax() {
+        const heroImage = document.querySelector('.hero-image');
+        if(!heroImage) return;
         let ticking = false;
-
-        function updateParallax() {
-            const scrolled = window.pageYOffset;
-            const heroImage = document.querySelector('.hero-image');
-            
-            if (heroImage) {
-                const rate = scrolled * 0.5;
-                heroImage.style.transform = `translateY(${rate}px)`;
-            }
-            
+        const updateParallax = () => {
+            const rate = window.pageYOffset * 0.4;
+            heroImage.style.transform = `translateY(${rate}px)`;
             ticking = false;
-        }
-
-        function requestTick() {
+        };
+        window.addEventListener('scroll', () => {
             if (!ticking) {
-                requestAnimationFrame(updateParallax);
+                window.requestAnimationFrame(updateParallax);
                 ticking = true;
             }
-        }
-
-        window.addEventListener('scroll', requestTick, { passive: true });
+        }, { passive: true });
     }
 
-    // Read more functionality
-    function initializeReadMore() {
-        const readMoreBtn = document.querySelector('.read-more-btn');
-        if (!readMoreBtn) return;
-
-        readMoreBtn.addEventListener('click', function() {
-            const aboutText = document.querySelector('.about-text p');
-            if (aboutText) {
-                const isExpanded = aboutText.style.maxHeight && aboutText.style.maxHeight !== 'none';
-                aboutText.style.maxHeight = isExpanded ? 'none' : '4.2em';
-                aboutText.style.overflow = isExpanded ? 'visible' : 'hidden';
-                this.textContent = isExpanded ? 'Read more' : 'Read less';
-            }
-        });
-
-        // Set initial state
-        const aboutText = document.querySelector('.about-text p');
-        if (aboutText) {
-            aboutText.style.maxHeight = '4.2em';
-            aboutText.style.overflow = 'hidden';
-        }
-    }
-
-    // Gallery button functionality
-    function initializeGalleryButton() {
-        const galleryBtn = document.getElementById('openGalleryBtn');
-        if (galleryBtn) {
-            galleryBtn.addEventListener('click', () => openGalleryModal(0));
-        }
-    }
-
-    // Intersection Observer for gallery animations
     function initializeAnimations() {
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.style.animationPlayState = 'running';
+                    entry.target.classList.add('visible');
                 }
             });
-        }, observerOptions);
-
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
         document.querySelectorAll('.gallery-item').forEach(item => {
             observer.observe(item);
         });
@@ -1553,12 +1406,11 @@ const allProjects = projects;
         window.open(whatsappUrl, '_blank');
     };
 
-    // Main initialization function
     function initialize() {
         initializeGallery();
         initializeDropdown();
         initializeParallax();
-        initializeReadMore();
+        formatAndDisplayAboutText();
         initializeGalleryButton();
         initializeAnimations();
         initializeTouchSupport();
@@ -1566,7 +1418,6 @@ const allProjects = projects;
         initializeBackButton();
     }
 
-    // Run initialization
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initialize);
     } else {
