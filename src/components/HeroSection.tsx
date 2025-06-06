@@ -61,8 +61,14 @@ const HeroSection: React.FC = () => {
         >
           {heroWords[0] || 'PANORAMA'}
         </span>
-        <div className="block text-[0.15em] font-semibold text-gray-500 mt-[0.4em] tracking-[0.18em] uppercase" style={{ marginLeft: '0.4em' }}>
-             Official Partners With EMAAR® Oceanfront & HMR® Waterfront
+        <div 
+          className="block text-gray-500 mt-[0.4em] tracking-[0.18em] uppercase font-semibold leading-tight"
+          style={{ 
+            marginLeft: '0.4em',
+            fontSize: 'clamp(10px, 2.2vw, 14px)' // Responsive font size for mobile
+          }}
+        >
+          Official Partners With EMAAR® Oceanfront & HMR® Waterfront
         </div>
       </div>
     </main>

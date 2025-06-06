@@ -2,7 +2,6 @@
 // src/pages/projects.astro - Updated with slideshow
 import Layout from '../layouts/Layout.astro';
 import Navigation from '../components/Navigation.tsx';
-import BottomNavigation from '../components/BottomNavigation.tsx';
 import ProjectsList from '../components/ProjectsList.tsx';
 import ProjectsSlideshow from '../components/Slideshow.tsx';
 import { projects } from '../data/projects.js';
@@ -25,7 +24,7 @@ const formattedSlideshowImages = slideshowImages.map((img, index) => ({
 
 <Layout title="Projects - BYG">
   <Navigation currentPath={currentPath} client:load />
-  <BottomNavigation currentPath={currentPath} client:load />
+  
   
   <!-- Slideshow Section - Below Navbar -->
   <section class="w-full mt-20">
