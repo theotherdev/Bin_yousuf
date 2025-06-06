@@ -89,7 +89,7 @@ const Footer: React.FC = () => {
               </h3>
               <nav className="space-y-4">
                 <a 
-                  href="https://linkedin.com/company/bin-yousuf-group" 
+                  href="https://www.linkedin.com/company/bin-yousuf" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="block text-gray-300 hover:text-white transition-colors duration-300 text-sm"
@@ -97,7 +97,7 @@ const Footer: React.FC = () => {
                   LinkedIn
                 </a>
                 <a 
-                  href="https://instagram.com/binyousufgroup" 
+                  href="https://www.instagram.com/binyousuf.group" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="block text-gray-300 hover:text-white transition-colors duration-300 text-sm"
@@ -105,7 +105,7 @@ const Footer: React.FC = () => {
                   Instagram
                 </a>
                 <a 
-                  href="https://facebook.com/binyousufgroup" 
+                  href="https://www.instagram.com/binyousuf.group" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="block text-gray-300 hover:text-white transition-colors duration-300 text-sm"
@@ -113,7 +113,7 @@ const Footer: React.FC = () => {
                   Facebook
                 </a>
                 <a 
-                  href="https://youtube.com/@binyousufgroup" 
+                  href="https://www.instagram.com/binyousuf.group" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="block text-gray-300 hover:text-white transition-colors duration-300 text-sm"
@@ -156,7 +156,7 @@ const Footer: React.FC = () => {
                 
                 {/* Facebook */}
                 <a 
-                  href="https://facebook.com/binyousufgroup" 
+                  href="https://www.instagram.com/binyousuf.group" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-blue-400 transition-colors duration-300"
@@ -172,7 +172,7 @@ const Footer: React.FC = () => {
 
                 {/* LinkedIn */}
                 <a 
-                  href="https://linkedin.com/company/bin-yousuf-group" 
+                  href="https://www.linkedin.com/company/bin-yousuf" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-blue-400 transition-colors duration-300"
@@ -183,8 +183,7 @@ const Footer: React.FC = () => {
                 </a>
 
                 {/* Instagram */}
-                <a 
-                  href="https://instagram.com/binyousufgroup" 
+                <a href="https://www.instagram.com/binyousuf.group" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-pink-400 transition-colors duration-300"
@@ -200,7 +199,7 @@ const Footer: React.FC = () => {
 
                 {/* YouTube */}
                 <a 
-                  href="https://youtube.com/@binyousufgroup" 
+                  href="https://www.instagram.com/binyousuf.group" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-red-400 transition-colors duration-300"
