@@ -1,13 +1,14 @@
 ---
 // src/layouts/Layout.astro - Updated with Footer
 import Footer from '../components/Footer.tsx';
+import logoImage from '../assets/projects/logo.webp';
 
 export interface Props {
   title: string;
   description?: string;
 }
 
-const { title, description = "IND Design Studio - Architecture Portfolio" } = Astro.props;
+const { title, description = "BYG-BinYousufGroup" } = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -16,7 +17,7 @@ const { title, description = "IND Design Studio - Architecture Portfolio" } = As
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href={logoImage.src} type="image/webp" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <title>{title}</title>
   </head>

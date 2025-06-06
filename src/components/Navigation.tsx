@@ -1,6 +1,7 @@
 // src/components/Navigation.tsx
 import React, { useState, useEffect } from 'react';
 import { getProjectCounts } from '../data/projects.js';
+import logoImage from '../assets/projects/logo.webp';
 
 interface NavigationProps {
   currentPath: string;
@@ -80,8 +81,18 @@ const Navigation: React.FC<NavigationProps> = ({ currentPath }) => {
     <nav className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-[10px] z-[1000] border-b border-black/10">
       <div className="flex justify-between items-center max-w-[1400px] mx-auto px-10 py-5">
         <div className="flex items-center gap-5">
-          <a href="/" className="text-black font-semibold text-lg no-underline">
-            BYG
+          <a 
+            href="/" 
+            className="flex items-center gap-3 no-underline group transition-all duration-300 hover:scale-105"
+          >
+            {/* Logo Image */}
+            <img 
+              src={logoImage.src} 
+              alt="BYG Logo" 
+              className="h-8 w-auto transition-all duration-300 group-hover:brightness-110"
+            />
+            {/* Optional: Keep text for better branding */}
+            
           </a>
         </div>
 
@@ -96,7 +107,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPath }) => {
             Projects
           </a>
           <a 
-            href="/projects?section=emaar" 
+            href="/projects#project-1" 
             className="text-gray-500 text-sm font-normal transition-colors duration-300 hover:text-black"
           >
             Emaar
@@ -150,7 +161,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPath }) => {
       {/* Mobile Menu Overlay */}
       <div
         id="mobileMenu"
-        className={`fixed top-20 left-0 right-0 bg-white/98 backdrop-blur-[20px] border-b border-black/10 
+        className={`fixed top-20 left-0 right-0 bg-white backdrop-blur-[20px] border-b border-black/10
           transform transition-all duration-300 ease-out shadow-[0_10px_30px_rgba(0,0,0,0.1)] md:hidden
           ${isMenuOpen 
             ? 'translate-y-0 opacity-100 visible' 
