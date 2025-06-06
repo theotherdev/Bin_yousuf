@@ -1,6 +1,10 @@
-// src/components/About/AboutUsPage.tsx - Fixed version with proper animations and layout
+// src/components/About/AboutUsPage.tsx - Updated with partner logos
 import React, { useEffect, useRef } from 'react';
 import { getProjectCounts } from '../../data/projects.js';
+
+// Import the partner logos - add these to your assets folder
+import emaarLogo from '../../assets/projects/emaar-logo.png';
+import hmrLogo from '../../assets/projects/hmr-logo.png';
 
 const AboutUsPage: React.FC = () => {
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
@@ -195,7 +199,7 @@ const AboutUsPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Partnership Section */}
+      {/* Partnership Section - Updated with actual logos */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div 
@@ -210,14 +214,18 @@ const AboutUsPage: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             
-            {/* Emaar Partnership */}
+            {/* Emaar Partnership - Updated with logo */}
             <div 
               ref={(el) => (sectionRefs.current[5] = el)}
               className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-500 opacity-0 transform translate-y-8 hover:-translate-y-2"
             >
               <div className="flex items-center mb-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-[#4c4c4c] to-gray-600 rounded-lg flex items-center justify-center mr-4 shadow-lg">
-                  <span className="text-white font-bold text-2xl">E</span>
+                <div className="w-16 h-16 bg-white rounded-lg flex items-center justify-center mr-4 shadow-lg border border-gray-100 p-2">
+                  <img 
+                    src={emaarLogo.src} 
+                    alt="Emaar Logo" 
+                    className="w-full h-full object-contain"
+                  />
                 </div>
                 <div>
                   <h3 className="text-2xl font-semibold text-[#4c4c4c]">Emaar Oceanfront</h3>
@@ -256,14 +264,18 @@ const AboutUsPage: React.FC = () => {
               </a>
             </div>
 
-            {/* HMR Partnership */}
+            {/* HMR Partnership - Updated with logo */}
             <div 
               ref={(el) => (sectionRefs.current[6] = el)}
               className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-500 opacity-0 transform translate-y-8 hover:-translate-y-2"
             >
               <div className="flex items-center mb-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-[#4c4c4c] to-gray-600 rounded-lg flex items-center justify-center mr-4 shadow-lg">
-                  <span className="text-white font-bold text-2xl">H</span>
+                <div className="w-16 h-16 bg-white rounded-lg flex items-center justify-center mr-4 shadow-lg border border-gray-100 p-2">
+                  <img 
+                    src={hmrLogo.src} 
+                    alt="HMR Logo" 
+                    className="w-full h-full object-contain"
+                  />
                 </div>
                 <div>
                   <h3 className="text-2xl font-semibold text-[#4c4c4c]">HMR Waterfront</h3>
