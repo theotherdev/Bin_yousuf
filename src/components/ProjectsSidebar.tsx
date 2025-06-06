@@ -1,4 +1,4 @@
-// src/components/ProjectsSidebar.tsx
+// src/components/ProjectsSidebar.tsx - Fixed with click functionality
 import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
@@ -207,6 +207,15 @@ const ProjectsSidebar: React.FC<ProjectsSidebarProps> = ({ currentPath, isVisibl
         className={className}
         data-project-id={project.id}
         onClick={(e) => handleProjectClick(project, e)}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleProjectClick(project);
+          }
+        }}
+        aria-label={`Scroll to ${project.name} project`}
       >
         {itemContent}
       </div>
@@ -240,33 +249,3 @@ const ProjectsSidebar: React.FC<ProjectsSidebarProps> = ({ currentPath, isVisibl
 };
 
 export default ProjectsSidebar;
-
-// Additional styles to add to your global.css or component
-/*
-Add these styles to your src/styles/global.css file:
-
-.custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.05);
-  border-radius: 2px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 2px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.3);
-}
-
-@media (max-width: 1024px) {
-  #projectsSidebar {
-    width: 350px !important;
-    left: 3vw !important;
-  }
-}
-*/
