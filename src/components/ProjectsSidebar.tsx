@@ -1,4 +1,4 @@
-// src/components/ProjectsSidebar.tsx
+// src/components/ProjectsSidebar.tsx - Fixed to hide when footer is visible
 import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
@@ -17,6 +17,7 @@ const ProjectsSidebar: React.FC<ProjectsSidebarProps> = ({ currentPath, isVisibl
   const sidebarRef = useRef<HTMLDivElement>(null);
   const [activeProjectId, setActiveProjectId] = useState<number | null>(null);
   const [isScrolling, setIsScrolling] = useState(false);
+  const [shouldHide, setShouldHide] = useState(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
   const isProjectsPage = currentPath === '/projects' || currentPath === '/projects/';
@@ -25,14 +26,45 @@ const ProjectsSidebar: React.FC<ProjectsSidebarProps> = ({ currentPath, isVisibl
   useEffect(() => {
     // Setup intersection observer for highlighting active project
     setupIntersectionObserver();
+    
+    // Setup scroll listener to check sidebar collision with footer
+    setupScrollListener();
 
     return () => {
       // Cleanup
       if (observerRef.current) {
         observerRef.current.disconnect();
       }
+      window.removeEventListener('scroll', checkSidebarFooterCollision);
     };
   }, []);
+
+  const checkSidebarFooterCollision = () => {
+    const sidebar = sidebarRef.current;
+    const footer = document.querySelector('footer');
+    
+    if (!sidebar || !footer) return;
+
+    const sidebarRect = sidebar.getBoundingClientRect();
+    const footerRect = footer.getBoundingClientRect();
+    
+    // Calculate if sidebar bottom would overlap with footer top
+    const sidebarBottom = sidebarRect.bottom;
+    const footerTop = footerRect.top;
+    
+    // Hide sidebar if it would overlap with footer (with some padding)
+    const shouldHideNow = sidebarBottom >= footerTop - 20; // 20px padding
+    
+    if (shouldHideNow !== shouldHide) {
+      setShouldHide(shouldHideNow);
+    }
+  };
+
+  const setupScrollListener = () => {
+    window.addEventListener('scroll', checkSidebarFooterCollision, { passive: true });
+    // Also check on initial load
+    setTimeout(checkSidebarFooterCollision, 100);
+  };
 
   const setupIntersectionObserver = () => {
     const options: IntersectionObserverInit = {
@@ -213,6 +245,9 @@ const ProjectsSidebar: React.FC<ProjectsSidebarProps> = ({ currentPath, isVisibl
     );
   };
 
+  // Determine if sidebar should be visible (considering footer visibility)
+  const sidebarVisible = isVisible && !shouldHide;
+
   return (
     <div
       ref={sidebarRef}
@@ -222,7 +257,7 @@ const ProjectsSidebar: React.FC<ProjectsSidebarProps> = ({ currentPath, isVisibl
         z-[5] transition-all duration-500 overflow-y-auto
         shadow-[0_20px_60px_rgba(0,0,0,0.1)] custom-scrollbar
         will-change-[opacity,transform] hidden lg:block
-        ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-[100px]'}
+        ${sidebarVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-[100px] pointer-events-none'}
       `}
       id="projectsSidebar"
     >
@@ -240,33 +275,3 @@ const ProjectsSidebar: React.FC<ProjectsSidebarProps> = ({ currentPath, isVisibl
 };
 
 export default ProjectsSidebar;
-
-// Additional styles to add to your global.css or component
-/*
-Add these styles to your src/styles/global.css file:
-
-.custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.05);
-  border-radius: 2px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 2px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.3);
-}
-
-@media (max-width: 1024px) {
-  #projectsSidebar {
-    width: 350px !important;
-    left: 3vw !important;
-  }
-}
-*/

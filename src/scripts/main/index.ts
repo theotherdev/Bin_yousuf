@@ -1,4 +1,4 @@
-// src/scripts/main/index.ts - Complete Fixed Version
+// src/scripts/main/index.ts - Fixed version with footer detection
 import type { Project, AnimationElements, AnimationState } from '../types/index.js';
 import { GSAPLoader } from '../utils/gsap-loader.js';
 
@@ -132,15 +132,29 @@ class ProjectAnimationController {
     const heroHeight = windowHeight * 1.1;
     const projectsSectionPadding = windowHeight * 0.12;
     const firstProjectPosition = heroHeight + projectsSectionPadding;
-    const scrollStart = firstProjectPosition - windowHeight * 0.9; // Start slightly earlier
-    const scrollRange = windowHeight * 1.8; // Longer range for smoother animation
+    const scrollStart = firstProjectPosition - windowHeight * 0.9;
+    const scrollRange = windowHeight * 1.8;
     
     const gsap = window.gsap;
     
-    // SIDEBAR VISIBILITY
-    const sidebarThreshold = scrollStart + (scrollRange * 0.85); // When crossfade starts
+    // FOOTER DETECTION - NEW LOGIC
+    const footer = document.querySelector('footer');
+    let isNearFooter = false;
+    
+    if (footer) {
+      const footerRect = footer.getBoundingClientRect();
+      const footerTop = footerRect.top + scrollY;
+      const footerBuffer = windowHeight * 0.4; // 40% of viewport height as buffer
+      
+      // Check if we're approaching the footer
+      isNearFooter = scrollY + windowHeight > footerTop - footerBuffer;
+    }
+    
+    // SIDEBAR VISIBILITY WITH FOOTER DETECTION
+    const sidebarThreshold = scrollStart + (scrollRange * 0.85);
+    const shouldShowSidebar = scrollY > sidebarThreshold && !isNearFooter;
 
-    if (scrollY > sidebarThreshold) {
+    if (shouldShowSidebar) {
       if (this.elements.projectsSidebar && !this.elements.projectsSidebar.classList.contains('visible')) {
         this.showSidebar(gsap);
       }
@@ -705,7 +719,7 @@ class AppController {
         await this.projectController.initialize();
         this.heroController.initialize();
         this.isInitialized = true;
-        console.log('✅ App fully initialized');
+        console.log('✅ App fully initialized with footer detection');
       } catch (error) {
         console.error('Error during app initialization:', error);
       }

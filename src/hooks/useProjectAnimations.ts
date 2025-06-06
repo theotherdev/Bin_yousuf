@@ -1,4 +1,4 @@
-// src/hooks/useProjectAnimations.ts
+// src/hooks/useProjectAnimations.ts - Fixed version with footer detection
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
@@ -134,9 +134,18 @@ export const useProjectAnimations = (projects: Project[], enabled: boolean = tru
     const scrollStart = firstProjectPosition - windowHeight * 0.8;
     const scrollRange = windowHeight * 1.5;
 
-    // Update sidebar visibility
+    // Get footer element and its position
+    const footer = document.querySelector('footer');
+    const footerTop = footer ? footer.getBoundingClientRect().top + scrollY : Infinity;
+    
+    // Calculate if we're near the footer (with some buffer)
+    const footerBuffer = windowHeight * 0.3; // 30% of viewport height as buffer
+    const isNearFooter = scrollY + windowHeight > footerTop - footerBuffer;
+
+    // Update sidebar visibility - hide if near footer
     const sidebarThreshold = windowHeight * 0.2;
-    updateSidebarVisibility(scrollY > sidebarThreshold);
+    const shouldShowSidebar = scrollY > sidebarThreshold && !isNearFooter;
+    updateSidebarVisibility(shouldShowSidebar);
 
     // Calculate progress
     const progress = Math.min(Math.max((scrollY - scrollStart) / scrollRange, 0), 1);
