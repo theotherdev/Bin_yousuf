@@ -107,7 +107,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPath }) => {
             Projects
           </a>
           <a 
-            href="/projects?section=emaar" 
+            href="/projects#project-1" 
             className="text-gray-500 text-sm font-normal transition-colors duration-300 hover:text-black"
           >
             Emaar
