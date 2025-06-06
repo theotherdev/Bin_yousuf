@@ -1,7 +1,4 @@
-.font-poppins {
-  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-}
-/* src/styles/global.css - Complete Fixed Version */
+/* src/styles/global.css - Updated with navbar stability fixes */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
 /* Tailwind Directives */
@@ -9,30 +6,37 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Performance Optimizations */
+/* Critical styles to prevent layout shift */
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Font loading optimization */
+.font-poppins {
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
 }
 
 /* Base Layer Customizations */
 @layer base {
-  /* Reset and Base Styles */
+  /* Reset and Base Styles with font stability */
   * {
-    @apply m-0 p-0;
     font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
   }
 
-  /* Body Styles with scroll optimizations */
+  /* Body Styles with stable layout */
   body {
     @apply bg-white overflow-x-hidden font-normal leading-relaxed text-gray-800;
     font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
     
-    /* Scroll performance optimizations */
+    /* Prevent layout shift during loading */
+    min-height: 100vh;
     overscroll-behavior: none;
     scroll-behavior: auto; /* Let GSAP handle smooth scrolling */
   }
 
-  /* Typography */
+  /* Typography with stable dimensions */
   h1 { @apply text-clamp-title font-bold tracking-tight mb-2 text-gray-800; }
   h2 { @apply text-clamp-subtitle font-semibold tracking-tight mb-2 text-gray-800; }
   h3 { @apply text-2xl lg:text-[28px] font-semibold mb-2 text-gray-800; }
@@ -51,6 +55,15 @@
     font-family: 'Poppins', sans-serif !important;
   }
 
+  /* Ensure stable layout during hydration */
+  [data-hydrating] {
+    visibility: hidden;
+  }
+
+  [data-hydrated] {
+    visibility: visible;
+  }
+
   /* Scroll performance improvements */
   html {
     scroll-behavior: auto; /* Disable native smooth scroll to prevent conflicts */
@@ -59,6 +72,37 @@
 
 /* Component Layer */
 @layer components {
+  /* Navigation stability fixes */
+  nav {
+    contain: layout style;
+    will-change: transform;
+    min-height: 80px; /* Consistent height */
+  }
+
+  /* Navigation items should not cause layout shift */
+  .nav-item {
+    white-space: nowrap;
+    min-width: max-content;
+  }
+
+  /* Logo container with stable dimensions */
+  .logo-container {
+    min-width: 32px;
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Mobile menu button with fixed dimensions */
+  .mobile-menu-button {
+    min-width: 40px;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   /* Scroll optimized containers */
   .scroll-container {
     contain: layout style paint;
@@ -94,6 +138,7 @@
   /* Navigation Link */
   .nav-link {
     @apply text-gray-500 text-sm font-normal transition-colors duration-300 hover:text-black;
+    white-space: nowrap;
   }
 
   .nav-link.active {
@@ -197,6 +242,18 @@
     backface-visibility: hidden;
   }
 
+  /* Navigation stability utilities */
+  .stable-nav {
+    contain: layout style;
+    min-height: 80px;
+    will-change: transform;
+  }
+
+  .stable-nav-item {
+    white-space: nowrap;
+    min-width: max-content;
+  }
+
   /* Custom Cursor - only for desktop */
   @media (min-width: 1024px) {
     body:not(.projects-page), html:not(.projects-page) {
@@ -270,6 +327,34 @@
     content-visibility: auto;
     contain-intrinsic-size: 100vh;
   }
+
+  /* Font loading stability */
+  .font-stable {
+    font-display: swap;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  }
+
+  /* Hydration stability */
+  .hydration-stable {
+    visibility: hidden;
+  }
+
+  .hydration-stable.loaded {
+    visibility: visible;
+  }
+}
+
+/* Prevent transitions during page load */
+.preload * {
+  transition: none !important;
+  animation: none !important;
+}
+
+/* Enable transitions after page load */
+.loaded * {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
 }
 
 /* Hero Text Animations - Keep these as regular CSS for GSAP compatibility */
@@ -453,4 +538,171 @@
 
 .blur-out {
   animation: blur-out 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Navigation specific stability fixes */
+.navbar-stable {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  min-height: 80px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  contain: layout style;
+  will-change: transform;
+}
+
+.navbar-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px 40px;
+  min-height: 80px;
+}
+
+.navbar-logo {
+  min-width: 32px;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.navbar-nav-item {
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 400;
+  color: #6b7280;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.navbar-nav-item:hover,
+.navbar-nav-item.active {
+  color: #000;
+}
+
+.navbar-mobile-toggle {
+  min-width: 40px;
+  min-height: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.navbar-mobile-toggle span {
+  width: 20px;
+  height: 2px;
+  background: #374151;
+  border-radius: 1px;
+  transition: all 0.3s ease;
+}
+
+/* Mobile menu stability */
+.navbar-mobile-menu {
+  position: fixed;
+  top: 80px;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transform: translateY(-100%);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 999;
+}
+
+.navbar-mobile-menu.open {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+
+.navbar-mobile-menu-content {
+  padding: 30px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.navbar-mobile-menu-item {
+  color: #6b7280;
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.navbar-mobile-menu-item:hover {
+  color: #000;
+  transform: translateX(5px);
+}
+
+/* Prevent layout shift during font loading */
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/poppins/v20/pxiEyp8kv8JHgFVrJJfecg.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/poppins/v20/pxiByp8kv8JHgFVrLGT9Z1xlFQ.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/poppins/v20/pxiByp8kv8JHgFVrLEj6Z1xlFQ.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/poppins/v20/pxiByp8kv8JHgFVrLCz7Z1xlFQ.woff2') format('woff2');
+}
+
+/* Smooth scrolling disabled by default - let GSAP handle it */
+html {
+  scroll-behavior: auto;
+}
+
+/* Body margin reset to prevent layout shift */
+body {
+  margin: 0 !important;
+  padding: 0 !important;
 }

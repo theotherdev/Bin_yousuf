@@ -1,4 +1,4 @@
-// src/components/Navigation.tsx - Updated for new About page structure
+// src/components/Navigation.tsx - Fixed version with stable layout
 import React, { useState, useEffect } from 'react';
 import { getProjectCounts } from '../data/projects.js';
 import logoImage from '../assets/projects/logo.webp';
@@ -9,15 +9,24 @@ interface NavigationProps {
 
 const Navigation: React.FC<NavigationProps> = ({ currentPath }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [projectCounts, setProjectCounts] = useState({ emaar: 0, hmr: 0 });
+  const [projectCounts, setProjectCounts] = useState({ emaar: 5, hmr: 7 }); // Default values to prevent layout shift
+  const [isClient, setIsClient] = useState(false);
 
   const isProjectsListPage = currentPath === '/projects' || currentPath === '/projects/';
   const isProjectDetailPage = currentPath.startsWith('/projects/') && currentPath !== '/projects/';
   const isAboutPage = currentPath === '/about' || currentPath === '/about/';
 
+  // Set client-side flag
   useEffect(() => {
-    const counts = getProjectCounts();
-    setProjectCounts(counts);
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    // Only update counts on client-side to prevent hydration mismatch
+    if (isClient) {
+      const counts = getProjectCounts();
+      setProjectCounts(counts);
+    }
 
     // Close menu on resize to desktop
     const handleResize = () => {
@@ -29,7 +38,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPath }) => {
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [isMenuOpen]);
+  }, [isMenuOpen, isClient]);
 
   // Handle escape key
   useEffect(() => {
@@ -91,18 +100,21 @@ const Navigation: React.FC<NavigationProps> = ({ currentPath }) => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-[10px] z-[1000] border-b border-black/10">
-      <div className="flex justify-between items-center max-w-[1400px] mx-auto px-10 py-5">
+    <nav className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-[10px] z-[1000] border-b border-black/10 will-change-transform">
+      <div className="flex justify-between items-center max-w-[1400px] mx-auto px-10 py-5 min-h-[80px]">
         <div className="flex items-center gap-5">
           <a 
             href="/" 
             className="flex items-center gap-3 no-underline group transition-all duration-300 hover:scale-105"
           >
-            {/* Logo Image */}
+            {/* Logo Image with fixed dimensions to prevent layout shift */}
             <img 
               src={logoImage.src} 
               alt="BYG Logo" 
               className="h-8 w-auto transition-all duration-300 group-hover:brightness-110"
+              width="32"
+              height="32"
+              style={{ minWidth: '32px', minHeight: '32px' }}
             />
           </a>
         </div>
@@ -110,8 +122,16 @@ const Navigation: React.FC<NavigationProps> = ({ currentPath }) => {
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-[30px]">
           <a 
+            href="/" 
+            className={`text-sm font-normal transition-colors duration-300 hover:text-black whitespace-nowrap ${
+              isProjectsListPage || isProjectDetailPage ? 'text-black' : 'text-gray-500'
+            }`}
+          >
+            Home
+          </a>
+          <a 
             href="/projects" 
-            className={`text-sm font-normal transition-colors duration-300 hover:text-black ${
+            className={`text-sm font-normal transition-colors duration-300 hover:text-black whitespace-nowrap ${
               isProjectsListPage || isProjectDetailPage ? 'text-black' : 'text-gray-500'
             }`}
           >
@@ -119,13 +139,13 @@ const Navigation: React.FC<NavigationProps> = ({ currentPath }) => {
           </a>
           <a 
             href="/projects#project-1" 
-            className="text-gray-500 text-sm font-normal transition-colors duration-300 hover:text-black"
+            className="text-gray-500 text-sm font-normal transition-colors duration-300 hover:text-black whitespace-nowrap"
           >
             Emaar
           </a>
           <a 
             href="/projects#project-6" 
-            className="text-gray-500 text-sm font-normal transition-colors duration-300 hover:text-black"
+            className="text-gray-500 text-sm font-normal transition-colors duration-300 hover:text-black whitespace-nowrap"
           >
             HMR Waterfront
           </a>
@@ -134,7 +154,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPath }) => {
         <div className="hidden md:flex items-center gap-[30px]">
           <a 
             href="/about" 
-            className={`text-sm font-normal transition-colors duration-300 hover:text-black ${
+            className={`text-sm font-normal transition-colors duration-300 hover:text-black whitespace-nowrap ${
               isAboutPage ? 'text-black' : 'text-gray-500'
             }`}
           >
@@ -142,7 +162,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPath }) => {
           </a>
           <button 
             onClick={handleContactClick}
-            className="text-gray-500 text-sm font-normal transition-colors duration-300 hover:text-black bg-transparent border-none cursor-pointer font-inherit"
+            className="text-gray-500 text-sm font-normal transition-colors duration-300 hover:text-black bg-transparent border-none cursor-pointer font-inherit whitespace-nowrap"
           >
             Contact
           </button>
@@ -157,6 +177,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPath }) => {
             }`}
             aria-label="Toggle navigation"
             onClick={toggleMenu}
+            style={{ minWidth: '40px', minHeight: '40px' }} // Fixed dimensions
           >
             <span className={`w-5 h-0.5 bg-gray-800 transition-all duration-300 rounded-[1px] ${
               isMenuOpen ? 'transform rotate-45 translate-x-[6px] translate-y-[6px]' : ''

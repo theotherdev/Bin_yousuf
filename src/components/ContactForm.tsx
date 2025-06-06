@@ -188,7 +188,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ projectName }) => {
                   </div>
               </div>
               <div className="mt-12 text-center">
-                  <p className="text-gray-600">Prefer to talk? Call us at <a href="https://wa.me/923360878079?text=${message}" className="text-gray-700 font-semibold hover:underline hover:text-gray-900">+92 336 0878079</a></p>
+                  <p className="text-gray-600">Prefer to talk? Call us at <a href="https://wa.me/923360878079?text=Hi! I'm interested in learning more about BYG and your waterfront properties. Could you please provide me with more information?" className="text-gray-700 font-semibold hover:underline hover:text-gray-900">+92 336 0878079</a></p>
               </div>
           </div>
       </section>

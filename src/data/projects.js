@@ -59,7 +59,7 @@ export const projects = [
   {
     id: 7,
     number: '007',
-    name: 'Gold Crest Residence',
+    name: 'Gold Crest',
     location: 'HMR',
     image: goldCrestImg,
   },
