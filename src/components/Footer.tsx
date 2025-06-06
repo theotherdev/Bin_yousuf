@@ -1,4 +1,4 @@
-// src/components/Footer.tsx - Updated with modern color scheme
+// src/components/Footer.tsx - Updated with Privacy Policy link
 import React from 'react';
 import { projects, getProjectCounts } from '../data/projects.js';
 import logoImage from '../assets/projects/logo.webp';
@@ -56,37 +56,51 @@ const Footer: React.FC = () => {
               </button>
             </div>
 
-            {/* Pages Column */}
+            {/* Pages Column - Updated with specific order */}
             <div>
               <h3 className="text-lg font-semibold text-white mb-6 uppercase tracking-wider">
                 PAGES
               </h3>
               <nav className="space-y-4">
-                {emaarProjects.slice(0, 3).map((project) => {
-                  const projectSlug = project.name.toLowerCase().replace(/[\s&]/g, '-').replace(/--+/g, '-');
-                  return (
-                    <a 
-                      key={project.id}
-                      href={`/projects/${projectSlug}`} 
-                      className="block text-gray-300 hover:text-white transition-colors duration-300 text-sm hover:translate-x-1 transform"
-                    >
-                      {project.name}
-                    </a>
-                  );
-                })}
+                {/* Panorama */}
+                <a 
+                  href="/projects/panorama" 
+                  className="block text-gray-300 hover:text-white transition-colors duration-300 text-sm hover:translate-x-1 transform"
+                >
+                  Panorama
+                </a>
                 
-                {hmrProjects.slice(0, 2).map((project) => {
-                  const projectSlug = project.name.toLowerCase().replace(/[\s&]/g, '-').replace(/--+/g, '-');
-                  return (
-                    <a 
-                      key={project.id}
-                      href={`/projects/${projectSlug}`} 
-                      className="block text-gray-300 hover:text-white transition-colors duration-300 text-sm hover:translate-x-1 transform"
-                    >
-                      {project.name}
-                    </a>
-                  );
-                })}
+                {/* The Views */}
+                <a 
+                  href="/projects/the-views" 
+                  className="block text-gray-300 hover:text-white transition-colors duration-300 text-sm hover:translate-x-1 transform"
+                >
+                  The Views
+                </a>
+                
+                {/* AA Waterfront */}
+                <a 
+                  href="/projects/aa-waterfront" 
+                  className="block text-gray-300 hover:text-white transition-colors duration-300 text-sm hover:translate-x-1 transform"
+                >
+                  AA Waterfront
+                </a>
+                
+                {/* About Us */}
+                <a 
+                  href="/about" 
+                  className="block text-gray-300 hover:text-white transition-colors duration-300 text-sm hover:translate-x-1 transform"
+                >
+                  About Us
+                </a>
+                
+                {/* Privacy Policy */}
+                <a 
+                  href="/privacy-policy" 
+                  className="block text-gray-300 hover:text-white transition-colors duration-300 text-sm hover:translate-x-1 transform"
+                >
+                  Privacy Policy
+                </a>
               </nav>
             </div>
 

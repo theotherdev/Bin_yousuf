@@ -1,0 +1,65 @@
+---
+// src/pages/privacy-policy.astro
+import Layout from '../layouts/Layout.astro';
+import Navigation from '../components/Navigation.tsx';
+import PolicyPage from '../components/Policy/PolicyPage.tsx';
+
+const currentPath = Astro.url.pathname;
+---
+
+<Layout 
+  title="Privacy Policy - BYG | BinYousuf Group" 
+  description="Privacy Policy for BinYousuf Group - Learn how we collect, use, and protect your personal information when you use our real estate services."
+>
+  <Navigation currentPath={currentPath} client:load />
+  <PolicyPage client:load />
+</Layout>
+
+<style>
+  /* Privacy policy page specific styles */
+  body {
+    overflow-x: hidden;
+  }
+  
+  /* Ensure smooth animations */
+  * {
+    will-change: auto;
+  }
+  
+  /* Performance optimizations */
+  main {
+    contain: layout style;
+    scroll-behavior: smooth;
+  }
+  
+  /* Reduce motion for accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+    
+    .transition-all {
+      transition: none !important;
+    }
+  }
+  
+  /* Custom scrollbar for webkit browsers */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+  }
+</style>
