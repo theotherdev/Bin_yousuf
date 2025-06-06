@@ -1,5 +1,5 @@
-// src/components/ProjectsSlideshow.tsx - Minimal and aesthetic slideshow
-import React, { useState, useEffect, useRef } from 'react';
+// src/components/ProjectsSlideshow.tsx - Fixed version with reliable auto-play
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 interface SlideshowProps {
   images: Array<{
@@ -21,70 +21,78 @@ const ProjectsSlideshow: React.FC<SlideshowProps> = ({
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
-  const [isTransitioning, setIsTransitioning] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const slideshowRef = useRef<HTMLDivElement>(null);
 
-  // Auto-play functionality
+  // Memoized function to go to next slide
+  const nextSlide = useCallback(() => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+  }, [images.length]);
+
+  // Memoized function to go to previous slide
+  const prevSlide = useCallback(() => {
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+  }, [images.length]);
+
+  // Memoized function to go to specific slide
+  const goToSlide = useCallback((index: number) => {
+    if (index === currentIndex) return;
+    setCurrentIndex(index);
+  }, [currentIndex]);
+
+  // Auto-play functionality - removed currentIndex from dependencies to prevent restart
   useEffect(() => {
     if (isPlaying && images.length > 1) {
-      intervalRef.current = setInterval(() => {
-        nextSlide();
-      }, autoPlayInterval);
+      intervalRef.current = setInterval(nextSlide, autoPlayInterval);
+    } else {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
     }
 
+    // Cleanup function
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
+        intervalRef.current = null;
       }
     };
-  }, [currentIndex, isPlaying, autoPlayInterval, images.length]);
+  }, [isPlaying, autoPlayInterval, images.length, nextSlide]); // Removed currentIndex
 
   // Pause on hover
-  const handleMouseEnter = () => {
+  const handleMouseEnter = useCallback(() => {
     setIsPlaying(false);
-  };
+  }, []);
 
-  const handleMouseLeave = () => {
+  const handleMouseLeave = useCallback(() => {
     setIsPlaying(true);
-  };
+  }, []);
 
-  const nextSlide = () => {
-    if (isTransitioning) return;
-    setIsTransitioning(true);
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+  // Handle manual navigation - temporarily pause auto-play
+  const handleManualNavigation = useCallback((action: () => void) => {
+    // Temporarily pause auto-play
+    setIsPlaying(false);
     
-    setTimeout(() => {
-      setIsTransitioning(false);
-    }, 500);
-  };
-
-  const prevSlide = () => {
-    if (isTransitioning) return;
-    setIsTransitioning(true);
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+    // Execute the navigation action
+    action();
     
+    // Resume auto-play after a short delay
     setTimeout(() => {
-      setIsTransitioning(false);
-    }, 500);
-  };
+      setIsPlaying(true);
+    }, autoPlayInterval);
+  }, [autoPlayInterval]);
 
-  const goToSlide = (index: number) => {
-    if (isTransitioning || index === currentIndex) return;
-    setIsTransitioning(true);
-    setCurrentIndex(index);
-    
-    setTimeout(() => {
-      setIsTransitioning(false);
-    }, 500);
-  };
-
+  // If no images, return null
   if (!images || images.length === 0) {
     return null;
   }
 
+  // If only one image, don't show controls
+  const showControls = images.length > 1;
+
   return (
-    <div className="relative w-full overflow-hidden bg-gray-50" style={{ height }}>
+    <div className="relative w-full overflow-hidden bg-gray-50 group" style={{ height }}>
       {/* Main slideshow container */}
       <div 
         ref={slideshowRef}
@@ -97,7 +105,7 @@ const ProjectsSlideshow: React.FC<SlideshowProps> = ({
           {images.map((image, index) => (
             <div
               key={index}
-              className={`absolute top-0 left-0 w-full h-full transition-all duration-500 ease-in-out ${
+              className={`absolute top-0 left-0 w-full h-full transition-all duration-700 ease-in-out ${
                 index === currentIndex 
                   ? 'opacity-100 scale-100' 
                   : 'opacity-0 scale-105'
@@ -113,23 +121,22 @@ const ProjectsSlideshow: React.FC<SlideshowProps> = ({
                 loading={index === 0 ? "eager" : "lazy"}
               />
               
-              {/* Subtle overlay for better text contrast if needed */}
-              <div className="absolute inset-0 bg-black/10"></div>
+              {/* Subtle overlay for better contrast */}
+              <div className="absolute inset-0 bg-black/5"></div>
             </div>
           ))}
         </div>
 
-        {/* Navigation Arrows (minimal, only show on hover) */}
-        {showArrows && images.length > 1 && (
+        {/* Navigation Arrows */}
+        {showArrows && showControls && (
           <>
             <button
-              onClick={prevSlide}
-              disabled={isTransitioning}
+              onClick={() => handleManualNavigation(prevSlide)}
               className="absolute left-6 top-1/2 -translate-y-1/2 z-10 
                 bg-white/20 hover:bg-white/30 backdrop-blur-sm 
                 rounded-full p-3 transition-all duration-300 
                 opacity-0 group-hover:opacity-100 hover:scale-110
-                disabled:opacity-50 disabled:cursor-not-allowed"
+                focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-white/50"
               aria-label="Previous image"
             >
               <svg 
@@ -143,13 +150,12 @@ const ProjectsSlideshow: React.FC<SlideshowProps> = ({
             </button>
 
             <button
-              onClick={nextSlide}
-              disabled={isTransitioning}
+              onClick={() => handleManualNavigation(nextSlide)}
               className="absolute right-6 top-1/2 -translate-y-1/2 z-10 
                 bg-white/20 hover:bg-white/30 backdrop-blur-sm 
                 rounded-full p-3 transition-all duration-300 
                 opacity-0 group-hover:opacity-100 hover:scale-110
-                disabled:opacity-50 disabled:cursor-not-allowed"
+                focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-white/50"
               aria-label="Next image"
             >
               <svg 
@@ -165,15 +171,14 @@ const ProjectsSlideshow: React.FC<SlideshowProps> = ({
         )}
 
         {/* Dot indicators */}
-        {showDots && images.length > 1 && (
+        {showDots && showControls && (
           <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10">
             <div className="flex items-center gap-2 bg-black/20 backdrop-blur-sm rounded-full px-4 py-2">
               {images.map((_, index) => (
                 <button
                   key={index}
-                  onClick={() => goToSlide(index)}
-                  disabled={isTransitioning}
-                  className={`transition-all duration-300 rounded-full ${
+                  onClick={() => handleManualNavigation(() => goToSlide(index))}
+                  className={`transition-all duration-300 rounded-full focus:outline-none focus:ring-2 focus:ring-white/50 ${
                     index === currentIndex
                       ? 'w-6 h-2 bg-white'
                       : 'w-2 h-2 bg-white/50 hover:bg-white/70'
@@ -185,32 +190,16 @@ const ProjectsSlideshow: React.FC<SlideshowProps> = ({
           </div>
         )}
 
-        {/* Play/Pause button (minimal) */}
-        <button
-          onClick={() => setIsPlaying(!isPlaying)}
-          className="absolute top-6 right-6 z-10 
-            bg-black/20 hover:bg-black/30 backdrop-blur-sm 
-            rounded-full p-2 transition-all duration-300 
-            opacity-60 hover:opacity-100"
-          aria-label={isPlaying ? 'Pause slideshow' : 'Play slideshow'}
-        >
-          {isPlaying ? (
-            <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
-            </svg>
-          ) : (
-            <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M8 5v14l11-7z"/>
-            </svg>
-          )}
-        </button>
-
         {/* Image counter */}
-        <div className="absolute top-6 left-6 z-10 
-          bg-black/20 backdrop-blur-sm rounded-full px-3 py-1 
-          text-white text-sm font-medium opacity-60">
-          {currentIndex + 1} / {images.length}
-        </div>
+        {showControls && (
+          <div className="absolute top-6 left-6 z-10 
+            bg-black/20 backdrop-blur-sm rounded-full px-3 py-1 
+            text-white text-sm font-medium opacity-70">
+            {currentIndex + 1} / {images.length}
+          </div>
+        )}
+
+        
       </div>
     </div>
   );
