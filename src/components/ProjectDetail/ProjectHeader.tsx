@@ -64,7 +64,7 @@ export const ProjectHeader: React.FC<ProjectHeaderProps> = ({
             
             {dropdownOpen && (
               <div className="absolute top-full left-0 bg-white border border-gray-200 
-                rounded-lg shadow-[0_10px_30px_rgba(0,0,0,0.1)] min-w-[300px] 
+                rounded-none shadow-[0_10px_30px_rgba(0,0,0,0.1)] min-w-[300px] 
                 max-h-[400px] overflow-y-auto mt-1 z-[1001]">
                 {allProjects.map((project) => (
                   <button
@@ -188,7 +188,7 @@ export const ProjectGallery: React.FC<ProjectGalleryProps> = ({ images, projectN
                 <div className="w-full h-full bg-gradient-to-br from-indigo-600 to-purple-600 
                   flex flex-col justify-end p-[30px_20px] text-white relative">
                   <div className="absolute top-5 left-5 right-5 h-[120px] 
-                    bg-white/10 rounded-lg"></div>
+                    bg-white/10 rounded-none"></div>
                   <span className="text-lg font-semibold mb-2 relative z-10">
                     {projectName}
                   </span>

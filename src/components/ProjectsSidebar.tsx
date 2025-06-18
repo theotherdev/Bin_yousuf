@@ -195,7 +195,7 @@ const ProjectsSidebar: React.FC<ProjectsSidebarProps> = ({ currentPath, isVisibl
 
     const className = `
       flex items-start p-[12px_8px] cursor-pointer 
-      transition-all duration-300 rounded-lg relative mb-1
+      transition-all duration-300 rounded-none relative mb-1
       hover:bg-black/5 hover:translate-x-[5px]
       ${isActive ? 'bg-black/[0.08] translate-x-[5px]' : ''}
     `;
@@ -227,7 +227,7 @@ const ProjectsSidebar: React.FC<ProjectsSidebarProps> = ({ currentPath, isVisibl
       ref={sidebarRef}
       className={`
         fixed left-[5vw] top-[15vh] w-[400px] max-h-[70vh] 
-        bg-white/95 backdrop-blur-[20px] rounded-2xl p-[30px_25px]
+        bg-white/95 backdrop-blur-[20px] -rounded-2xl p-[30px_25px]
         z-[5] transition-all duration-500 overflow-y-auto
         shadow-[0_20px_60px_rgba(0,0,0,0.1)] custom-scrollbar
         will-change-[opacity,transform] hidden lg:block

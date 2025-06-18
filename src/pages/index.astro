@@ -57,7 +57,7 @@ return Astro.redirect('/projects');
         {projects.map((project, index) => (
           <a 
             href={`/projects#project-${project.id}`}
-            class="block bg-white rounded-2xl overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.1)] transition-all duration-300 no-underline text-inherit active:scale-[0.98]"
+            class="block bg-white -rounded-2xl overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.1)] transition-all duration-300 no-underline text-inherit active:scale-[0.98]"
             data-project={project.id}
           >
             <div class="w-full h-[250px] overflow-hidden relative">

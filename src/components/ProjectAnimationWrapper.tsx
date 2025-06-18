@@ -41,7 +41,7 @@ const ProjectAnimationWrapper: React.FC<ProjectAnimationWrapperProps> = ({ child
       
       {/* Debug info in development */}
       {import.meta.env.DEV && (
-        <div className="fixed bottom-20 right-5 bg-black/80 text-white p-4 rounded-lg text-xs font-mono z-[2000]">
+        <div className="fixed bottom-20 right-5 bg-black/80 text-white p-4 rounded-none text-xs font-mono z-[2000]">
           <div>Scroll: {Math.round(animationState.scrollY)}px</div>
           <div>Progress: {(animationState.progress * 100).toFixed(1)}%</div>
           <div>Animating: {animationState.isAnimating ? 'Yes' : 'No'}</div>

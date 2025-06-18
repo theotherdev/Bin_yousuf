@@ -101,7 +101,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPath }) => {
 
   return (
     <nav className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-[10px] z-[1000] border-b border-black/10 will-change-transform">
-      <div className="flex justify-between items-center max-w-[1400px] mx-auto px-10 py-5 min-h-[80px]">
+      <div className="flex justify-between items-center max-w-[1400px] mx-auto px-10 py-2 min-h-[20px]">
         <div className="flex items-center gap-5">
           <a 
             href="/" 
@@ -112,9 +112,9 @@ const Navigation: React.FC<NavigationProps> = ({ currentPath }) => {
               src={logoImage.src} 
               alt="BYG Logo" 
               className="h-8 w-auto transition-all duration-300 group-hover:brightness-110"
-              width="32"
-              height="32"
-              style={{ minWidth: '32px', minHeight: '32px' }}
+              width="24"
+              height="24"
+              style={{ minWidth: '24px', minHeight: '24px' }}
             />
           </a>
         </div>

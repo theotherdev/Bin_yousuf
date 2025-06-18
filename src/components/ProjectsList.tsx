@@ -255,7 +255,7 @@ const ProjectsList: React.FC<ProjectsListProps> = ({ projects, emaarProjects, hm
             {/* Project Image */}
             <a 
               href={getProjectUrl(project)}
-              className="w-full h-[70vh] overflow-hidden rounded-2xl 
+              className="w-full h-[70vh] overflow-hidden -rounded-2xl 
                 shadow-[0_40px_80px_rgba(0,0,0,0.15)] relative block 
                 no-underline text-inherit transition-all duration-500
                 ease-out group hover:-translate-y-2 

@@ -11,6 +11,7 @@ export default defineConfig({
       applyBaseStyles: false // Keep your custom global styles
     })
   ],
+  output: 'server',
   vite: {
     define: {
       'import.meta.env.DEV': JSON.stringify(process.env.NODE_ENV === 'development')
