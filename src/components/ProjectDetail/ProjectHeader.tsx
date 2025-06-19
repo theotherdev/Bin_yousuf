@@ -28,8 +28,8 @@ export const ProjectHeader: React.FC<ProjectHeaderProps> = ({
         <div className="flex items-center gap-5">
           <button
             onClick={onClose}
-            className="bg-transparent border-none text-2xl text-gray-500 cursor-pointer 
-              p-1.5 transition-colors duration-300 hover:text-gray-800"
+            className="bg-transparent border-none text-2xl text-neutral-500 cursor-pointer 
+              p-1.5 transition-colors duration-300 hover:text-neutral-800"
           >
             ×
           </button>
@@ -38,10 +38,10 @@ export const ProjectHeader: React.FC<ProjectHeaderProps> = ({
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
               className={`
-                bg-transparent border-none text-lg font-medium text-gray-800 
+                bg-transparent border-none text-lg font-medium text-neutral-800 
                 cursor-pointer flex items-center gap-2 px-3 py-2 rounded-md 
-                transition-all duration-300 hover:bg-gray-100
-                ${dropdownOpen ? 'bg-gray-100' : ''}
+                transition-all duration-300 hover:bg-neutral-100
+                ${dropdownOpen ? 'bg-neutral-100' : ''}
               `}
             >
               {projectName}
@@ -63,8 +63,8 @@ export const ProjectHeader: React.FC<ProjectHeaderProps> = ({
             </button>
             
             {dropdownOpen && (
-              <div className="absolute top-full left-0 bg-white border border-gray-200 
-                rounded-none shadow-[0_10px_30px_rgba(0,0,0,0.1)] min-w-[300px] 
+              <div className="absolute top-full left-0 bg-white border border-neutral-200 
+                rounded-none -shadow-[0_10px_30px_rgba(0,0,0,0.1)] min-w-[300px] 
                 max-h-[400px] overflow-y-auto mt-1 z-[1001]">
                 {allProjects.map((project) => (
                   <button
@@ -74,13 +74,13 @@ export const ProjectHeader: React.FC<ProjectHeaderProps> = ({
                     )}
                     className={`
                       w-full flex items-center gap-3 px-4 py-3 text-left 
-                      transition-colors duration-300 border-b border-gray-100 
-                      last:border-b-0 hover:bg-gray-50
+                      transition-colors duration-300 border-b border-neutral-100 
+                      last:border-b-0 hover:bg-neutral-50
                       ${project.name === projectName ? 'bg-indigo-600 text-white hover:bg-indigo-600' : ''}
                     `}
                   >
                     <span className={`text-xs min-w-[30px] font-medium ${
-                      project.name === projectName ? 'text-white/80' : 'text-gray-500'
+                      project.name === projectName ? 'text-white/80' : 'text-neutral-500'
                     }`}>
                       {project.number}
                     </span>
@@ -88,7 +88,7 @@ export const ProjectHeader: React.FC<ProjectHeaderProps> = ({
                       {project.name}
                     </span>
                     <span className={`text-xs font-normal ${
-                      project.name === projectName ? 'text-white/90' : 'text-gray-600'
+                      project.name === projectName ? 'text-white/90' : 'text-neutral-600'
                     }`}>
                       {project.location}
                     </span>
@@ -102,9 +102,9 @@ export const ProjectHeader: React.FC<ProjectHeaderProps> = ({
         <div className="flex items-center">
           <button
             onClick={onOpenGallery}
-            className="bg-transparent border-none text-gray-500 text-sm font-normal 
+            className="bg-transparent border-none text-neutral-500 text-sm font-normal 
               cursor-pointer px-3 py-2 rounded-md transition-all duration-300 
-              hover:text-gray-800 hover:bg-gray-100"
+              hover:text-neutral-800 hover:bg-neutral-100"
           >
             Gallery
           </button>
@@ -139,7 +139,7 @@ export const ProjectGallery: React.FC<ProjectGalleryProps> = ({ images, projectN
             style={{ animationDelay: `${index * 0.1}s` }}
           >
             <div 
-              className="relative overflow-hidden rounded-xl shadow-project 
+              className="relative overflow-hidden rounded-xl -shadow-project 
                 transition-all duration-[400ms] ease-out-cubic cursor-pointer
                 hover:-translate-y-2.5 hover:shadow-project-hover max-w-[75%] w-full"
               onClick={() => setSelectedImage(index)}
@@ -155,15 +155,15 @@ export const ProjectGallery: React.FC<ProjectGalleryProps> = ({ images, projectN
         ))}
         
         {/* Brochure Section */}
-        <div className="mt-[100px] p-20 bg-gradient-to-br from-gray-50 to-white 
+        <div className="mt-[100px] p-20 bg-gradient-to-br from-neutral-50 to-white 
           rounded-[20px] mb-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-[60px] items-center 
             max-w-[1000px] mx-auto">
             <div className="text-center lg:text-left">
-              <h3 className="text-clamp-description font-semibold text-gray-800 mb-5">
+              <h3 className="text-clamp-description font-semibold text-neutral-800 mb-5">
                 Interested in {projectName}?
               </h3>
-              <p className="text-base text-gray-600 leading-relaxed mb-[30px]">
+              <p className="text-base text-neutral-600 leading-relaxed mb-[30px]">
                 Download our comprehensive project brochure for detailed information, 
                 floor plans, pricing, and exclusive offers.
               </p>
@@ -181,7 +181,7 @@ export const ProjectGallery: React.FC<ProjectGalleryProps> = ({ images, projectN
             
             <div className="flex justify-center items-center">
               <div className="w-[200px] h-[280px] bg-white rounded-xl 
-                shadow-[0_20px_60px_rgba(0,0,0,0.15)] overflow-hidden relative 
+                -shadow-[0_20px_60px_rgba(0,0,0,0.15)] overflow-hidden relative 
                 transform perspective-1000 hover:scale-105 transition-transform duration-300"
                 style={{ transform: 'rotateY(-10deg) rotateX(5deg)' }}
               >

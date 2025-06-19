@@ -227,7 +227,7 @@ const ProjectsList: React.FC<ProjectsListProps> = ({ projects, emaarProjects, hm
           }}
           className={`
             min-h-screen w-full flex items-center justify-center relative
-            ${index % 2 === 1 ? 'bg-gray-50' : 'bg-white'}
+            ${index % 2 === 1 ? 'bg-neutral-50' : 'bg-white'}
             transition-colors duration-300
           `}
           id={`project-${project.id}`}
@@ -236,18 +236,18 @@ const ProjectsList: React.FC<ProjectsListProps> = ({ projects, emaarProjects, hm
           data-project-location={project.location.toLowerCase()}
           data-project-index={index}
         >
-          <div className="w-full max-w-[1400px] mx-auto px-10 py-[60px] 
+          <div className="w-full max-w-[1400px] mx-auto px-4 py-[60px] 
             grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-[60px] items-center">
             
             {/* Project Header */}
-            <div className="flex flex-col gap-5 text-center lg:text-left">
-              <span className="text-sm text-gray-500 font-medium">
+            <div className="flex flex-col gap-5 text-left lg:text-left">
+              <span className="text-sm text-neutral-500 font-medium">
                 {project.number}
               </span>
-              <h1 className="text-clamp-title font-semibold leading-tight text-gray-800 m-0">
+              <h2 className="text-clamp-title- text-7xl font-semibold leading-tight text-neutral-800 m-0">
                 {project.name}
-              </h1>
-              <p className="text-lg text-gray-600 font-normal">
+              </h2>
+              <p className="text-lg text-neutral-600 font-normal">
                 {project.location}
               </p>
             </div>
@@ -256,7 +256,7 @@ const ProjectsList: React.FC<ProjectsListProps> = ({ projects, emaarProjects, hm
             <a 
               href={getProjectUrl(project)}
               className="w-full h-[70vh] overflow-hidden -rounded-2xl 
-                shadow-[0_40px_80px_rgba(0,0,0,0.15)] relative block 
+                -shadow-[0_40px_80px_rgba(0,0,0,0.15)] relative block 
                 no-underline text-inherit transition-all duration-500
                 ease-out group hover:-translate-y-2 
                 hover:shadow-[0_50px_100px_rgba(0,0,0,0.2)]
@@ -286,7 +286,7 @@ const ProjectsList: React.FC<ProjectsListProps> = ({ projects, emaarProjects, hm
           </div>
 
           {/* Progress indicator */}
-          <div className="absolute bottom-8 right-8 text-sm text-gray-400 font-medium">
+          <div className="absolute bottom-8 right-8 text-sm text-neutral-400 font-medium">
             {String(index + 1).padStart(2, '0')} / {String(projects.length).padStart(2, '0')}
           </div>
         </section>

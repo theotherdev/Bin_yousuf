@@ -92,7 +92,7 @@ const ProjectsSlideshow: React.FC<SlideshowProps> = ({
   const showControls = images.length > 1;
 
   return (
-    <div className="relative w-full overflow-hidden bg-gray-50 group" style={{ height }}>
+    <div className="relative w-full overflow-hidden bg-neutral-50 group" style={{ height }}>
       {/* Main slideshow container */}
       <div 
         ref={slideshowRef}

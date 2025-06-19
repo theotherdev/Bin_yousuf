@@ -21,14 +21,14 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ currentPath }) => {
         <>
           <a 
             href="#emaar" 
-            className="text-gray-500 text-sm font-normal transition-colors duration-300 hover:text-gray-800 no-underline"
+            className="text-neutral-500 text-sm font-normal transition-colors duration-300 hover:text-neutral-800 no-underline"
             data-section="emaar"
           >
             Emaar <sup className="text-[10px] ml-0.5">{projectCounts.emaar}</sup>
           </a>
           <a 
             href="#hmr" 
-            className="text-gray-500 text-sm font-normal transition-colors duration-300 hover:text-gray-800 no-underline"
+            className="text-neutral-500 text-sm font-normal transition-colors duration-300 hover:text-neutral-800 no-underline"
             data-section="hmr"
           >
             HMR <sup className="text-[10px] ml-0.5">{projectCounts.hmr}</sup>
@@ -38,13 +38,13 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ currentPath }) => {
         <>
           <a 
             href="/projects?section=emaar" 
-            className="text-gray-500 text-sm font-normal transition-colors duration-300 hover:text-gray-800 no-underline"
+            className="text-neutral-500 text-sm font-normal transition-colors duration-300 hover:text-neutral-800 no-underline"
           >
             Emaar <sup className="text-[10px] ml-0.5">{projectCounts.emaar}</sup>
           </a>
           <a 
             href="/projects#project-6" 
-            className="text-gray-500 text-sm font-normal transition-colors duration-300 hover:text-gray-800 no-underline"
+            className="text-neutral-500 text-sm font-normal transition-colors duration-300 hover:text-neutral-800 no-underline"
           >
             HMR <sup className="text-[10px] ml-0.5">{projectCounts.hmr}</sup>
           </a>

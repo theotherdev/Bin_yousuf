@@ -101,20 +101,19 @@ const Navigation: React.FC<NavigationProps> = ({ currentPath }) => {
 
   return (
     <nav className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-[10px] z-[1000] border-b border-black/10 will-change-transform">
-      <div className="flex justify-between items-center max-w-[1400px] mx-auto px-10 py-2 min-h-[20px]">
+      <div className="flex justify-between items-center max-w-[1400px] mx-auto px-4 py-2 min-h-[20px]">
         <div className="flex items-center gap-5">
           <a 
             href="/" 
-            className="flex items-center gap-3 no-underline group transition-all duration-300 hover:scale-105"
+            className="flex items-center gap-3 no-underline group"
           >
             {/* Logo Image with fixed dimensions to prevent layout shift */}
             <img 
               src={logoImage.src} 
               alt="BYG Logo" 
-              className="h-8 w-auto transition-all duration-300 group-hover:brightness-110"
+              className="h-8 invert w-auto transition-all contrast-100 duration-300 group-hover:brightness-110"
               width="24"
               height="24"
-              style={{ minWidth: '24px', minHeight: '24px' }}
             />
           </a>
         </div>
@@ -124,7 +123,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPath }) => {
           <a 
             href="/" 
             className={`text-sm font-normal transition-colors duration-300 hover:text-black whitespace-nowrap ${
-              isProjectsListPage || isProjectDetailPage ? 'text-black' : 'text-gray-500'
+              isProjectsListPage || isProjectDetailPage ? 'text-black' : 'text-neutral-500'
             }`}
           >
             Home
@@ -132,20 +131,20 @@ const Navigation: React.FC<NavigationProps> = ({ currentPath }) => {
           <a 
             href="/projects" 
             className={`text-sm font-normal transition-colors duration-300 hover:text-black whitespace-nowrap ${
-              isProjectsListPage || isProjectDetailPage ? 'text-black' : 'text-gray-500'
+              isProjectsListPage || isProjectDetailPage ? 'text-black' : 'text-neutral-500'
             }`}
           >
             Projects
           </a>
           <a 
             href="/projects#project-1" 
-            className="text-gray-500 text-sm font-normal transition-colors duration-300 hover:text-black whitespace-nowrap"
+            className="text-neutral-500 text-sm font-normal transition-colors duration-300 hover:text-black whitespace-nowrap"
           >
             Emaar
           </a>
           <a 
             href="/projects#project-6" 
-            className="text-gray-500 text-sm font-normal transition-colors duration-300 hover:text-black whitespace-nowrap"
+            className="text-neutral-500 text-sm font-normal transition-colors duration-300 hover:text-black whitespace-nowrap"
           >
             HMR Waterfront
           </a>
@@ -155,14 +154,14 @@ const Navigation: React.FC<NavigationProps> = ({ currentPath }) => {
           <a 
             href="/about" 
             className={`text-sm font-normal transition-colors duration-300 hover:text-black whitespace-nowrap ${
-              isAboutPage ? 'text-black' : 'text-gray-500'
+              isAboutPage ? 'text-black' : 'text-neutral-500'
             }`}
           >
             About
           </a>
           <button 
             onClick={handleContactClick}
-            className="text-gray-500 text-sm font-normal transition-colors duration-300 hover:text-black bg-transparent border-none cursor-pointer font-inherit whitespace-nowrap"
+            className="text-neutral-500 text-sm font-normal transition-colors duration-300 hover:text-black bg-transparent border-none cursor-pointer font-inherit whitespace-nowrap"
           >
             Contact
           </button>
@@ -179,13 +178,13 @@ const Navigation: React.FC<NavigationProps> = ({ currentPath }) => {
             onClick={toggleMenu}
             style={{ minWidth: '40px', minHeight: '40px' }} // Fixed dimensions
           >
-            <span className={`w-5 h-0.5 bg-gray-800 transition-all duration-300 rounded-[1px] ${
+            <span className={`w-5 h-0.5 bg-neutral-800 transition-all duration-300 rounded-[1px] ${
               isMenuOpen ? 'transform rotate-45 translate-x-[6px] translate-y-[6px]' : ''
             }`} />
-            <span className={`w-5 h-0.5 bg-gray-800 transition-all duration-300 rounded-[1px] ${
+            <span className={`w-5 h-0.5 bg-neutral-800 transition-all duration-300 rounded-[1px] ${
               isMenuOpen ? 'opacity-0' : ''
             }`} />
-            <span className={`w-5 h-0.5 bg-gray-800 transition-all duration-300 rounded-[1px] ${
+            <span className={`w-5 h-0.5 bg-neutral-800 transition-all duration-300 rounded-[1px] ${
               isMenuOpen ? 'transform -rotate-45 translate-x-[6px] -translate-y-[6px]' : ''
             }`} />
           </button>
@@ -196,7 +195,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPath }) => {
       <div
         id="mobileMenu"
         className={`fixed top-20 left-0 right-0 bg-white backdrop-blur-[20px] border-b border-black/10
-          transform transition-all duration-300 ease-out shadow-[0_10px_30px_rgba(0,0,0,0.1)] md:hidden
+          transform transition-all duration-300 ease-out -shadow-[0_10px_30px_rgba(0,0,0,0.1)] md:hidden
           ${isMenuOpen 
             ? 'translate-y-0 opacity-100 visible' 
             : '-translate-y-full opacity-0 invisible'
@@ -205,7 +204,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPath }) => {
         <div className="px-10 py-[30px] flex flex-col gap-5">
           <a
             href="/projects"
-            className={`text-gray-500 text-base font-medium transition-all duration-300 py-3 
+            className={`text-neutral-500 text-base font-medium transition-all duration-300 py-3 
               border-b border-black/5 flex justify-between items-center
               hover:text-black hover:translate-x-[5px] ${
               isProjectsListPage || isProjectDetailPage ? 'text-black' : ''
@@ -216,31 +215,31 @@ const Navigation: React.FC<NavigationProps> = ({ currentPath }) => {
           </a>
           <a
             href="/projects?section=emaar"
-            className="text-gray-500 text-base font-medium transition-all duration-300 py-3 
+            className="text-neutral-500 text-base font-medium transition-all duration-300 py-3 
               border-b border-black/5 flex justify-between items-center
               hover:text-black hover:translate-x-[5px]"
             onClick={closeMenu}
           >
             Emaar
-            <span className="bg-gray-600 text-white text-xs font-semibold px-2 py-1 rounded-xl min-w-[20px] text-center">
+            <span className="bg-neutral-600 text-white text-xs font-semibold px-2 py-1 rounded-xl min-w-[20px] text-center">
               {projectCounts.emaar}
             </span>
           </a>
           <a
             href="/projects#project-6"
-            className="text-gray-500 text-base font-medium transition-all duration-300 py-3 
+            className="text-neutral-500 text-base font-medium transition-all duration-300 py-3 
               border-b border-black/5 flex justify-between items-center
               hover:text-black hover:translate-x-[5px]"
             onClick={closeMenu}
           >
             HMR Waterfront
-            <span className="bg-gray-600 text-white text-xs font-semibold px-2 py-1 rounded-xl min-w-[20px] text-center">
+            <span className="bg-neutral-600 text-white text-xs font-semibold px-2 py-1 rounded-xl min-w-[20px] text-center">
               {projectCounts.hmr}
             </span>
           </a>
           <a
             href="/about"
-            className={`text-gray-500 text-base font-medium transition-all duration-300 py-3 
+            className={`text-neutral-500 text-base font-medium transition-all duration-300 py-3 
               border-b border-black/5 flex justify-between items-center
               hover:text-black hover:translate-x-[5px] ${
               isAboutPage ? 'text-black' : ''
@@ -251,7 +250,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPath }) => {
           </a>
           <button
             onClick={handleContactClick}
-            className="text-gray-500 text-base font-medium transition-all duration-300 py-3 
+            className="text-neutral-500 text-base font-medium transition-all duration-300 py-3 
               border-b border-black/5 flex justify-between items-center
               hover:text-black hover:translate-x-[5px] bg-transparent border-none cursor-pointer 
               text-left w-full font-inherit"

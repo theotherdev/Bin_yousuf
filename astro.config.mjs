@@ -14,7 +14,7 @@ export default defineConfig({
     })
   ],
 
-  output: 'server',
+  output: 'static',
 
   vite: {
     define: {

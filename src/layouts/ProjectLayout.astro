@@ -25,7 +25,7 @@ const allProjects = projects;
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header class="project-header">
+    <header class="project-header px-4">
         <div class="header-content">
             <div class="header-left">
                 <button class="close-btn" id="closeBtn">×</button>
@@ -255,7 +255,6 @@ const allProjects = projects;
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(10px);
         z-index: 1000;
-        padding: 20px 40px;
         border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     }
 
@@ -327,7 +326,6 @@ const allProjects = projects;
         left: 0;
         background: white;
         border: 1px solid #e0e0e0;
-        border-radius: 8px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         min-width: 300px;
         max-height: 400px;
@@ -366,7 +364,7 @@ const allProjects = projects;
     }
 
     .dropdown-item.active {
-        background: #667eea;
+        background: black;
         color: white;
     }
 
@@ -463,7 +461,7 @@ const allProjects = projects;
 
     /* Main Content */
     .project-main {
-        margin-top: 80px;
+        /* margin-top: 80px; */
     }
 
     /* Hero Section */
@@ -681,7 +679,6 @@ const allProjects = projects;
     .gallery-image-wrapper {
         position: relative;
         overflow: hidden;
-        border-radius: 12px;
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
@@ -997,7 +994,7 @@ const allProjects = projects;
 
     @media (max-width: 768px) {
         .project-header {
-            padding: 15px 20px;
+            /* padding: 15px 20px; */
         }
 
         .project-main {
@@ -1106,7 +1103,7 @@ const allProjects = projects;
         }
 
         .gallery-image-wrapper {
-            border-radius: 8px;
+            /* border-radius: 8px; */
         }
 
         .project-info-section,

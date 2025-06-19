@@ -179,14 +179,14 @@ const ProjectsSidebar: React.FC<ProjectsSidebarProps> = ({ currentPath, isVisibl
     
     const itemContent = (
       <>
-        <span className="text-[11px] text-gray-500 mr-3 font-medium min-w-[25px] mt-0.5">
+        <span className="text-[11px] text-neutral-500 mr-3 font-medium min-w-[25px] mt-0.5">
           {project.number}
         </span>
         <div className="flex-1">
-          <h4 className="text-[13px] font-medium text-gray-800 mb-[3px] leading-[1.4]">
+          <h4 className="text-[13px] font-medium text-neutral-800 mb-[3px] leading-[1.4]">
             {project.name}
           </h4>
-          <p className="text-[11px] text-gray-500 leading-[1.3]">
+          <p className="text-[11px] text-neutral-500 leading-[1.3]">
             {project.location}
           </p>
         </div>
@@ -229,14 +229,14 @@ const ProjectsSidebar: React.FC<ProjectsSidebarProps> = ({ currentPath, isVisibl
         fixed left-[5vw] top-[15vh] w-[400px] max-h-[70vh] 
         bg-white/95 backdrop-blur-[20px] -rounded-2xl p-[30px_25px]
         z-[5] transition-all duration-500 overflow-y-auto
-        shadow-[0_20px_60px_rgba(0,0,0,0.1)] custom-scrollbar
+        -shadow-[0_20px_60px_rgba(0,0,0,0.1)] custom-scrollbar
         will-change-[opacity,transform] hidden lg:block
         ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-[100px]'}
       `}
       id="projectsSidebar"
     >
       <div className="flex justify-between items-center mb-[25px] pb-[15px] border-b border-black/10">
-        <h3 className="text-base font-semibold text-gray-800">Projects</h3>
+        <h3 className="text-base font-semibold text-neutral-800">Projects</h3>
       </div>
 
       <div className="flex flex-col">

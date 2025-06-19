@@ -62,7 +62,7 @@ const HeroSection: React.FC = () => {
           {heroWords[0] || 'PANORAMA'}
         </span>
         <div 
-          className="block text-gray-500 mt-[0.4em] tracking-[0.18em] uppercase font-semibold leading-tight w-full sm:w-auto"
+          className="block text-neutral-500 mt-[0.4em] tracking-[0.18em] uppercase font-semibold leading-tight w-full sm:w-auto"
           style={{ 
             marginLeft: '0.4em',
             fontSize: 'clamp(6px, 1vw, 18px)', // Responsive font size for mobile

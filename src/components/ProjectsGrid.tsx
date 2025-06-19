@@ -11,7 +11,7 @@ const ProjectsGrid: React.FC = () => {
           key={project.id}
           href={`/projects#project-${project.id}`}
           className={`
-            relative w-full h-[60vh] rounded-xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.15)]
+            relative w-full h-[60vh] rounded-xl overflow-hidden -shadow-[0_20px_60px_rgba(0,0,0,0.15)]
             transition-all duration-300 cursor-pointer block no-underline group
             hover:transform hover:-translate-y-2.5 hover:shadow-[0_30px_80px_rgba(0,0,0,0.2)]
             md:h-[50vh]
