@@ -4,6 +4,9 @@ import type { ProjectData } from '../types/project';
 import { Image } from 'astro:assets';
 import { projects } from '../data/projects.js';
 import ContactForm from '../components/ContactForm.tsx';
+import ProjectAmenities from '../components/ProjectDetail/ProjectAmenities.tsx';
+import { projectCompletionDates } from '../types/project';
+
 
 export interface Props {
     project: ProjectData;
@@ -117,6 +120,10 @@ const allProjects = projects;
                                 <span class="spec-label">Square:</span>
                                 <span class="spec-value">{project.info.square}</span>
                             </div>
+                            <div class="spec-row">
+                                <span class="spec-label">Completion:</span>
+                                <span class="spec-value">{projectCompletionDates[project.id] || 'TBA'}</span>
+                            </div>
                         </div>
                         
                         <!-- View Brochure Button -->
@@ -143,6 +150,9 @@ const allProjects = projects;
                 </div>
             </div>
         </section>
+        
+    <!-- Project Amenities Section -->
+        <ProjectAmenities projectId={project.id} client:load />
 
         <section class="gallery-section">
             <div class="gallery-container">
@@ -173,6 +183,7 @@ const allProjects = projects;
                 })}
             </div>
         </section>
+        
         
         <ContactForm projectName={project.name} client:load />
 
