@@ -1,151 +1,32 @@
 ---
-// src/layouts/Layout.astro - Enhanced with comprehensive SEO meta tags
+// src/layouts/Layout.astro - Updated without WhatsApp button
 import Footer from '../components/Footer.tsx';
 import logoImage from '../assets/projects/logo.webp';
 
 export interface Props {
   title: string;
   description?: string;
-  keywords?: string;
-  image?: string;
-  url?: string;
-  type?: string;
 }
 
-const { 
-  title, 
-  description = "BinYousuf Group - Official sales partners of Emaar Oceanfront & HMR Waterfront. Specialists in luxury waterfront properties in Karachi, Pakistan.", 
-  keywords = "waterfront properties Karachi, Emaar Oceanfront, HMR Waterfront, luxury apartments Karachi, sea facing apartments, DHA Phase 8 properties, BinYousuf Group, real estate Karachi",
-  image = logoImage.src,
-  url = Astro.url.href,
-  type = "website"
-} = Astro.props;
-
-// Structured Data for Local Business
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": ["RealEstateAgent", "LocalBusiness"],
-  "name": "BinYousuf Group",
-  "alternateName": "BYG",
-  "description": "Official sales partners of Emaar Oceanfront & HMR Waterfront. Specialists in luxury waterfront properties in Karachi, Pakistan.",
-  "url": "https://www.binyousufgroup.com",
-  "logo": `https://www.binyousufgroup.com${logoImage.src}`,
-  "image": `https://www.binyousufgroup.com${logoImage.src}`,
-  "telephone": "+92 336 0878079",
-  "email": "info@binyousufgroup.com",
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Karachi",
-    "addressRegion": "Sindh",
-    "addressCountry": "PK",
-    "streetAddress": "DHA Phase 8"
-  },
-  "geo": {
-    "@type": "GeoCoordinates",
-    "latitude": "24.8607",
-    "longitude": "67.0011"
-  },
-  "areaServed": {
-    "@type": "Place",
-    "name": "Karachi, Pakistan"
-  },
-  "serviceArea": {
-    "@type": "Place",
-    "name": "Karachi, Sindh, Pakistan"
-  },
-  "knowsAbout": [
-    "Waterfront Properties",
-    "Luxury Real Estate",
-    "Emaar Oceanfront",
-    "HMR Waterfront",
-    "DHA Phase 8 Properties",
-    "Investment Properties"
-  ],
-  "hasOfferCatalog": {
-    "@type": "OfferCatalog",
-    "name": "Waterfront Properties",
-    "itemListElement": [
-      {
-        "@type": "Offer",
-        "itemOffered": {
-          "@type": "Product",
-          "name": "Emaar Oceanfront Properties",
-          "description": "Luxury sea-facing apartments in DHA Phase 8"
-        }
-      },
-      {
-        "@type": "Offer",
-        "itemOffered": {
-          "@type": "Product",
-          "name": "HMR Waterfront Properties",
-          "description": "Premium waterfront residential developments"
-        }
-      }
-    ]
-  },
-  "sameAs": [
-    "https://www.linkedin.com/company/bin-yousuf",
-    "https://www.instagram.com/binyousuf.group"
-  ]
-};
-
-// Generate canonical URL
-const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const { title, description = "BYG-BinYousufGroup" } = Astro.props;
 ---
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <!-- Primary Meta Tags -->
-    <title>{title}</title>
-    <meta name="title" content={title} />
     <meta name="description" content={description} />
-    <meta name="keywords" content={keywords} />
-    <meta name="author" content="BinYousuf Group" />
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-    <link rel="canonical" href={canonicalURL} />
-    
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content={type} />
-    <meta property="og:url" content={url} />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:image" content={`https://www.binyousufgroup.com${image}`} />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:site_name" content="BinYousuf Group" />
-    <meta property="og:locale" content="en_US" />
-    
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content={url} />
-    <meta property="twitter:title" content={title} />
-    <meta property="twitter:description" content={description} />
-    <meta property="twitter:image" content={`https://www.binyousufgroup.com${image}`} />
-    
-    <!-- Business/Location Meta -->
-    <meta name="geo.region" content="PK-SD" />
-    <meta name="geo.placename" content="Karachi" />
-    <meta name="geo.position" content="24.8607;67.0011" />
-    <meta name="ICBM" content="24.8607, 67.0011" />
-    
-    <!-- Favicon -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href={logoImage.src} type="image/webp" />
-    <link rel="apple-touch-icon" href={logoImage.src} />
     
-    <!-- Preload critical fonts -->
+    <!-- Preload critical fonts to prevent layout shift -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Structured Data -->
-    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
-    
-    <!-- Critical CSS to prevent layout shift -->
+    <!-- Prevent layout shift on initial load -->
     <style>
+      /* Critical CSS to prevent navbar movement */
       * {
         box-sizing: border-box;
         margin: 0;
@@ -160,6 +41,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
         color: #333;
       }
       
+      /* Ensure navigation is stable from the start */
       nav {
         position: fixed;
         top: 0;
@@ -172,22 +54,27 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
         will-change: transform;
       }
       
+      /* Reserve space for fixed navigation */
       main {
         padding-top: 0px;
       }
       
+      /* Prevent font swapping issues */
       .font-poppins {
         font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
       }
       
+      /* Prevent initial content shift */
       [data-hydrating] {
         visibility: hidden;
       }
       
+      /* Show content after hydration */
       [data-hydrated] {
         visibility: visible;
       }
       
+      /* Smooth transitions only after page load */
       .loaded * {
         transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
         transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -214,11 +101,13 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
         document.body.setAttribute('data-hydrated', '');
         document.body.removeAttribute('data-hydrating');
         
+        // Add loaded class after a brief delay to enable smooth transitions
         setTimeout(() => {
           document.body.classList.add('loaded');
         }, 100);
       });
       
+      // Handle React hydration completion
       window.addEventListener('load', () => {
         setTimeout(() => {
           document.body.classList.add('loaded');
