@@ -1,4 +1,4 @@
-// src/components/Navigation.tsx - Updated with inline WhatsApp button
+// src/components/Navigation.tsx - Updated with new WhatsApp message
 import React, { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { getProjectCounts } from '../data/projects.js';
@@ -139,7 +139,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPath }) => {
 
   const handleContactClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    const message = "Hi! I'm interested in learning more about BYG and your waterfront properties. Could you please provide me with more information?";
+    const message = "Hi! I'm interested in learning more about EMAAR & HMR waterfront properties. Could you please provide me with more information?";
     const whatsappUrl = `https://wa.me/923360878079?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
     
@@ -198,7 +198,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPath }) => {
       });
     }
 
-    const message = "Hi! I'm interested in learning more about BYG and your waterfront properties. Could you please provide me with more information?";
+    const message = "Hi! I'm interested in learning more about EMAAR & HMR waterfront properties. Could you please provide me with more information?";
     const whatsappUrl = `https://wa.me/923360878079?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
     

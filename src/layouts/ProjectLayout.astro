@@ -1394,14 +1394,14 @@ const allProjects = projects;
             }
         }, { passive: true });
     }
-
-    // WhatsApp brochure inquiry
-    window.openWhatsApp = function() {
-        const projectName = project.name;
-        const message = `Hi, I would like to inquire about ${projectName}. Could you please share the brochure and more details about this project?`;
-        const whatsappUrl = `https://wa.me/923360878079?text=${encodeURIComponent(message)}`;
-        window.open(whatsappUrl, '_blank');
-    };
+      
+     // WhatsApp brochure inquiry
+window.openWhatsApp = function() {
+  const projectName = project.name;
+  const message = `Hi! I'm interested in learning more about EMAAR & HMR waterfront properties. Could you please provide me with more information about ${projectName}?`;
+  const whatsappUrl = `https://wa.me/923360878079?text=${encodeURIComponent(message)}`;
+  window.open(whatsappUrl, '_blank');
+};
 
     function initialize() {
         initializeGallery();
