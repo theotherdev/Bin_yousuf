@@ -1,4 +1,4 @@
-// src/components/ProjectsList.tsx - Fixed version
+// src/components/ProjectsList.tsx - Fixed version with no URL changes during scroll
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { gsap } from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
@@ -32,7 +32,7 @@ const ProjectsList: React.FC<ProjectsListProps> = ({ projects, emaarProjects, hm
     }, 100);
   }, []);
 
-  // Handle initial scroll based on URL hash
+  // Handle initial scroll based on URL hash (only once on page load)
   const handleInitialScroll = useCallback(() => {
     if (isInitializedRef.current) return;
     
@@ -46,7 +46,7 @@ const ProjectsList: React.FC<ProjectsListProps> = ({ projects, emaarProjects, hm
           if (!isNaN(projectIndex)) {
             setCurrentIndex(projectIndex);
             
-            // Smooth scroll to element
+            // Smooth scroll to element without changing URL
             targetElement.scrollIntoView({ 
               behavior: 'smooth', 
               block: 'start',
@@ -89,16 +89,11 @@ const ProjectsList: React.FC<ProjectsListProps> = ({ projects, emaarProjects, hm
 
       if (mostVisibleEntry && mostVisibleEntry.isIntersecting) {
         const target = mostVisibleEntry.target as HTMLElement;
-        const projectId = target.dataset.projectId;
         const projectIndex = parseInt(target.dataset.projectIndex || '0');
         
         if (!isNaN(projectIndex)) {
-          // Update URL hash without triggering scroll
-          const newHash = `#project-${projectId}`;
-          if (window.location.hash !== newHash) {
-            history.replaceState(null, '', newHash);
-          }
-          
+          // Don't update URL hash during scrolling - bad for SEO
+          // Just update the current index for internal state
           debouncedSetCurrentIndex(projectIndex);
         }
       }
@@ -138,7 +133,7 @@ const ProjectsList: React.FC<ProjectsListProps> = ({ projects, emaarProjects, hm
     });
   }, [isScrolling]);
 
-  // Handle navigation clicks
+  // Handle navigation clicks (for bottom nav and external links)
   const handleNavigationClick = useCallback((e: Event) => {
     const target = e.target as HTMLElement;
     const link = target.closest('a[href^="#"]') as HTMLAnchorElement;
@@ -155,10 +150,17 @@ const ProjectsList: React.FC<ProjectsListProps> = ({ projects, emaarProjects, hm
       if (hmrIndex !== -1) {
         scrollToProject(hmrIndex);
       }
+    } else if (section?.startsWith('project-')) {
+      // Handle direct project links
+      const projectId = section.replace('project-', '');
+      const projectIndex = projects.findIndex(p => p.id.toString() === projectId);
+      if (projectIndex !== -1) {
+        scrollToProject(projectIndex);
+      }
     }
   }, [projects, scrollToProject]);
 
-  // Keyboard navigation with throttling
+  // Keyboard navigation with throttling (no URL changes)
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (isScrolling) return; // Prevent rapid key presses during scroll
     

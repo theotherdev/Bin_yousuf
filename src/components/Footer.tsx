@@ -1,4 +1,4 @@
-// src/components/Footer.tsx - Updated with Privacy Policy link
+// src/components/Footer.tsx - Updated for new homepage structure
 import React from 'react';
 import { projects, getProjectCounts } from '../data/projects.js';
 import logoImage from '../assets/projects/logo.webp';
@@ -56,7 +56,7 @@ const Footer: React.FC = () => {
               </button>
             </div>
 
-            {/* Pages Column - Updated with specific order */}
+            {/* Pages Column - Updated with new structure */}
             <div>
               <h3 className="text-lg font-semibold text-white mb-6 uppercase tracking-wider">
                 PAGES

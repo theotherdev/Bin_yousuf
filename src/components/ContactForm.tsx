@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 
 // --- WRAPPER APP TO RUN THE FORM AND LOAD STYLES ---
 const App = () => {
-  const exampleProjectName = "Panorama Residences"; 
+  const exampleProjectName = "this project"; 
   
   return (
     <>

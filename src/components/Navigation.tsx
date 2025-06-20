@@ -1,4 +1,4 @@
-// src/components/Navigation.tsx - Fixed version with stable layout
+// src/components/Navigation.tsx - Updated for new homepage structure
 import React, { useState, useEffect } from 'react';
 import { getProjectCounts } from '../data/projects.js';
 import logoImage from '../assets/projects/logo.webp';
@@ -12,7 +12,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPath }) => {
   const [projectCounts, setProjectCounts] = useState({ emaar: 5, hmr: 7 }); // Default values to prevent layout shift
   const [isClient, setIsClient] = useState(false);
 
-  const isProjectsListPage = currentPath === '/projects' || currentPath === '/projects/';
+  const isHomePage = currentPath === '/' || currentPath === '';
   const isProjectDetailPage = currentPath.startsWith('/projects/') && currentPath !== '/projects/';
   const isAboutPage = currentPath === '/about' || currentPath === '/about/';
 
@@ -123,27 +123,19 @@ const Navigation: React.FC<NavigationProps> = ({ currentPath }) => {
           <a 
             href="/" 
             className={`text-sm font-normal transition-colors duration-300 hover:text-black whitespace-nowrap ${
-              isProjectsListPage || isProjectDetailPage ? 'text-black' : 'text-neutral-500'
-            }`}
-          >
-            Home
-          </a>
-          <a 
-            href="/projects" 
-            className={`text-sm font-normal transition-colors duration-300 hover:text-black whitespace-nowrap ${
-              isProjectsListPage || isProjectDetailPage ? 'text-black' : 'text-neutral-500'
+              isHomePage ? 'text-black' : 'text-neutral-500'
             }`}
           >
             Projects
           </a>
           <a 
-            href="/projects#project-1" 
+            href="/#project-1" 
             className="text-neutral-500 text-sm font-normal transition-colors duration-300 hover:text-black whitespace-nowrap"
           >
             Emaar
           </a>
           <a 
-            href="/projects#project-6" 
+            href="/#project-6" 
             className="text-neutral-500 text-sm font-normal transition-colors duration-300 hover:text-black whitespace-nowrap"
           >
             HMR Waterfront
@@ -203,18 +195,18 @@ const Navigation: React.FC<NavigationProps> = ({ currentPath }) => {
       >
         <div className="px-10 py-[30px] flex flex-col gap-5">
           <a
-            href="/projects"
+            href="/"
             className={`text-neutral-500 text-base font-medium transition-all duration-300 py-3 
               border-b border-black/5 flex justify-between items-center
               hover:text-black hover:translate-x-[5px] ${
-              isProjectsListPage || isProjectDetailPage ? 'text-black' : ''
+              isHomePage ? 'text-black' : ''
             }`}
             onClick={closeMenu}
           >
             Projects
           </a>
           <a
-            href="/projects?section=emaar"
+            href="/#project-1"
             className="text-neutral-500 text-base font-medium transition-all duration-300 py-3 
               border-b border-black/5 flex justify-between items-center
               hover:text-black hover:translate-x-[5px]"
@@ -226,7 +218,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPath }) => {
             </span>
           </a>
           <a
-            href="/projects#project-6"
+            href="/#project-6"
             className="text-neutral-500 text-base font-medium transition-all duration-300 py-3 
               border-b border-black/5 flex justify-between items-center
               hover:text-black hover:translate-x-[5px]"

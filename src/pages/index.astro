@@ -1,91 +1,128 @@
 ---
-// src/pages/index.astro
+// src/pages/index.astro - Improved version with better TypeScript support
 import Layout from '../layouts/Layout.astro';
 import Navigation from '../components/Navigation.tsx';
-import HeroSection from '../components/HeroSection.tsx';
-import BottomNavigation from '../components/BottomNavigation.tsx';
-import ProjectsSidebar from '../components/ProjectsSidebar.tsx';
-import ProjectsGrid from '../components/ProjectsGrid.tsx';
+import ProjectsList from '../components/ProjectsList.tsx';
+import ProjectsSlideshow from '../components/Slideshow.tsx';
 import { projects } from '../data/projects.js';
-import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 
 const currentPath = Astro.url.pathname;
-return Astro.redirect('/projects');
+
+// Group projects by location
+const emaarProjects = projects.filter(p => p.location === 'Emaar');
+const hmrProjects = projects.filter(p => p.location === 'HMR');
+
+// Define slideshow image interface
+interface SlideshowImage {
+  src: string;
+  alt: string;
+}
+
+// Import slideshow images with better type handling
+const slideshowImageModules = import.meta.glob<{ default: ImageMetadata }>('../assets/projects/slideshow/*.{webp,jpg,jpeg,png}', { eager: true });
+
+// Format images for the slideshow component with proper typing
+let formattedSlideshowImages: SlideshowImage[] = [];
+
+try {
+  formattedSlideshowImages = Object.entries(slideshowImageModules)
+    .map(([path, module], index) => {
+      if (module?.default) {
+        return {
+          src: module.default.src || module.default,
+          alt: `Project Slideshow Image ${index + 1}`
+        } as SlideshowImage;
+      }
+      return null;
+    })
+    .filter((img): img is SlideshowImage => img !== null)
+    .slice(0, 10); // Limit to 10 images for performance
+} catch (error) {
+  console.warn('Failed to load slideshow images:', error);
+}
+
+// Fallback: If no slideshow images found, use project images
+if (formattedSlideshowImages.length === 0) {
+  formattedSlideshowImages = projects.slice(0, 5).map((project, index) => ({
+    src: project.image.src,
+    alt: `${project.name} - ${project.location}`
+  }));
+}
 ---
 
 <Layout title="BYG-BinYousufGroup">
   <Navigation currentPath={currentPath} client:load />
-  <HeroSection client:load />
-  <BottomNavigation currentPath={currentPath} client:load />
   
-  <!-- Fullscreen Project Image Animation Container - Desktop Only -->
-  <div class="fixed top-0 left-0 w-screen h-screen pointer-events-none z-[999] hidden lg:block">
-    <div 
-      class="absolute top-full left-0 w-screen h-screen overflow-hidden opacity-0 transition-none will-change-transform"
-      id="animatedProjectImage"
-    >
-      {projects[0] && (
-        <Image
-          src={projects[0].image}
-          alt={projects[0].name}
-          id="mainAnimatedImage"
-          class="w-full h-full object-cover block"
-          width={1920}
-          height={1080}
-          quality={90}
-          format="webp"
-          loading="eager"
-        />
-      )}
-    </div>
-  </div>
   
-  <!-- Desktop scroll spacer -->
-  <div class="h-[110vh] bg-white hidden lg:block" id="scrollSpacer"></div>
-  
-  <!-- Desktop Section -->
-  <section class="min-h-screen relative hidden lg:flex pt-[12vh]">
-    <ProjectsSidebar currentPath={currentPath} client:visible />
-    <ProjectsGrid client:visible />
+  <!-- Slideshow Section - Below Navbar -->
+  <section class="w-full mt-10">
+    <ProjectsSlideshow 
+      images={formattedSlideshowImages}
+      autoPlayInterval={2000}
+      showDots={true}
+      showArrows={false}
+      height="60vh"
+      client:load 
+    />
   </section>
-
-  <!-- Mobile Projects Section -->
-  <section class="block lg:hidden bg-white min-h-screen py-[60px] pb-20">
-    <div class="max-w-full mx-auto px-5">
-      <h2 class="text-[32px] font-semibold text-center mb-10 text-neutral-800">Our Projects</h2>
-      <div class="flex flex-col gap-[30px]">
-        {projects.map((project, index) => (
-          <a 
-            href={`/projects#project-${project.id}`}
-            class="block bg-white -rounded-2xl overflow-hidden -shadow-[0_10px_30px_rgba(0,0,0,0.1)] transition-all duration-300 no-underline text-inherit active:scale-[0.98]"
-            data-project={project.id}
-          >
-            <div class="w-full h-[250px] overflow-hidden relative">
-              <Image
-                src={project.image}
-                alt={project.name}
-                width={800}
-                height={600}
-                quality={85}
-                format="webp"
-                loading={index < 2 ? "eager" : "lazy"}
-                class="w-full h-full object-cover transition-transform duration-300 active:scale-105"
-              />
-            </div>
-            
-            <div class="p-5 bg-white">
-              <span class="text-xs text-neutral-500 font-medium block mb-2">{project.number}</span>
-              <h3 class="text-[22px] font-semibold mb-1.5 leading-[1.3] text-neutral-800">{project.name}</h3>
-              <p class="text-sm text-neutral-600 font-normal mb-0">{project.location}</p>
-            </div>
-          </a>
-        ))}
-      </div>
-    </div>
-  </section>
+  
+  <!-- Main Projects Content -->
+  <main class="pt-0">
+    <ProjectsList 
+      projects={projects}
+      emaarProjects={emaarProjects}
+      hmrProjects={hmrProjects}
+      client:load 
+    />
+  </main>
 </Layout>
 
-<!-- Keep the existing script that imports the main TypeScript file -->
+<style>
+  /* Ensure smooth scrolling without conflicts */
+  html {
+    scroll-behavior: auto; /* Let GSAP handle smooth scrolling */
+  }
+  
+  /* Prevent layout shifts during loading */
+  main {
+    min-height: 100vh;
+  }
+  
+  /* Optimize for performance */
+  * {
+    will-change: auto;
+  }
+  
+  /* Reduce motion for users who prefer it */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* Slideshow specific optimizations */
+  .slideshow-container {
+    contain: layout style paint;
+  }
+</style>
+
 <script>
-  import('../scripts/main/index.ts');
+  // Prevent the main TypeScript animations from running on projects page
+  // This ensures no conflicts between React components and TS scroll handlers
+  
+  // Remove any existing scroll listeners from main.ts
+  if (typeof window !== 'undefined') {
+    // Clean up any existing main.ts scroll listeners
+    const existingHandlers = (window as any).__scrollHandlers || [];
+    existingHandlers.forEach((handler: EventListener) => {
+      window.removeEventListener('scroll', handler);
+    });
+    (window as any).__scrollHandlers = [];
+    
+    // Mark this page as projects page to prevent main.ts initialization
+    (window as any).__isProjectsPage = true;
+  }
 </script>

@@ -1,5 +1,5 @@
 ---
-// src/pages/projects/[id].astro - Alternative approach without type assertion
+// src/pages/projects/[id].astro - Fixed gallery image loading
 import type { GetStaticPaths, GetStaticPathsResult } from "astro";
 import ProjectLayout from '../../layouts/ProjectLayout.astro';
 import type { ProjectData } from '../../types/project';
@@ -331,78 +331,65 @@ export const getStaticPaths: GetStaticPaths = async (): Promise<GetStaticPathsRe
 const projectInfo = Astro.props.projectInfo as ProjectInfo;
 const projectId = Astro.props.projectId as string;
 
-// Helper function to safely import images with proper typing
-async function safeImageImport(imagePath: string): Promise<ImageMetadata | null> {
-  try {
-    const imageModules = import.meta.glob('../../assets/projects/**/*.{webp,jpg,jpeg,png}');
-    if (imageModules[imagePath]) {
-      const module = await imageModules[imagePath]() as { default: ImageMetadata };
-      return module.default;
-    }
-    return null;
-  } catch (error) {
-    console.warn(`Could not load image: ${imagePath}`, error);
-    return null;
+// Enhanced image loading function
+async function loadProjectImages(projectLocation: string, projectId: string): Promise<{
+  heroImage: ImageMetadata;
+  galleryImages: Array<{
+    src: ImageMetadata;
+    alt: string;
+    width: number;
+    height: number;
+  }>;
+}> {
+  // Get all image modules with import.meta.glob
+  const imageModules = import.meta.glob<{ default: ImageMetadata }>('../../assets/projects/**/*.{webp,jpg,jpeg,png}', { eager: true });
+  
+  // Normalize location name for path matching
+  const locationPath = projectLocation.toLowerCase();
+  
+  // Try to find hero image (main-image.webp)
+  let heroImage: ImageMetadata = projectInfo.image; // fallback to project list image
+  const heroImagePath = `../../assets/projects/${locationPath}/${projectId}/main-image.webp`;
+  
+  if (imageModules[heroImagePath]) {
+    heroImage = imageModules[heroImagePath].default;
   }
-}
-
-// Build safe image paths
-const basePath = `../../assets/projects/emaar/${projectInfo.location.toLowerCase()}/${projectId}`;
-const heroImagePath = `${basePath}/main-image.webp`;
-
-// Try to load gallery images safely
-const galleryImages: Array<{
-  src: ImageMetadata;
-  alt: string;
-  width: number;
-  height: number;
-}> = [];
-
-const maxGalleryImages = 10; // Limit to prevent build issues
-
-for (let i = 1; i <= maxGalleryImages; i++) {
-  try {
-    const imagePath = `${basePath}/gallery-${i}.webp`;
-    const image = await safeImageImport(imagePath);
+  
+  // Try to find gallery images (gallery-1.webp, gallery-2.webp, etc.)
+  const galleryImages: Array<{
+    src: ImageMetadata;
+    alt: string;
+    width: number;
+    height: number;
+  }> = [];
+  
+  // Check for gallery images up to 20
+  for (let i = 1; i <= 20; i++) {
+    const galleryImagePath = `../../assets/projects/${locationPath}/${projectId}/gallery-${i}.webp`;
     
-    if (image) {
+    if (imageModules[galleryImagePath]) {
       galleryImages.push({
-        src: image,
+        src: imageModules[galleryImagePath].default,
         alt: `${projectInfo.name} - Gallery Image ${i}`,
         width: 1200,
         height: 800
       });
     }
-  } catch (error) {
-    // Skip corrupted or missing images
-    console.warn(`Skipping gallery image ${i} for ${projectId}:`, error);
-    continue;
   }
+  
+  // If no gallery images found, return empty array (don't create fake duplicates)
+  if (galleryImages.length === 0) {
+    console.log(`No gallery images found for ${projectInfo.name} - showing single image layout`);
+  }
+  
+  return {
+    heroImage,
+    galleryImages
+  };
 }
 
-// Use main project image as hero if available, otherwise use fallback
-let heroImage: ImageMetadata;
-try {
-  const loadedHeroImage = await safeImageImport(heroImagePath);
-  if (loadedHeroImage) {
-    heroImage = loadedHeroImage;
-  } else {
-    heroImage = projectInfo.image; // Fallback to main project image
-  }
-} catch (error) {
-  console.warn(`Using fallback hero image for ${projectId}:`, error);
-  heroImage = projectInfo.image;
-}
-
-// If no gallery images found, use the hero image as a gallery item
-if (galleryImages.length === 0) {
-  galleryImages.push({
-    src: heroImage,
-    alt: `${projectInfo.name} - Main Image`,
-    width: 1200,
-    height: 800
-  });
-}
+// Load images for this project
+const { heroImage, galleryImages } = await loadProjectImages(projectInfo.location, projectId);
 
 // Get project-specific content with proper type checking
 const content: ProjectContent = projectContent[projectId] || {
