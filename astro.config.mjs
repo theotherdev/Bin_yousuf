@@ -1,26 +1,19 @@
-// astro.config.mjs
+// astro.config.mjs - Without sitemap integration
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import tailwind from '@astrojs/tailwind';
-
 import vercel from '@astrojs/vercel';
 
-// https://astro.build/config
 export default defineConfig({
+  site: 'https://www.binyousufgroup.com',
+  
   integrations: [
     react(),
     tailwind({
-      applyBaseStyles: false // Keep your custom global styles
+      applyBaseStyles: false
     })
   ],
 
   output: 'static',
-
-  vite: {
-    define: {
-      'import.meta.env.DEV': JSON.stringify(process.env.NODE_ENV === 'development')
-    }
-  },
-
   adapter: vercel()
 });

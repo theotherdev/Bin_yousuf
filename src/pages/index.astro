@@ -1,5 +1,5 @@
 ---
-// src/pages/index.astro - Improved version with better TypeScript support
+// src/pages/index.astro - Enhanced with SEO optimization
 import Layout from '../layouts/Layout.astro';
 import Navigation from '../components/Navigation.tsx';
 import ProjectsList from '../components/ProjectsList.tsx';
@@ -9,21 +9,23 @@ import type { ImageMetadata } from 'astro';
 
 const currentPath = Astro.url.pathname;
 
+// Enhanced SEO meta data
+const seoData = {
+  title: "BinYousuf Group - Luxury Waterfront Properties Karachi | Emaar & HMR Official Partner",
+  description: "BinYousuf Group (BYG) - Official sales partners of Emaar Oceanfront & HMR Waterfront. Discover luxury sea-facing apartments and waterfront properties in DHA Phase 8, Karachi. Expert real estate consultants specializing in premium oceanfront investments.",
+  keywords: "waterfront properties Karachi, Emaar Oceanfront Karachi, HMR Waterfront, luxury apartments Karachi, sea facing apartments DHA Phase 8, BinYousuf Group, real estate Karachi, oceanfront properties Pakistan, luxury real estate investment, DHA Phase 8 properties, waterfront living Karachi",
+  image: "/og-image.jpg" // You'll need to create this
+};
+
 // Group projects by location
 const emaarProjects = projects.filter(p => p.location === 'Emaar');
 const hmrProjects = projects.filter(p => p.location === 'HMR');
-
-// Define slideshow image interface
-interface SlideshowImage {
-  src: string;
-  alt: string;
-}
 
 // Import slideshow images with better type handling
 const slideshowImageModules = import.meta.glob<{ default: ImageMetadata }>('../assets/projects/slideshow/*.{webp,jpg,jpeg,png}', { eager: true });
 
 // Format images for the slideshow component with proper typing
-let formattedSlideshowImages: SlideshowImage[] = [];
+let formattedSlideshowImages: Array<{ src: string; alt: string }> = [];
 
 try {
   formattedSlideshowImages = Object.entries(slideshowImageModules)
@@ -31,13 +33,13 @@ try {
       if (module?.default) {
         return {
           src: module.default.src || module.default,
-          alt: `Project Slideshow Image ${index + 1}`
-        } as SlideshowImage;
+          alt: `Luxury Waterfront Property ${index + 1} - BinYousuf Group`
+        };
       }
       return null;
     })
-    .filter((img): img is SlideshowImage => img !== null)
-    .slice(0, 10); // Limit to 10 images for performance
+    .filter((img): img is { src: string; alt: string } => img !== null)
+    .slice(0, 10);
 } catch (error) {
   console.warn('Failed to load slideshow images:', error);
 }
@@ -46,17 +48,69 @@ try {
 if (formattedSlideshowImages.length === 0) {
   formattedSlideshowImages = projects.slice(0, 5).map((project, index) => ({
     src: project.image.src,
-    alt: `${project.name} - ${project.location}`
+    alt: `${project.name} - ${project.location} Luxury Waterfront Property`
   }));
 }
+
+// Structured data for the homepage
+const homepageStructuredData = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": seoData.title,
+  "description": seoData.description,
+  "url": "https://www.binyousufgroup.com/",
+  "mainEntity": {
+    "@type": "RealEstateAgent",
+    "name": "BinYousuf Group",
+    "description": "Official sales partners specializing in luxury waterfront properties",
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Waterfront Properties Portfolio",
+      "itemListElement": projects.map((project, index) => ({
+        "@type": "Offer",
+        "position": index + 1,
+        "itemOffered": {
+          "@type": "Apartment",
+          "name": project.name,
+          "description": `Luxury ${project.location} waterfront property in Karachi`,
+          "location": {
+            "@type": "Place",
+            "name": "Karachi, Pakistan",
+            "address": "DHA Phase 8, Karachi"
+          }
+        }
+      }))
+    }
+  },
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://www.binyousufgroup.com/"
+      }
+    ]
+  }
+};
 ---
 
-<Layout title="BYG-BinYousufGroup">
+<Layout 
+  title={seoData.title}
+  description={seoData.description}
+  keywords={seoData.keywords}
+  image={seoData.image}
+  url="https://www.binyousufgroup.com/"
+  type="website"
+>
+  <!-- Structured Data for Homepage -->
+  <script type="application/ld+json" set:html={JSON.stringify(homepageStructuredData)} />
+  
   <Navigation currentPath={currentPath} client:load />
   
-  
-  <!-- Slideshow Section - Below Navbar -->
-  <section class="w-full mt-10">
+  <!-- Hero Section with SEO-optimized content -->
+  <section class="w-full mt-10" aria-label="Featured Waterfront Properties">
     <ProjectsSlideshow 
       images={formattedSlideshowImages}
       autoPlayInterval={2000}
@@ -67,8 +121,28 @@ if (formattedSlideshowImages.length === 0) {
     />
   </section>
   
+  <!-- Hidden SEO content for search engines -->
+  <div class="sr-only">
+    <h1>BinYousuf Group - Luxury Waterfront Properties in Karachi</h1>
+    <p>
+      Discover premium oceanfront living with BinYousuf Group, the official sales partners 
+      of Emaar Oceanfront and HMR Waterfront in Karachi, Pakistan. We specialize in luxury 
+      sea-facing apartments and waterfront properties in DHA Phase 8, offering unparalleled 
+      investment opportunities in Karachi's most prestigious coastal developments.
+    </p>
+    <h2>Featured Waterfront Projects</h2>
+    <ul>
+      {projects.map(project => (
+        <li>
+          <strong>{project.name}</strong> - {project.location} luxury waterfront property 
+          featuring premium amenities and stunning sea views in DHA Phase 8, Karachi.
+        </li>
+      ))}
+    </ul>
+  </div>
+  
   <!-- Main Projects Content -->
-  <main class="pt-0">
+  <main class="pt-0" role="main" aria-label="Waterfront Properties Portfolio">
     <ProjectsList 
       projects={projects}
       emaarProjects={emaarProjects}
@@ -79,22 +153,32 @@ if (formattedSlideshowImages.length === 0) {
 </Layout>
 
 <style>
-  /* Ensure smooth scrolling without conflicts */
-  html {
-    scroll-behavior: auto; /* Let GSAP handle smooth scrolling */
+  /* Screen reader only content for SEO */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
   
-  /* Prevent layout shifts during loading */
+  /* Ensure smooth scrolling without conflicts */
+  html {
+    scroll-behavior: auto;
+  }
+  
   main {
     min-height: 100vh;
   }
   
-  /* Optimize for performance */
   * {
     will-change: auto;
   }
   
-  /* Reduce motion for users who prefer it */
   @media (prefers-reduced-motion: reduce) {
     * {
       animation-duration: 0.01ms !important;
@@ -103,7 +187,6 @@ if (formattedSlideshowImages.length === 0) {
     }
   }
 
-  /* Slideshow specific optimizations */
   .slideshow-container {
     contain: layout style paint;
   }
@@ -111,18 +194,12 @@ if (formattedSlideshowImages.length === 0) {
 
 <script>
   // Prevent the main TypeScript animations from running on projects page
-  // This ensures no conflicts between React components and TS scroll handlers
-  
-  // Remove any existing scroll listeners from main.ts
   if (typeof window !== 'undefined') {
-    // Clean up any existing main.ts scroll listeners
     const existingHandlers = (window as any).__scrollHandlers || [];
     existingHandlers.forEach((handler: EventListener) => {
       window.removeEventListener('scroll', handler);
     });
     (window as any).__scrollHandlers = [];
-    
-    // Mark this page as projects page to prevent main.ts initialization
     (window as any).__isProjectsPage = true;
   }
 </script>

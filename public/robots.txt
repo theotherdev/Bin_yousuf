@@ -1,0 +1,19 @@
+# robots.txt for binyousufgroup.com
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://www.binyousufgroup.com/sitemap.xml
+
+# Crawl-delay for polite crawling
+Crawl-delay: 1
+
+# Block access to admin/private areas (if any)
+Disallow: /api/
+Disallow: /_astro/
+Disallow: /admin/
+
+# Allow important pages
+Allow: /about
+Allow: /privacy-policy
+Allow: /projects/
