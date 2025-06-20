@@ -1,4 +1,4 @@
-// src/components/WhatsAppButton.tsx
+// src/components/WhatsAppButton.tsx - Updated with new WhatsApp message
 import React, { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 
@@ -9,7 +9,7 @@ interface WhatsAppButtonProps {
 }
 
 const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({ 
-  message = "Hi! I'm interested in learning more about BYG and your waterfront properties. Could you please provide me with more information?",
+  message = "Hi! I'm interested in learning more about EMAAR & HMR waterfront properties. Could you please provide me with more information?",
   phoneNumber = "923360878079",
   className = ""
 }) => {

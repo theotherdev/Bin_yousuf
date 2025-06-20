@@ -1,4 +1,4 @@
-// src/components/ProjectsList.tsx - Fixed version with no URL changes during scroll
+// src/components/ProjectsList.tsx - Fixed image display issue
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { gsap } from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
@@ -178,6 +178,40 @@ const ProjectsList: React.FC<ProjectsListProps> = ({ projects, emaarProjects, hm
     return `/projects/${project.name.toLowerCase().replace(/[\s&]/g, '-').replace(/--+/g, '-')}`;
   }, []);
 
+  // Smart image handling based on project characteristics
+  const getImageConfig = (project: Project) => {
+    // Vertical/Portrait images - need portrait containers
+    const verticalProjects = ['H1 Tower'];
+    
+    // Wide panoramic images - work better with object-contain
+    const panoramicProjects = ['Pearl & Reef Towers', 'The Views'];
+    
+    // Standard landscape images - work fine with object-cover
+    const standardProjects = ['Panorama', 'Park Edge', 'Coral Towers', 'AA Waterfront', 
+                             'Gold Crest Residence', 'H&S Residence', 'Saima Marina', 
+                             'Saima Waterfront', 'Beach Terraces'];
+
+    if (verticalProjects.includes(project.name)) {
+      return { 
+        type: 'vertical', 
+        aspectRatio: '4/5', 
+        objectFit: 'object-cover' 
+      };
+    } else if (panoramicProjects.includes(project.name)) {
+      return { 
+        type: 'panoramic', 
+        aspectRatio: '16/9', 
+        objectFit: 'object-contain' 
+      };
+    } else {
+      return { 
+        type: 'standard', 
+        aspectRatio: '16/10', 
+        objectFit: 'object-cover' 
+      };
+    }
+  };
+
   // Initialize everything
   useEffect(() => {
     handleInitialScroll();
@@ -246,7 +280,7 @@ const ProjectsList: React.FC<ProjectsListProps> = ({ projects, emaarProjects, hm
               <span className="text-sm text-neutral-500 font-medium">
                 {project.number}
               </span>
-              <h2 className="text-clamp-title- text-7xl font-semibold leading-tight text-neutral-800 m-0">
+              <h2 className="text-7xl font-semibold leading-tight text-neutral-800 m-0">
                 {project.name}
               </h2>
               <p className="text-lg text-neutral-600 font-normal">
@@ -254,33 +288,64 @@ const ProjectsList: React.FC<ProjectsListProps> = ({ projects, emaarProjects, hm
               </p>
             </div>
             
-            {/* Project Image */}
+            {/* Smart Image Container - Adapts to each project's image characteristics */}
             <a 
               href={getProjectUrl(project)}
-              className="w-full h-[70vh] overflow-hidden -rounded-2xl 
-                -shadow-[0_40px_80px_rgba(0,0,0,0.15)] relative block 
-                no-underline text-inherit transition-all duration-500
-                ease-out group hover:-translate-y-2 
-                hover:shadow-[0_50px_100px_rgba(0,0,0,0.2)]
-                focus:outline-none focus:ring-4 focus:ring-blue-500/20"
+              className="w-full relative block no-underline text-inherit transition-all 
+                duration-500 ease-out group hover:-translate-y-2 focus:outline-none 
+                focus:ring-4 focus:ring-blue-500/20"
             >
-              <img
-                src={project.image.src}
-                alt={project.name}
-                className="w-full h-full object-cover transition-transform 
-                  duration-700 ease-out group-hover:scale-105"
-                loading={index < 2 ? "eager" : "lazy"}
-              />
-              
-              {/* Overlay for better interaction feedback */}
-              <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/10" />
+              {/* Image Container - Optimized for each project */}
+              <div className="relative w-full overflow-hidden rounded-2xl 
+                shadow-[0_40px_80px_rgba(0,0,0,0.15)] group-hover:shadow-[0_50px_100px_rgba(0,0,0,0.2)]
+                transition-shadow duration-500">
+                
+                {(() => {
+                  const config = getImageConfig(project);
+                  const needsBackground = config.objectFit === 'object-contain';
+                  
+                  return (
+                    <>
+                      {/* Desktop: Optimized container for each project */}
+                      <div 
+                        className={`hidden lg:block relative w-full ${needsBackground ? 'bg-neutral-100' : ''}`} 
+                        style={{ aspectRatio: config.aspectRatio }}
+                      >
+                        <img
+                          src={project.image.src}
+                          alt={project.name}
+                          className={`absolute inset-0 w-full h-full ${config.objectFit} object-center 
+                            transition-transform duration-700 ease-out group-hover:scale-105`}
+                          loading={index < 2 ? "eager" : "lazy"}
+                        />
+                      </div>
+
+                      {/* Mobile: Standard approach for all */}
+                      <div className="block lg:hidden relative w-full h-[60vh]">
+                        <img
+                          src={project.image.src}
+                          alt={project.name}
+                          className="absolute inset-0 w-full h-full object-cover object-center 
+                            transition-transform duration-700 ease-out group-hover:scale-105"
+                          loading={index < 2 ? "eager" : "lazy"}
+                        />
+                      </div>
+                    </>
+                  );
+                })()}
+                
+                {/* Overlay for better interaction feedback */}
+                <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/10" />
+              </div>
             </a>
             
             {/* Desktop Details Button */}
             <div className="col-span-full text-center mt-10 hidden lg:block">
               <a 
                 href={getProjectUrl(project)}
-                className="btn-secondary transition-all duration-300"
+                className="inline-block px-10 py-4 bg-neutral-800 text-white no-underline 
+                  rounded-lg font-medium transition-all duration-300 hover:bg-black 
+                  hover:-translate-y-0.5 transform backface-visibility-hidden will-change-transform"
               >
                 View Project Details
               </a>

@@ -1,4 +1,4 @@
-// src/components/Footer.tsx - Updated for new homepage structure
+// src/components/Footer.tsx - Updated with new WhatsApp message
 import React from 'react';
 import { projects, getProjectCounts } from '../data/projects.js';
 import logoImage from '../assets/projects/logo.webp';
@@ -10,7 +10,7 @@ const Footer: React.FC = () => {
   const hmrProjects = projects.filter(p => p.location === 'HMR');
 
   const handleWhatsAppClick = () => {
-    const message = "Hi! I'm interested in learning more about BYG projects. Could you please provide me with more information?";
+    const message = "Hi! I'm interested in learning more about EMAAR & HMR waterfront properties. Could you please provide me with more information?";
     const whatsappUrl = `https://wa.me/923360878079?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
