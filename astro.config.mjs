@@ -15,5 +15,13 @@ export default defineConfig({
   ],
 
   output: 'static',
-  adapter: vercel()
+  adapter: vercel(),
+  
+  vite: {
+    build: {
+      rollupOptions: {
+        external: ['googleapis']
+      }
+    }
+  }
 });
