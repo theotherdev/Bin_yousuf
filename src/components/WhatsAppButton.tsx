@@ -179,7 +179,7 @@ const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
         onClick={handleWhatsAppClick}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className="group relative overflow-hidden bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg will-change-transform"
+        className="group relative overflow-hidden bg-[#121212] hover:bg-black text-white shadow-lg will-change-transform"
         style={{
           borderRadius: '25px',
           padding: '12px 20px',

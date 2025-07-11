@@ -273,7 +273,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPath }) => {
             onClick={handleWhatsAppClick}
             onMouseEnter={handleWhatsAppHover}
             onMouseLeave={handleWhatsAppLeave}
-            className="relative flex items-center justify-center bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white w-9 h-9 rounded-full shadow-md hover:shadow-lg transition-all duration-300 will-change-transform group"
+            className="relative flex items-center justify-center bg-[#121212] hover:bg-black text-white w-9 h-9 rounded-full shadow-md hover:shadow-lg transition-all duration-300 will-change-transform group"
             aria-label="Contact us on WhatsApp"
             title="WhatsApp Us"
           >
@@ -291,7 +291,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPath }) => {
           <button
             ref={whatsappMobileBtnRef}
             onClick={handleWhatsAppClick}
-            className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white p-2 rounded-full shadow-md transition-all duration-300 active:scale-95 flex items-center justify-center"
+            className="bg-[#121212] hover:bg-black text-white p-2 rounded-full shadow-md transition-all duration-300 active:scale-95 flex items-center justify-center"
             style={{ minWidth: '40px', minHeight: '40px' }}
             aria-label="Contact us on WhatsApp"
           >

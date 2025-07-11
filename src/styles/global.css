@@ -142,10 +142,10 @@
 
   /* Button Styles */
   .btn-primary {
-    @apply inline-flex items-center gap-3 bg-gradient-to-r from-[#667eea] to-[#764ba2] 
+    @apply inline-flex items-center gap-3 bg-[#121212] 
            text-white border-none px-8 py-4 rounded-xl text-base font-medium 
            cursor-pointer transition-all duration-300
-           hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(102,126,234,0.4)];
+           hover:bg-black hover:-translate-y-0.5 hover:shadow-lg;
     
     /* GPU acceleration */
     transform: translateZ(0);
@@ -154,7 +154,7 @@
   }
 
   .btn-secondary {
-    @apply inline-block px-10 py-4 bg-neutral-800 text-white no-underline 
+    @apply inline-block px-10 py-4 bg-[#121212] text-white no-underline 
            rounded-lg font-medium transition-all duration-300
            hover:bg-black hover:-translate-y-0.5;
     

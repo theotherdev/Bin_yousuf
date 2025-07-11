@@ -343,7 +343,7 @@ const ProjectsList: React.FC<ProjectsListProps> = ({ projects, emaarProjects, hm
             <div className="col-span-full text-center mt-10 hidden lg:block">
               <a 
                 href={getProjectUrl(project)}
-                className="inline-block px-10 py-4 bg-neutral-800 text-white no-underline 
+                className="inline-block px-10 py-4 bg-[#121212] text-white no-underline 
                   rounded-lg font-medium transition-all duration-300 hover:bg-black 
                   hover:-translate-y-0.5 transform backface-visibility-hidden will-change-transform"
               >

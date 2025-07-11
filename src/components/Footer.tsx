@@ -1,4 +1,4 @@
-// src/components/Footer.tsx - Updated without WhatsApp button
+// src/components/Footer.tsx - Minimalistic Footer Design
 import React from 'react';
 import { projects, getProjectCounts } from '../data/projects.js';
 import logoImage from '../assets/projects/logo.webp';
@@ -11,76 +11,62 @@ const Footer: React.FC = () => {
 
   return (
     <>
-      {/* Footer Separator - Updated gradient */}
-      <div className="w-full h-px bg-gradient-to-r from-transparent via-blue-300 to-transparent"></div>
+      {/* Simple Separator */}
+      <div className="w-full border-t border-gray-300"></div>
       
-      <footer className="relative w-full bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 py-16">
-        {/* Subtle pattern overlay */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 0%, transparent 50%), 
-                             radial-gradient(circle at 75% 75%, rgba(255,255,255,0.1) 0%, transparent 50%)`
-          }}></div>
-        </div>
-        
-        <div className="relative mx-auto w-full max-w-7xl px-8">
+      <footer className="relative w-full py-16" style={{backgroundColor: '#F2F2EC'}}>
+        <div className="relative mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           
-          {/* Main Footer Content */}
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-12 mb-16">
-            
-            {/* Company Logo and Info */}
-            <div className="lg:col-span-1">
-              <div className="mb-8">
+          {/* Centered Header Section */}
+          <div className="text-center mb-12 px-6">
+            <div className="mb-4 pt-16">
+              <a href="/" className="inline-block">
                 <img 
                   src={logoImage.src} 
                   alt="BYG Logo" 
-                  className="h-16 w-auto mb-4 filter brightness-0 invert"
+                  className="h-11 mx-auto mb-4 transition-transform duration-300 hover:scale-105 cursor-pointer"
+                  style={{width: '30%', objectFit: 'contain'}}
                 />
-              </div>
+              </a>
             </div>
-
-            {/* Pages Column - Updated with new structure */}
+          </div>
+          
+          {/* Main Footer Content */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            
+            {/* Pages Column */}
             <div>
-              <h3 className="text-lg font-semibold text-white mb-6 uppercase tracking-wider">
+              <h3 className="text-lg font-semibold text-gray-900 mb-6 uppercase tracking-wider">
                 PAGES
               </h3>
               <nav className="space-y-4">
-                {/* Panorama */}
                 <a 
                   href="/projects/panorama" 
-                  className="block text-neutral-300 hover:text-white transition-colors duration-300 text-sm hover:translate-x-1 transform"
+                  className="block text-gray-600 hover:text-gray-900 transition-colors duration-300 text-sm hover:translate-x-1 transform"
                 >
                   Panorama
                 </a>
-                
-                {/* The Views */}
                 <a 
                   href="/projects/the-views" 
-                  className="block text-neutral-300 hover:text-white transition-colors duration-300 text-sm hover:translate-x-1 transform"
+                  className="block text-gray-600 hover:text-gray-900 transition-colors duration-300 text-sm hover:translate-x-1 transform"
                 >
                   The Views
                 </a>
-                
-                {/* AA Waterfront */}
                 <a 
                   href="/projects/aa-waterfront" 
-                  className="block text-neutral-300 hover:text-white transition-colors duration-300 text-sm hover:translate-x-1 transform"
+                  className="block text-gray-600 hover:text-gray-900 transition-colors duration-300 text-sm hover:translate-x-1 transform"
                 >
                   AA Waterfront
                 </a>
-                
-                {/* About Us */}
                 <a 
                   href="/about" 
-                  className="block text-neutral-300 hover:text-white transition-colors duration-300 text-sm hover:translate-x-1 transform"
+                  className="block text-gray-600 hover:text-gray-900 transition-colors duration-300 text-sm hover:translate-x-1 transform"
                 >
                   About Us
                 </a>
-                
-                {/* Privacy Policy */}
                 <a 
                   href="/privacy-policy" 
-                  className="block text-neutral-300 hover:text-white transition-colors duration-300 text-sm hover:translate-x-1 transform"
+                  className="block text-gray-600 hover:text-gray-900 transition-colors duration-300 text-sm hover:translate-x-1 transform"
                 >
                   Privacy Policy
                 </a>
@@ -89,7 +75,7 @@ const Footer: React.FC = () => {
 
             {/* Follow Us Column */}
             <div>
-              <h3 className="text-lg font-semibold text-white mb-6 uppercase tracking-wider">
+              <h3 className="text-lg font-semibold text-gray-900 mb-6 uppercase tracking-wider">
                 FOLLOW US
               </h3>
               <nav className="space-y-4">
@@ -97,7 +83,7 @@ const Footer: React.FC = () => {
                   href="https://www.linkedin.com/company/bin-yousuf" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="block text-neutral-300 hover:text-blue-300 transition-colors duration-300 text-sm hover:translate-x-1 transform"
+                  className="block text-gray-600 hover:text-gray-900 transition-colors duration-300 text-sm hover:translate-x-1 transform"
                 >
                   LinkedIn
                 </a>
@@ -105,7 +91,7 @@ const Footer: React.FC = () => {
                   href="https://www.instagram.com/binyousuf.group" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="block text-neutral-300 hover:text-blue-300 transition-colors duration-300 text-sm hover:translate-x-1 transform"
+                  className="block text-gray-600 hover:text-gray-900 transition-colors duration-300 text-sm hover:translate-x-1 transform"
                 >
                   Instagram
                 </a>
@@ -113,7 +99,7 @@ const Footer: React.FC = () => {
                   href="https://www.instagram.com/binyousuf.group" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="block text-neutral-300 hover:text-blue-300 transition-colors duration-300 text-sm hover:translate-x-1 transform"
+                  className="block text-gray-600 hover:text-gray-900 transition-colors duration-300 text-sm hover:translate-x-1 transform"
                 >
                   Facebook
                 </a>
@@ -121,46 +107,40 @@ const Footer: React.FC = () => {
                   href="https://www.instagram.com/binyousuf.group" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="block text-neutral-300 hover:text-blue-300 transition-colors duration-300 text-sm hover:translate-x-1 transform"
+                  className="block text-gray-600 hover:text-gray-900 transition-colors duration-300 text-sm hover:translate-x-1 transform"
                 >
                   YouTube
-                </a>
-                <a 
-                  href="mailto:info@binyousufgroup.com"
-                  className="block text-neutral-300 hover:text-blue-300 transition-colors duration-300 text-sm hover:translate-x-1 transform"
-                >
-                  info@binyousufgroup.com
                 </a>
               </nav>
             </div>
 
-            {/* Contact Information Column - Replaces WhatsApp button */}
+            {/* Contact Information Column */}
             <div>
-              <h3 className="text-lg font-semibold text-white mb-6 uppercase tracking-wider">
+              <h3 className="text-lg font-semibold text-gray-900 mb-6 uppercase tracking-wider">
                 CONTACT
               </h3>
               <div className="space-y-4">
-                <div className="text-neutral-300">
+                <div className="text-gray-600">
                   <p className="text-sm mb-2">Phone:</p>
                   <a 
                     href="tel:+923360878079"
-                    className="text-white hover:text-blue-300 transition-colors duration-300 font-medium"
+                    className="text-gray-900 hover:text-gray-700 transition-colors duration-300 font-medium"
                   >
                     +92 336 0878079
                   </a>
                 </div>
-                <div className="text-neutral-300">
+                <div className="text-gray-600">
                   <p className="text-sm mb-2">Email:</p>
                   <a 
                     href="mailto:info@binyousufgroup.com"
-                    className="text-white hover:text-blue-300 transition-colors duration-300 font-medium"
+                    className="text-gray-900 hover:text-gray-700 transition-colors duration-300 font-medium"
                   >
                     info@binyousufgroup.com
                   </a>
                 </div>
-                <div className="text-neutral-300">
+                <div className="text-gray-600">
                   <p className="text-sm mb-2">Location:</p>
-                  <p className="text-white text-sm">
+                  <p className="text-gray-900 text-sm">
                     DHA Phase 8, Karachi
                   </p>
                 </div>
@@ -169,24 +149,10 @@ const Footer: React.FC = () => {
           </div>
 
           {/* Bottom Section */}
-                      <div className="border-t border-blue-600 pt-8">
-            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+          <div className="border-t border-gray-300 pt-6">
+            <div className="flex flex-col items-center text-center gap-4">
               
-              {/* Copyright */}
-              <div className="text-sm text-neutral-400">
-                © {currentYear} Bin Yousuf Group™ — All Rights Reserved · With{' '}
-                <span className="text-red-400">❤</span> from{' '}
-                <a 
-                  href="https://otherdev.com/" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-neutral-300 hover:text-white transition-colors duration-300 underline hover:no-underline"
-                >
-                  The Other Dev
-                </a>
-              </div>
-
-              {/* Social Media Icons - Enhanced */}
+              {/* Social Media Icons */}
               <div className="flex gap-4">
                 
                 {/* Facebook */}
@@ -194,7 +160,7 @@ const Footer: React.FC = () => {
                   href="https://www.instagram.com/binyousuf.group" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="text-neutral-400 hover:text-blue-300 transition-all duration-300 p-2 rounded-none hover:bg-blue-400/10 hover:scale-110 transform"
+                  className="text-gray-500 hover:text-gray-700 transition-all duration-300 p-2 rounded-none hover:bg-gray-200/50 hover:scale-110 transform"
                 >
                   <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path
@@ -210,7 +176,7 @@ const Footer: React.FC = () => {
                   href="https://www.linkedin.com/company/bin-yousuf" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="text-neutral-400 hover:text-blue-300 transition-all duration-300 p-2 rounded-none hover:bg-blue-400/10 hover:scale-110 transform"
+                  className="text-gray-500 hover:text-gray-700 transition-all duration-300 p-2 rounded-none hover:bg-gray-200/50 hover:scale-110 transform"
                 >
                   <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
@@ -221,7 +187,7 @@ const Footer: React.FC = () => {
                 <a href="https://www.instagram.com/binyousuf.group" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="text-neutral-400 hover:text-blue-300 transition-all duration-300 p-2 rounded-none hover:bg-blue-400/10 hover:scale-110 transform"
+                  className="text-gray-500 hover:text-gray-700 transition-all duration-300 p-2 rounded-none hover:bg-gray-200/50 hover:scale-110 transform"
                 >
                   <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path
@@ -237,11 +203,25 @@ const Footer: React.FC = () => {
                   href="https://www.instagram.com/binyousuf.group" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="text-neutral-400 hover:text-blue-300 transition-all duration-300 p-2 rounded-none hover:bg-blue-400/10 hover:scale-110 transform"
+                  className="text-gray-500 hover:text-gray-700 transition-all duration-300 p-2 rounded-none hover:bg-gray-200/50 hover:scale-110 transform"
                 >
                   <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
                   </svg>
+                </a>
+              </div>
+              
+              {/* Copyright */}
+              <div className="text-sm text-gray-500">
+                © {currentYear} Bin Yousuf Group™ · With{' '}
+                <span className="text-red-500">❤</span> from{' '}
+                <a 
+                  href="https://otherdev.com/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-gray-700 hover:text-gray-900 transition-colors duration-300 underline hover:no-underline"
+                >
+                  The Other Dev
                 </a>
               </div>
             </div>
