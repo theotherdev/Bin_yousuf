@@ -33,8 +33,16 @@ export default defineConfig({
     },
     build: {
       rollupOptions: {
-        external: ['googleapis']
+        external: ['googleapis'],
+        output: {
+          globals: {
+            'gsap/ScrollToPlugin': 'ScrollToPlugin'
+          }
+        }
       }
+    },
+    ssr: {
+      noExternal: ['gsap']
     }
   }
 });

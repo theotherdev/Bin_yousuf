@@ -1,9 +1,12 @@
 // src/components/ProjectsSidebar.tsx - Fixed with click functionality
 import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
-import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
+import ScrollToPluginPkg from 'gsap/ScrollToPlugin';
 import { projects } from '../data/projects.js';
 import type { Project } from '../scripts/types/index.js';
+
+// Handle CommonJS/ES6 module compatibility
+const ScrollToPlugin = ScrollToPluginPkg.ScrollToPlugin || ScrollToPluginPkg.default || ScrollToPluginPkg;
 
 // Register GSAP plugin
 gsap.registerPlugin(ScrollToPlugin);

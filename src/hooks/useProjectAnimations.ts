@@ -1,8 +1,11 @@
 // src/hooks/useProjectAnimations.ts - Fixed version with footer detection
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
-import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
+import ScrollToPluginPkg from 'gsap/ScrollToPlugin';
 import type { Project } from '../scripts/types/index.js';
+
+// Handle CommonJS/ES6 module compatibility
+const ScrollToPlugin = ScrollToPluginPkg.ScrollToPlugin || ScrollToPluginPkg.default || ScrollToPluginPkg;
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollToPlugin);
