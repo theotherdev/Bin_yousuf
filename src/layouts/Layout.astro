@@ -1,6 +1,7 @@
 ---
 // src/layouts/Layout.astro - Updated without WhatsApp button
 import Footer from '../components/Footer.tsx';
+import StickyWhatsAppButton from '../components/StickyWhatsAppButton.tsx';
 import logoImage from '../assets/projects/logo.webp';
 
 export interface Props {
@@ -89,6 +90,9 @@ const { title, description = "BYG-BinYousufGroup" } = Astro.props;
     
     <!-- Footer Component -->
     <Footer client:load />
+    
+    <!-- Sticky WhatsApp Button -->
+    <StickyWhatsAppButton client:load />
     
     <style is:global>
       @import '../styles/global.css';

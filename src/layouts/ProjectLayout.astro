@@ -5,6 +5,7 @@ import { Image } from 'astro:assets';
 import { projects } from '../data/projects.js';
 import ContactForm from '../components/ContactForm.tsx';
 import ProjectAmenities from '../components/ProjectDetail/ProjectAmenities.tsx';
+import StickyWhatsAppButton from '../components/StickyWhatsAppButton.tsx';
 import { projectCompletionDates } from '../types/project';
 
 
@@ -240,6 +241,9 @@ const allProjects = projects;
             </div>
         </div>
     </div>
+    
+    <!-- Sticky WhatsApp Button -->
+    <StickyWhatsAppButton client:load />
 </body>
 </html>
 
