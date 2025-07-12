@@ -1,10 +1,30 @@
 # Bin Yousuf Group - Premium Real Estate
 
+[![Live Website](https://img.shields.io/badge/Live-Website-blue?style=for-the-badge)](https://www.binyousufgroup.com)
+[![Built with Astro](https://img.shields.io/badge/Built%20with-Astro-orange?style=for-the-badge&logo=astro)](https://astro.build)
+[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://typescriptlang.org)
+
 A modern, responsive real estate website built with Astro, React, TypeScript, and GSAP animations. Showcasing premium properties from EMAAR Oceanfront and HMR Waterfront developments in Karachi, Pakistan.
 
-## 🚀 Live Website
+## 🚀 Live Demo
 
-[https://www.binyousufgroup.com](https://www.binyousufgroup.com)
+🌐 **[View Live Website](https://www.binyousufgroup.com)**
+
+## 📚 Table of Contents
+
+- [Features](#-features)
+- [Tech Stack](#️-tech-stack)
+- [Quick Start](#-quick-start)
+- [Environment Setup](#-environment-setup)
+- [Build & Deploy](#-build--deploy)
+- [Project Structure](#-project-structure)
+- [Featured Properties](#-featured-properties)
+- [Lead Management](#-lead-management)
+- [API Documentation](#-api-documentation)
+- [Contributing](#-contributing)
+- [License](#-license)
+- [Support](#-support)
 
 ## ✨ Features
 
@@ -58,7 +78,7 @@ A modern, responsive real estate website built with Astro, React, TypeScript, an
 - **Deployment**: [Vercel](https://vercel.com/)
 - **Backend**: Google Sheets API for lead management
 
-## 📦 Installation
+## 🚀 Quick Start
 
 1. **Clone the repository**
    ```bash
@@ -270,13 +290,44 @@ bun run preview      # Preview production build
 bun run astro        # Run Astro CLI commands
 ```
 
-## 🔧 API Routes
+## 📡 API Documentation
 
 ### `/api/sheets` - Lead Submission
-- **Method**: POST
-- **Purpose**: Submit contact form data to Google Sheets
-- **Fields**: fullName, email, phone, property, source, url, userAgent
-- **Response**: JSON with success status and row count
+
+**Endpoint:** `POST /api/sheets`
+
+**Purpose:** Submit contact form data to Google Sheets
+
+**Request Body:**
+```json
+{
+  "fullName": "string (optional)",
+  "email": "string (optional)",
+  "phone": "string (optional)",  
+  "property": "string (optional)",
+  "source": "string (optional)",
+  "url": "string (optional)",
+  "userAgent": "string (optional)"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Lead submitted successfully",
+  "rowsUpdated": 1
+}
+```
+
+**Error Response:**
+```json
+{
+  "success": false,
+  "error": "Error message",
+  "details": "Detailed error information"
+}
+```
 
 ## 🤝 Contributing
 
@@ -299,13 +350,26 @@ This software is proprietary and confidential. Unauthorized copying, modificatio
 - **Vercel** - For seamless deployment
 - **Google Sheets API** - For lead management
 
-## 📞 Contact
+## 💬 Support
 
+### Business Inquiries
 **Bin Yousuf Group**
-- Website: [https://www.binyousufgroup.com](https://www.binyousufgroup.com)
-- WhatsApp: [+92 336 0878079](https://wa.me/923360878079)
-- Email: Contact via website form
+- 🌐 Website: [binyousufgroup.com](https://www.binyousufgroup.com)
+- 📱 WhatsApp: [+92 336 0878079](https://wa.me/923360878079)
+- 📧 Contact: Via website form
+
+### Technical Support
+**OtherDev**
+- 🌐 Website: [www.otherdev.com](https://www.otherdev.com)
+- 📧 Email: hello@otherdev.com
+- 💼 For technical issues, feature requests, or development support
 
 ---
 
+<div align="center">
+
 **Built with ❤️ for premium real estate marketing**
+
+[![OtherDev](https://img.shields.io/badge/Developed%20by-OtherDev-blue?style=for-the-badge)](https://www.otherdev.com)
+
+</div>
