@@ -57,13 +57,20 @@ export const POST: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
     
-    // Debug: Check if environment variables are loaded
+    // Enhanced debugging for production
+    console.log('=== Google Sheets API Debug ===');
+    console.log('Environment variables:', {
+      GOOGLE_SHEET_ID: !!process.env.GOOGLE_SHEET_ID,
+      GOOGLE_PROJECT_ID: !!process.env.GOOGLE_PROJECT_ID,
+      GOOGLE_CLIENT_EMAIL: !!process.env.GOOGLE_CLIENT_EMAIL,
+      GOOGLE_PRIVATE_KEY: !!process.env.GOOGLE_PRIVATE_KEY,
+      sheetIdValue: process.env.GOOGLE_SHEET_ID ? process.env.GOOGLE_SHEET_ID.substring(0, 10) + '...' : 'missing'
+    });
+    console.log('Request body:', body);
+    
+    // Check if environment variables are loaded
     if (!process.env.GOOGLE_SHEET_ID) {
-      console.error('Environment variables not loaded:', {
-        GOOGLE_SHEET_ID: !!process.env.GOOGLE_SHEET_ID,
-        GOOGLE_PROJECT_ID: !!process.env.GOOGLE_PROJECT_ID,
-        GOOGLE_CLIENT_EMAIL: !!process.env.GOOGLE_CLIENT_EMAIL
-      });
+      console.error('Environment variables not loaded');
       return new Response(JSON.stringify({ 
         success: false, 
         error: 'Environment variables not configured. Please check .env file.' 
@@ -94,7 +101,9 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     // Get Google Sheets instance
+    console.log('Attempting to get Google Sheets instance...');
     const sheets = await getGoogleSheetsInstance();
+    console.log('Google Sheets instance created successfully');
     
     // Prepare data row (handle empty/undefined values)
     const timestamp = formatTimestamp(new Date());
@@ -113,12 +122,15 @@ export const POST: APIRoute = async ({ request }) => {
     ];
 
     // Check if sheet exists, create if it doesn't
+    console.log('Checking if sheet exists...');
     try {
       await sheets.spreadsheets.values.get({
         spreadsheetId: SHEET_ID,
         range: `${SHEET_NAME}!A1:A1`,
       });
+      console.log('Sheet exists, proceeding with data append');
     } catch (error) {
+      console.log('Sheet does not exist, creating new sheet...');
       // Sheet doesn't exist, create it with headers
       const headers = [
         'Timestamp',
@@ -161,6 +173,7 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     // Append the new data
+    console.log('Appending data to sheet:', rowData);
     const response = await sheets.spreadsheets.values.append({
       spreadsheetId: SHEET_ID,
       range: `${SHEET_NAME}!A:K`,
@@ -172,6 +185,7 @@ export const POST: APIRoute = async ({ request }) => {
     });
 
     console.log('Successfully added row to Google Sheets:', response.data);
+    console.log('=== End Debug ===');
 
     // Send email notification (optional)
     // You can add email notification logic here using services like SendGrid, Nodemailer, etc.
