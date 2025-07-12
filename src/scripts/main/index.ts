@@ -18,6 +18,7 @@ async function loadProjects(): Promise<Project[]> {
 
 // Check if we're on the projects page to prevent conflicts
 function isProjectsPage(): boolean {
+  if (typeof window === 'undefined') return false;
   return window.location.pathname === '/projects' || 
          window.location.pathname === '/projects/' ||
          (window as any).__isProjectsPage === true;
@@ -39,7 +40,7 @@ class ProjectAnimationController {
     this.elements = this.initializeElements();
     this.animationState = {
       scrollY: 0,
-      windowHeight: window.innerHeight,
+      windowHeight: typeof window !== 'undefined' ? window.innerHeight : 0,
       progress: 0,
       isAnimating: false
     };
@@ -47,7 +48,7 @@ class ProjectAnimationController {
     // Bind event handlers
     this.scrollHandler = () => this.requestTick();
     this.resizeHandler = this.debounce(() => {
-      this.animationState.windowHeight = window.innerHeight;
+      this.animationState.windowHeight = typeof window !== 'undefined' ? window.innerHeight : 0;
       this.handleScroll();
     }, 150);
   }

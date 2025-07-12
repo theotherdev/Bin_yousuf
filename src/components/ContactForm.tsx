@@ -12,7 +12,7 @@ const App = () => {
       {/* This script loads the Tailwind CSS library to style the component */}
       <script src="https://cdn.tailwindcss.com"></script>
       
-      {/* This is your actual form component */}
+      {/* This is your actual form component */}a
       <ContactForm projectName={exampleProjectName} />
     </>
   );
@@ -54,11 +54,15 @@ const ContactForm: React.FC<ContactFormProps> = ({ projectName }) => {
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!formData.name.trim()) newErrors.name = 'Name is required';
-    if (!formData.email.trim()) { newErrors.email = 'Email is required'; } 
-    else if (!emailRegex.test(formData.email)) { newErrors.email = 'Please enter a valid email address'; }
-    if (!formData.phone.trim()) { newErrors.phone = 'Phone number is required'; }
-    else if (formData.phone.replace(/\D/g, '').length < 10) { newErrors.phone = 'Please enter a valid phone number'; }
+    
+    // Only validate if fields are filled out
+    if (formData.email.trim() && !emailRegex.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+    if (formData.phone.trim() && formData.phone.replace(/\D/g, '').length < 10) {
+      newErrors.phone = 'Please enter a valid phone number';
+    }
+    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -75,27 +79,48 @@ const ContactForm: React.FC<ContactFormProps> = ({ projectName }) => {
     if (!validateForm()) return;
     setIsSubmitting(true);
     setSubmitStatus('idle');
-    const googleFormUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSeXbvhQpRj0GU9OqbL5_MQ8jRRj2yukrHX8e2bFvPOoXrzjmw/formResponse';
-    
-    const formBody = new URLSearchParams({
-      'entry.1195041335': formData.name,       
-      'entry.79234155':   formData.email,      
-      'entry.1708096009': formData.phone,      
-      'entry.1777513188': formData.project,    
-      'entry.2089179122': formData.howHeard,   
-      'entry.1168048118': '1', // The required field
-    });
+
+    // Prepare data for Sheets API
+    const submissionData = {
+      fullName: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      property: formData.project,
+      residency: '', // Can be added to form later if needed
+      features: '', // Can be added to form later if needed
+      source: 'website_lead_form',
+      url: typeof window !== 'undefined' ? window.location.href : '',
+      userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : ''
+    };
 
     try {
-      await fetch(googleFormUrl, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: formBody.toString() });
-      setSubmitStatus('success');
-      setTimeout(() => {
-        setFormData({ name: '', email: '', phone: '', project: projectName, howHeard: '', message: '' });
-        setErrors({});
-        setSubmitStatus('idle');
-      }, 5000);
+      const response = await fetch('/api/sheets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(submissionData)
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setSubmitStatus('success');
+        setTimeout(() => {
+          setFormData({ name: '', email: '', phone: '', project: projectName, howHeard: '', message: '' });
+          setErrors({});
+          setSubmitStatus('idle');
+        }, 5000);
+      } else {
+        throw new Error(result.error || 'Submission failed');
+      }
     } catch (error) {
-      console.error('Form submission fetch error:', error);
+      console.error('Form submission error:', error);
+      
+      // For development: Show detailed error
+      if (window.location.hostname === 'localhost') {
+        console.error('API Error Details:', error);
+        alert(`Form submission failed: ${error.message}\n\nThis might be because:\n1. Environment variables not loaded\n2. Google Sheets API not configured\n3. Network connection issue\n\nThe form setup is complete, but needs environment variables in production.`);
+      }
+      
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
@@ -129,7 +154,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ projectName }) => {
                       <form onSubmit={handleSubmit} className="space-y-6">
                           <div>
                               <label htmlFor="name" className="block text-sm font-semibold text-neutral-700 mb-2">
-                                  Name <span className="text-red-500">*</span>
+                                  Name
                               </label>
                               <input 
                                 type="text" 
@@ -138,7 +163,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ projectName }) => {
                                 value={formData.name} 
                                 onChange={handleInputChange} 
                                 className={`w-full px-4 py-3.5 border ${errors.name ? 'border-red-300 bg-red-50' : 'border-neutral-300 hover:border-neutral-400'} rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:border-transparent transition-all duration-200 bg-neutral-50 focus:bg-white`} 
-                                placeholder="Your full name"
+                                placeholder="Your full name (optional)"
                               />
                               {errors.name && <p className="mt-2 text-sm text-red-600 flex items-center">
                                   <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -151,7 +176,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ projectName }) => {
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                               <div>
                                   <label htmlFor="email" className="block text-sm font-semibold text-neutral-700 mb-2">
-                                      Email <span className="text-red-500">*</span>
+                                      Email
                                   </label>
                                   <input 
                                     type="email" 
@@ -160,7 +185,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ projectName }) => {
                                     value={formData.email} 
                                     onChange={handleInputChange} 
                                     className={`w-full px-4 py-3.5 border ${errors.email ? 'border-red-300 bg-red-50' : 'border-neutral-300 hover:border-neutral-400'} rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:border-transparent transition-all duration-200 bg-neutral-50 focus:bg-white`} 
-                                    placeholder="your@email.com"
+                                    placeholder="your@email.com (optional)"
                                   />
                                   {errors.email && <p className="mt-2 text-sm text-red-600 flex items-center">
                                       <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -172,7 +197,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ projectName }) => {
                               
                               <div>
                                   <label htmlFor="phone" className="block text-sm font-semibold text-neutral-700 mb-2">
-                                      Phone <span className="text-red-500">*</span>
+                                      Phone
                                   </label>
                                   <input 
                                     type="tel" 
@@ -181,7 +206,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ projectName }) => {
                                     value={formData.phone} 
                                     onChange={handleInputChange} 
                                     className={`w-full px-4 py-3.5 border ${errors.phone ? 'border-red-300 bg-red-50' : 'border-neutral-300 hover:border-neutral-400'} rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:border-transparent transition-all duration-200 bg-neutral-50 focus:bg-white`} 
-                                    placeholder="+92 300 1234567"
+                                    placeholder="+92 300 1234567 (optional)"
                                   />
                                   {errors.phone && <p className="mt-2 text-sm text-red-600 flex items-center">
                                       <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">

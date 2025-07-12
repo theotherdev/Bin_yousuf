@@ -327,9 +327,19 @@ export const getStaticPaths: GetStaticPaths = async (): Promise<GetStaticPathsRe
   return paths;
 };
 
-// Extract props safely without type assertion
-const projectInfo = Astro.props.projectInfo as ProjectInfo;
-const projectId = Astro.props.projectId as string;
+// Extract project ID from URL params (works in server mode)
+const projectId = Astro.params.id as string;
+
+// Find project info from the projects data using the ID
+const projectInfo = projects.find(project => {
+  const normalizedProjectId = project.name.toLowerCase().replace(/[\s&]/g, '-').replace(/--+/g, '-');
+  return normalizedProjectId === projectId;
+}) as ProjectInfo;
+
+// Add safety check for missing projectInfo
+if (!projectInfo) {
+  throw new Error(`Project info not found for ID: ${projectId}`);
+}
 
 // Enhanced image loading function
 async function loadProjectImages(projectLocation: string, projectId: string): Promise<{
@@ -389,7 +399,8 @@ async function loadProjectImages(projectLocation: string, projectId: string): Pr
 }
 
 // Load images for this project
-const { heroImage, galleryImages } = await loadProjectImages(projectInfo.location, projectId);
+const projectLocation = projectInfo?.location || 'emaar'; // Default fallback
+const { heroImage, galleryImages } = await loadProjectImages(projectLocation, projectId);
 
 // Get project-specific content with proper type checking
 const content: ProjectContent = projectContent[projectId] || {

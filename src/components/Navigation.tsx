@@ -30,14 +30,16 @@ const Navigation: React.FC<NavigationProps> = ({ currentPath }) => {
 
     // Close menu on resize to desktop
     const handleResize = () => {
-      if (window.innerWidth > 768 && isMenuOpen) {
+      if (typeof window !== 'undefined' && window.innerWidth > 768 && isMenuOpen) {
         setIsMenuOpen(false);
         document.body.style.overflow = '';
       }
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
+    }
   }, [isMenuOpen, isClient]);
 
 

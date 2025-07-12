@@ -1,6 +1,8 @@
 import type { APIRoute } from 'astro';
 import { google } from 'googleapis';
 
+export const prerender = false;
+
 // Google Sheets configuration
 const SHEET_ID = process.env.GOOGLE_SHEET_ID || '';
 const SHEET_NAME = 'Lead Submissions';
@@ -55,48 +57,53 @@ export const POST: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
     
-    // Validate required fields
+    // Debug: Check if environment variables are loaded
+    if (!process.env.GOOGLE_SHEET_ID) {
+      console.error('Environment variables not loaded:', {
+        GOOGLE_SHEET_ID: !!process.env.GOOGLE_SHEET_ID,
+        GOOGLE_PROJECT_ID: !!process.env.GOOGLE_PROJECT_ID,
+        GOOGLE_CLIENT_EMAIL: !!process.env.GOOGLE_CLIENT_EMAIL
+      });
+      return new Response(JSON.stringify({ 
+        success: false, 
+        error: 'Environment variables not configured. Please check .env file.' 
+      }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+    
+    // Extract fields (all optional)
     const { fullName, email, phone, property } = body;
     
-    if (!fullName || !email || !phone) {
-      return new Response(
-        JSON.stringify({ 
-          success: false, 
-          error: 'Missing required fields: fullName, email, and phone are required' 
-        }),
-        { 
-          status: 400,
-          headers: { 'Content-Type': 'application/json' }
-        }
-      );
-    }
-
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return new Response(
-        JSON.stringify({ 
-          success: false, 
-          error: 'Invalid email format' 
-        }),
-        { 
-          status: 400,
-          headers: { 'Content-Type': 'application/json' }
-        }
-      );
+    // Only validate email format if email is provided
+    if (email && email.trim()) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return new Response(
+          JSON.stringify({ 
+            success: false, 
+            error: 'Invalid email format' 
+          }),
+          { 
+            status: 400,
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
+      }
     }
 
     // Get Google Sheets instance
     const sheets = await getGoogleSheetsInstance();
     
-    // Prepare data row
+    // Prepare data row (handle empty/undefined values)
     const timestamp = formatTimestamp(new Date());
     const rowData = [
       timestamp,
-      fullName,
-      email,
-      phone,
-      property || 'Not specified',
+      fullName || '',
+      email || '',
+      phone || '',
+      property || '',
       body.residency || '',
       body.features || '',
       body.source || 'website_lead_form',

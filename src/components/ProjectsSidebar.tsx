@@ -79,7 +79,7 @@ const ProjectsSidebar: React.FC<ProjectsSidebarProps> = ({ currentPath, isVisibl
       // Calculate offset based on navigation height
       const navHeight = 80;
       const elementPosition = targetElement.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - navHeight;
+      const offsetPosition = elementPosition + (typeof window !== 'undefined' ? window.pageYOffset : 0) - navHeight;
 
       // Use GSAP for smooth scrolling
       gsap.to(window, {
