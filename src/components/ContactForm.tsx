@@ -24,25 +24,23 @@ interface ContactFormProps {
 }
 
 interface FormData {
-  name: string; email: string; phone: string; beds: string;
-  project: string; information: string[]; howHeard: string; message: string;
+  name: string; email: string; phone: string;
+  project: string; howHeard: string; message: string;
 }
 
 interface FormErrors {
-  name?: string; email?: string; phone?: string; beds?: string; information?: string;
+  name?: string; email?: string; phone?: string;
 }
 
 const ContactForm: React.FC<ContactFormProps> = ({ projectName }) => {
   const [formData, setFormData] = useState<FormData>({
-    name: '', email: '', phone: '', beds: '', project: projectName, information: [], howHeard: '', message: ''
+    name: '', email: '', phone: '', project: projectName, howHeard: '', message: ''
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
-  const bedsOptions = ['Studio', '1BR', '2BR', '3BR', '4BR+', 'Not decided'];
-  const informationOptions = [ 'Floor plans & layouts', 'Pricing information', 'Payment plans', 'Site visit', 'Investment opportunities', 'Other' ];
   const howHeardOptions = [ 'Website', 'Social Media', 'Referral', 'Advertisement', 'Other' ];
   const projectOptions = { 
     Emaar: ['Panorama', 'The Views', 'Park Edge', 'Coral Towers', 'Pearl & Reef Towers'],
@@ -61,8 +59,6 @@ const ContactForm: React.FC<ContactFormProps> = ({ projectName }) => {
     else if (!emailRegex.test(formData.email)) { newErrors.email = 'Please enter a valid email address'; }
     if (!formData.phone.trim()) { newErrors.phone = 'Phone number is required'; }
     else if (formData.phone.replace(/\D/g, '').length < 10) { newErrors.phone = 'Please enter a valid phone number'; }
-    if (!formData.beds) newErrors.beds = 'Please select number of beds';
-    if (formData.information.length === 0) newErrors.information = 'Please select at least one information type';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -73,10 +69,6 @@ const ContactForm: React.FC<ContactFormProps> = ({ projectName }) => {
     if (errors[name as keyof FormErrors]) { setErrors(prev => ({ ...prev, [name]: undefined })); }
   };
 
-  const handleCheckboxChange = (option: string) => {
-    setFormData(prev => ({ ...prev, information: prev.information.includes(option) ? prev.information.filter(item => item !== option) : [...prev.information, option] }));
-    if (errors.information) { setErrors(prev => ({ ...prev, information: undefined })); }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,9 +81,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ projectName }) => {
       'entry.1195041335': formData.name,       
       'entry.79234155':   formData.email,      
       'entry.1708096009': formData.phone,      
-      'entry.2092815482': formData.beds,       
       'entry.1777513188': formData.project,    
-      'entry.388465524':  formData.information.join(', '), 
       'entry.2089179122': formData.howHeard,   
       'entry.1168048118': '1', // The required field
     });
@@ -100,7 +90,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ projectName }) => {
       await fetch(googleFormUrl, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: formBody.toString() });
       setSubmitStatus('success');
       setTimeout(() => {
-        setFormData({ name: '', email: '', phone: '', beds: '', project: projectName, information: [], howHeard: '', message: '' });
+        setFormData({ name: '', email: '', phone: '', project: projectName, howHeard: '', message: '' });
         setErrors({});
         setSubmitStatus('idle');
       }, 5000);
@@ -113,82 +103,215 @@ const ContactForm: React.FC<ContactFormProps> = ({ projectName }) => {
   };
 
   return (
-      <section className="py-20 bg-neutral-50 font-sans">
-          <div className="max-w-4xl mx-auto px-4">
-              <div className="text-center mb-12">
-                  <h2 className="text-3xl lg:text-4xl font-bold text-neutral-900 mb-3">Interested in {projectName}?</h2>
-                  <p className="text-base text-neutral-600 max-w-2xl mx-auto">Fill out the form below and our team will get back to you within 24 hours.</p>
+      <section className="py-16 md:py-24 bg-gradient-to-br from-gray-50 to-neutral-100">
+          <div className="max-w-3xl mx-auto px-4">
+              <div className="text-center mb-10">
+                  <div className="inline-block p-3 bg-neutral-100 rounded-full mb-6">
+                      <svg className="w-6 h-6 text-neutral-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                  </div>
+                  <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-4">
+                      Interested in {projectName}?
+                  </h2>
+                  <p className="text-lg text-neutral-600 max-w-2xl mx-auto leading-relaxed">
+                      Get detailed information about pricing, floor plans, and investment opportunities.
+                  </p>
               </div>
-              <div className="bg-white -rounded-2xl -shadow-lg border border-neutral-100 overflow-hidden">
-                  <div className="p-8 md:p-12">
-                      <form onSubmit={handleSubmit} className="space-y-8">
+              
+              <div className="bg-white rounded-2xl shadow-xl border border-neutral-200 overflow-hidden">
+                  <div className="bg-black px-8 py-6">
+                      <h3 className="text-xl font-semibold text-white">Contact Information</h3>
+                      <p className="text-gray-300 text-sm mt-1">We'll respond within 24 hours</p>
+                  </div>
+                  
+                  <div className="p-8">
+                      <form onSubmit={handleSubmit} className="space-y-6">
+                          <div>
+                              <label htmlFor="name" className="block text-sm font-semibold text-neutral-700 mb-2">
+                                  Name <span className="text-red-500">*</span>
+                              </label>
+                              <input 
+                                type="text" 
+                                name="name" 
+                                id="name" 
+                                value={formData.name} 
+                                onChange={handleInputChange} 
+                                className={`w-full px-4 py-3.5 border ${errors.name ? 'border-red-300 bg-red-50' : 'border-neutral-300 hover:border-neutral-400'} rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:border-transparent transition-all duration-200 bg-neutral-50 focus:bg-white`} 
+                                placeholder="Your full name"
+                              />
+                              {errors.name && <p className="mt-2 text-sm text-red-600 flex items-center">
+                                  <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                  </svg>
+                                  {errors.name}
+                              </p>}
+                          </div>
+                          
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                               <div>
-                                  <label htmlFor="name" className="block text-sm font-medium text-neutral-700 mb-1">Name <span className="text-red-500">*</span></label>
-                                  <input type="text" name="name" id="name" value={formData.name} onChange={handleInputChange} className={`w-full px-4 py-3 bg-white rounded-none border ${errors.name ? 'border-red-500 bg-red-50' : 'border-neutral-300'} focus:outline-none focus:ring-2 focus:ring-neutral-500`} placeholder="Enter your full name"/>
-                                  {errors.name && <p className="mt-1 text-sm text-red-500">{errors.name}</p>}
+                                  <label htmlFor="email" className="block text-sm font-semibold text-neutral-700 mb-2">
+                                      Email <span className="text-red-500">*</span>
+                                  </label>
+                                  <input 
+                                    type="email" 
+                                    name="email" 
+                                    id="email" 
+                                    value={formData.email} 
+                                    onChange={handleInputChange} 
+                                    className={`w-full px-4 py-3.5 border ${errors.email ? 'border-red-300 bg-red-50' : 'border-neutral-300 hover:border-neutral-400'} rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:border-transparent transition-all duration-200 bg-neutral-50 focus:bg-white`} 
+                                    placeholder="your@email.com"
+                                  />
+                                  {errors.email && <p className="mt-2 text-sm text-red-600 flex items-center">
+                                      <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                      </svg>
+                                      {errors.email}
+                                  </p>}
                               </div>
+                              
                               <div>
-                                  <label htmlFor="email" className="block text-sm font-medium text-neutral-700 mb-1">Email <span className="text-red-500">*</span></label>
-                                  <input type="email" name="email" id="email" value={formData.email} onChange={handleInputChange} className={`w-full px-4 py-3 bg-white rounded-none border ${errors.email ? 'border-red-500 bg-red-50' : 'border-neutral-300'} focus:outline-none focus:ring-2 focus:ring-neutral-500`} placeholder="your@email.com"/>
-                                  {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email}</p>}
-                              </div>
-                              <div className="md:col-span-2">
-                                  <label htmlFor="phone" className="block text-sm font-medium text-neutral-700 mb-1">Phone Number <span className="text-red-500">*</span></label>
-                                  <input type="tel" name="phone" id="phone" value={formData.phone} onChange={handleInputChange} className={`w-full px-4 py-3 bg-white rounded-none border ${errors.phone ? 'border-red-500 bg-red-50' : 'border-neutral-300'} focus:outline-none focus:ring-2 focus:ring-neutral-500`} placeholder="+92 300 1234567"/>
-                                  {errors.phone && <p className="mt-1 text-sm text-red-500">{errors.phone}</p>}
+                                  <label htmlFor="phone" className="block text-sm font-semibold text-neutral-700 mb-2">
+                                      Phone <span className="text-red-500">*</span>
+                                  </label>
+                                  <input 
+                                    type="tel" 
+                                    name="phone" 
+                                    id="phone" 
+                                    value={formData.phone} 
+                                    onChange={handleInputChange} 
+                                    className={`w-full px-4 py-3.5 border ${errors.phone ? 'border-red-300 bg-red-50' : 'border-neutral-300 hover:border-neutral-400'} rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:border-transparent transition-all duration-200 bg-neutral-50 focus:bg-white`} 
+                                    placeholder="+92 300 1234567"
+                                  />
+                                  {errors.phone && <p className="mt-2 text-sm text-red-600 flex items-center">
+                                      <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                      </svg>
+                                      {errors.phone}
+                                  </p>}
                               </div>
                           </div>
+
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                             <div>
-                                <label htmlFor="beds" className="block text-sm font-medium text-neutral-700 mb-1">Number of Beds <span className="text-red-500">*</span></label>
-                                <select name="beds" id="beds" value={formData.beds} onChange={handleInputChange} className={`w-full px-4 py-3 bg-white rounded-none border ${errors.beds ? 'border-red-500 bg-red-50' : 'border-neutral-300'} focus:outline-none focus:ring-2 focus:ring-neutral-500 appearance-none cursor-pointer`}>
-                                  <option value="">Select number of beds</option>
-                                  {bedsOptions.map(o => <option key={o} value={o}>{o}</option>)}
-                                </select>
-                                {errors.beds && <p className="mt-1 text-sm text-red-500">{errors.beds}</p>}
-                              </div>
                               <div>
-                                <label htmlFor="project" className="block text-sm font-medium text-neutral-700 mb-1">Project of Interest</label>
-                                <select name="project" id="project" value={formData.project} onChange={handleInputChange} className="w-full px-4 py-3 bg-white rounded-none border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-500 appearance-none cursor-pointer">
-                                  <option value="">Select a project (Optional)</option>
-                                  <optgroup label="Emaar">{projectOptions.Emaar.map(p => <option key={p} value={p}>{p}</option>)}</optgroup>
-                                  <optgroup label="HMR">{projectOptions.HMR.map(p => <option key={p} value={p}>{p}</option>)}</optgroup>
-                                  <option value="Multiple projects">Multiple projects</option><option value="Not sure">Not sure</option>
-                                </select>
+                                  <label htmlFor="project" className="block text-sm font-semibold text-neutral-700 mb-2">
+                                      Project Interest
+                                  </label>
+                                  <div className="relative">
+                                      <select 
+                                        name="project" 
+                                        id="project" 
+                                        value={formData.project} 
+                                        onChange={handleInputChange} 
+                                        className="w-full px-4 py-3.5 border border-neutral-300 hover:border-neutral-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:border-transparent appearance-none cursor-pointer transition-all duration-200 bg-neutral-50 focus:bg-white"
+                                      >
+                                        <option value="">Any project</option>
+                                        <optgroup label="Emaar">{projectOptions.Emaar.map(p => <option key={p} value={p}>{p}</option>)}</optgroup>
+                                        <optgroup label="HMR">{projectOptions.HMR.map(p => <option key={p} value={p}>{p}</option>)}</optgroup>
+                                        <option value="Multiple projects">Multiple projects</option>
+                                        <option value="Not sure">Not sure</option>
+                                      </select>
+                                      <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none">
+                                          <svg className="w-4 h-4 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                                          </svg>
+                                      </div>
+                                  </div>
+                              </div>
+                              
+                              <div>
+                                  <label htmlFor="howHeard" className="block text-sm font-semibold text-neutral-700 mb-2">
+                                      How did you find us?
+                                  </label>
+                                  <div className="relative">
+                                      <select 
+                                        name="howHeard" 
+                                        id="howHeard" 
+                                        value={formData.howHeard} 
+                                        onChange={handleInputChange} 
+                                        className="w-full px-4 py-3.5 border border-neutral-300 hover:border-neutral-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:border-transparent appearance-none cursor-pointer transition-all duration-200 bg-neutral-50 focus:bg-white"
+                                      >
+                                        <option value="">Optional</option>
+                                        {howHeardOptions.map(o => <option key={o} value={o}>{o}</option>)}
+                                      </select>
+                                      <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none">
+                                          <svg className="w-4 h-4 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                                          </svg>
+                                      </div>
+                                  </div>
                               </div>
                           </div>
-                          <div>
-                              <label className="block text-sm font-medium text-neutral-700">What information are you looking for? <span className="text-red-500">*</span></label>
-                              <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-2">
-                                  {informationOptions.map(option => (
-                                      <label key={option} className="flex items-center space-x-3 p-2 rounded-none hover:bg-neutral-50 cursor-pointer">
-                                          <input type="checkbox" checked={formData.information.includes(option)} onChange={() => handleCheckboxChange(option)} className="h-4 w-4 text-neutral-600 border-neutral-300 rounded focus:ring-neutral-500"/>
-                                          <span className="text-sm text-neutral-700">{option}</span>
-                                      </label>
-                                  ))}
-                              </div>
-                              {errors.information && <p className="mt-1 text-sm text-red-500">{errors.information}</p>}
-                          </div>
-                          <div>
-                            <label htmlFor="howHeard" className="block text-sm font-medium text-neutral-700 mb-1">How did you hear about us?</label>
-                            <select name="howHeard" id="howHeard" value={formData.howHeard} onChange={handleInputChange} className="w-full px-4 py-3 bg-white rounded-none border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-500 appearance-none cursor-pointer">
-                              <option value="">Select an option (Optional)</option>
-                              {howHeardOptions.map(o => <option key={o} value={o}>{o}</option>)}
-                            </select>
-                          </div>
-                          <div className="flex flex-col items-center space-y-4 pt-4">
-                              <button type="submit" disabled={isSubmitting} className={`w-full md:w-auto px-8 py-4 bg-gradient-to-r from-neutral-700 to-neutral-600 text-white font-medium rounded-none -shadow-lg hover:shadow-xl transform transition-all duration-200 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:-translate-y-1 hover:from-neutral-800 hover:to-neutral-700'}`}>
-                                {isSubmitting ? 'Submitting...' : 'Submit Inquiry'}
+                          
+                          <div className="pt-6">
+                              <button 
+                                type="submit" 
+                                disabled={isSubmitting} 
+                                className={`w-full px-6 py-4 bg-black hover:bg-gray-900 text-white font-semibold rounded-lg transition-all duration-200 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-lg transform hover:-translate-y-0.5'} focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2`}
+                              >
+                                {isSubmitting ? (
+                                  <span className="flex items-center justify-center">
+                                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24">
+                                      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" className="opacity-25"></circle>
+                                      <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" className="opacity-75"></path>
+                                    </svg>
+                                    Submitting...
+                                  </span>
+                                ) : (
+                                  <span className="flex items-center justify-center">
+                                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                                    </svg>
+                                    Get Property Information
+                                  </span>
+                                )}
                               </button>
-                              {submitStatus === 'success' && <div className="p-4 bg-green-50 border border-green-200 rounded-none text-green-800 text-center w-full"><span className="font-semibold">Thank you!</span> Your inquiry has been submitted.</div>}
-                              {submitStatus === 'error' && <div className="p-4 bg-red-50 border border-red-200 rounded-none text-red-800 text-center w-full"><span className="font-semibold">Oops!</span> Something went wrong. Please try again.</div>}
+                              
+                              {submitStatus === 'success' && (
+                                <div className="mt-6 p-5 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg">
+                                  <div className="flex items-center text-green-800">
+                                    <svg className="w-6 h-6 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <div>
+                                        <p className="font-semibold">Thank you for your interest!</p>
+                                        <p className="text-sm text-green-700">Our team will contact you within 24 hours with detailed information.</p>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+                              
+                              {submitStatus === 'error' && (
+                                <div className="mt-6 p-5 bg-gradient-to-r from-red-50 to-rose-50 border border-red-200 rounded-lg">
+                                  <div className="flex items-center text-red-800">
+                                    <svg className="w-6 h-6 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <div>
+                                        <p className="font-semibold">Something went wrong</p>
+                                        <p className="text-sm text-red-700">Please try again or contact us directly via WhatsApp.</p>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
                           </div>
                       </form>
                   </div>
               </div>
+              
               <div className="mt-12 text-center">
-                  <p className="text-neutral-600">Prefer to talk? Call us at <a href="https://wa.me/923360878079?text=Hi! I'm interested in learning more about BYG and your waterfront properties. Could you please provide me with more information?" className="text-neutral-700 font-semibold hover:underline hover:text-neutral-900">+92 336 0878079</a></p>
+                  <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-neutral-200 shadow-lg inline-block">
+                      <p className="text-neutral-700 mb-4 font-medium">Prefer to talk directly?</p>
+                      <a 
+                        href="https://wa.me/923360878079?text=Hi! I'm interested in learning more about BYG properties." 
+                        className="inline-flex items-center px-6 py-3 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg transition-all duration-200 hover:scale-105 shadow-md hover:shadow-lg"
+                      >
+                        <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.309"/>
+                        </svg>
+                        WhatsApp Us
+                      </a>
+                  </div>
               </div>
           </div>
       </section>
