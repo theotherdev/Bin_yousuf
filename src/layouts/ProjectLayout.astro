@@ -32,7 +32,7 @@ function formatProjectText(rawText: string): string {
                 inList = true;
             }
             const listItem = line.substring(2).trim(); // Remove the dash/bullet and space
-            html += `<li class="key-features-item relative pl-6 mb-1 text-sm text-gray-600 font-['Poppins',sans-serif] leading-relaxed before:content-['•'] before:absolute before:left-0 before:top-0 before:text-gray-800 before:font-bold before:text-base">${listItem}</li>`;
+            html += `<li class="key-features-item relative pl-6 mb-1 text-sm text-gray-600 leading-relaxed">${listItem}</li>`;
         } else {
             // If we were in a list and this line is not a bullet point, close the list
             if (inList) {
@@ -69,8 +69,234 @@ const allProjects = projects;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{project.name}</title>
     <meta name="description" content={project.description}>
-    <!-- Only essential preloads, no custom CSS -->
+    
+    <!-- Performance and anti-flicker meta tags -->
+    <meta name="color-scheme" content="light">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="robots" content="index, follow">
+    
+    <!-- DNS prefetch and preconnect for performance -->
+    <link rel="dns-prefetch" href="//wa.me">
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    
+    <!-- Critical inline styles to prevent any layout shift and flicker -->
+    <style>
+        /* Reset and base styles */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { height: 100%; }
+        body { 
+            font-family: system-ui, -apple-system, sans-serif; 
+            background: #fff; 
+            color: #333; 
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Prevent FOUC */
+        .project-main { opacity: 1; }
+        
+        /* Header styles */
+        .fixed { position: fixed; }
+        .top-0 { top: 0; }
+        .left-0 { left: 0; }
+        .right-0 { right: 0; }
+        .z-\[1000\] { z-index: 1000; }
+        .bg-white\/95 { background-color: rgba(255, 255, 255, 0.95); }
+        .backdrop-blur-md { backdrop-filter: blur(12px); }
+        .border-b { border-bottom-width: 1px; }
+        .border-black\/10 { border-color: rgba(0, 0, 0, 0.1); }
+        .px-4 { padding-left: 1rem; padding-right: 1rem; }
+        .flex { display: flex; }
+        .justify-between { justify-content: space-between; }
+        .items-center { align-items: center; }
+        .max-w-\[1400px\] { max-width: 1400px; }
+        .mx-auto { margin-left: auto; margin-right: auto; }
+        .gap-5 { gap: 1.25rem; }
+        
+        /* Layout styles */
+        .w-full { width: 100%; }
+        .h-screen { height: 100vh; min-height: 600px; }
+        .relative { position: relative; }
+        .overflow-hidden { overflow: hidden; }
+        .h-full { height: 100%; }
+        .object-cover { object-fit: cover; }
+        .object-center { object-position: center; }
+        .absolute { position: absolute; }
+        .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+        .py-16 { padding-top: 4rem; padding-bottom: 4rem; }
+        .bg-white { background-color: #fff; }
+        .text-center { text-align: center; }
+        .grid { display: grid; }
+        .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+        .gap-16 { gap: 4rem; }
+        .pt-5 { padding-top: 1.25rem; }
+        
+        /* Typography */
+        .text-base { font-size: 1rem; line-height: 1.5; }
+        .font-medium { font-weight: 500; }
+        .mb-5 { margin-bottom: 1.25rem; }
+        .text-gray-700 { color: #374151; }
+        .font-semibold { font-weight: 600; }
+        .text-gray-800 { color: #1f2937; }
+        .mt-8 { margin-top: 2rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mb-6 { margin-bottom: 1.5rem; }
+        .pl-0 { padding-left: 0; }
+        .list-none { list-style: none; }
+        .pl-6 { padding-left: 1.5rem; }
+        .mb-1 { margin-bottom: 0.25rem; }
+        .text-sm { font-size: 0.875rem; line-height: 1.25; }
+        .text-gray-600 { color: #4b5563; }
+        .leading-relaxed { line-height: 1.625; }
+        .hidden { display: none !important; }
+        .block { display: block; }
+        
+        /* Image loading optimization */
+        img { 
+            display: block; 
+            max-width: 100%; 
+            height: auto;
+            background-color: #f9fafb;
+        }
+        
+        /* Prevent image flicker during load */
+        .hero-image-container {
+            background-color: #f9fafb;
+            background-image: linear-gradient(45deg, #f9fafb 25%, transparent 25%), 
+                            linear-gradient(-45deg, #f9fafb 25%, transparent 25%), 
+                            linear-gradient(45deg, transparent 75%, #f9fafb 75%), 
+                            linear-gradient(-45deg, transparent 75%, #f9fafb 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+        
+        /* Bullet points for Key Features */
+        .key-features-item::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: #1f2937;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        
+        /* Component loading states */
+        .component-loading {
+            min-height: 200px;
+            background-color: #f9fafb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Responsive breakpoints */
+        @media (min-width: 1024px) {
+            .lg\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .lg\:gap-20 { gap: 5rem; }
+            .lg\:sticky { position: sticky; }
+            .lg\:top-\[120px\] { top: 120px; }
+        }
+        
+        /* Smooth transitions for components */
+        .fade-in {
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .fade-in.loaded {
+            opacity: 1;
+        }
+        
+        /* Loading animations */
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Prevent hydration flash */
+        astro-island {
+            display: contents;
+        }
+        
+        /* Component transition optimization */
+        [data-astro-cid-*] {
+            contain: layout;
+        }
+        
+        /* Button styles to prevent flicker */
+        button {
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            border: none;
+            outline: none;
+        }
+        
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background-color: #121212;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            box-shadow: 0 4px 15px rgba(76, 76, 76, 0.3);
+            text-decoration: none;
+            border: 0;
+            outline: 0;
+        }
+        
+        .btn-primary:hover {
+            background-color: black;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(18, 18, 18, 0.4);
+        }
+        
+        .btn-primary svg {
+            width: 18px;
+            height: 18px;
+            stroke-width: 2;
+        }
+        
+        /* Prevent button layout shifts */
+        .button-container {
+            min-height: 56px;
+            display: flex;
+            align-items: center;
+        }
+    </style>
+    
+    <!-- Preload hero image -->
     <link rel="preload" href={project.heroImage.src.src || project.heroImage.src} as="image" type="image/webp">
+    
+    <!-- Critical JavaScript to prevent button flicker -->
+    <script define:vars={{project}}>
+        // Define WhatsApp function immediately to prevent flicker
+        window.openWhatsApp = function() {
+            const projectName = project.name;
+            const message = `Hi! I'm interested in learning more about EMAAR & HMR waterfront properties. Could you please provide me with more information about ${projectName}?`;
+            const whatsappUrl = `https://wa.me/923360878079?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        };
+        
+        // Attach event listener as soon as DOM is available
+        document.addEventListener('DOMContentLoaded', function() {
+            const brochureBtn = document.getElementById('viewBrochureBtn');
+            if (brochureBtn) {
+                brochureBtn.addEventListener('click', window.openWhatsApp);
+            }
+        });
+    </script>
 </head>
 <body>
     <!-- Header -->
@@ -108,14 +334,16 @@ const allProjects = projects;
     <!-- Main Content -->
     <main class="project-main">
         <!-- Hero Section -->
-        <section class="w-full h-screen relative overflow-hidden">
-            <div class="w-full h-full relative cursor-pointer" onclick="openGalleryModal(0)">
+        <section class="w-full h-screen relative overflow-hidden hero-image-container">
+            <div class="w-full h-full relative cursor-pointer fade-in" onclick="openGalleryModal(0)" id="heroImageContainer">
                 <Image 
                     src={project.heroImage.src} 
                     alt={project.heroImage.alt}
                     width={1920}
                     height={1080}
-                    class="w-full h-full object-cover object-center"
+                    class="w-full h-full object-cover object-center hero-image"
+                    loading="eager"
+                    decoding="sync"
                 />
                 <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 transition-opacity duration-300 cursor-pointer hover:opacity-100">
                     <div class="text-white bg-white/20 p-4 rounded-full backdrop-blur-md transition-all duration-300 hover:bg-white/30 hover:scale-110">
@@ -179,16 +407,18 @@ const allProjects = projects;
                         
                         <!-- View Brochure Button -->
                         <div class="mt-[30px] pt-5 border-t border-gray-100">
-                            <button class="inline-flex items-center gap-3 bg-[#121212] text-white border-none px-7 py-[14px] rounded-lg text-sm font-medium cursor-pointer transition-all duration-300 font-['Poppins',sans-serif] shadow-[0_4px_15px_rgba(76,76,76,0.3)] hover:bg-black hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(18,18,18,0.4)]" onclick="openWhatsApp()">
-                                <svg class="w-[18px] h-[18px] stroke-2" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                                    <polyline points="14,2 14,8 20,8"/>
-                                    <line x1="16" y1="13" x2="8" y2="13"/>
-                                    <line x1="16" y1="17" x2="8" y2="17"/>
-                                    <polyline points="10,9 9,9 8,9"/>
-                                </svg>
-                                View Brochure
-                            </button>
+                            <div class="button-container">
+                                <button class="btn-primary" id="viewBrochureBtn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14,2 14,8 20,8"/>
+                                        <line x1="16" y1="13" x2="8" y2="13"/>
+                                        <line x1="16" y1="17" x2="8" y2="17"/>
+                                        <polyline points="10,9 9,9 8,9"/>
+                                    </svg>
+                                    View Brochure
+                                </button>
+                            </div>
                         </div>
                         
                         <!-- About Project Section -->
@@ -206,7 +436,7 @@ const allProjects = projects;
         </section>
         
         <!-- Project Amenities Section -->
-        <ProjectAmenities projectId={project.id} client:load />
+        <ProjectAmenities projectId={project.id} client:visible />
 
         <!-- Gallery Section -->
         <section class="py-20 md:py-24 bg-white">
@@ -241,7 +471,36 @@ const allProjects = projects;
         </section>
         
         <!-- Contact Form -->
-        <ContactForm projectName={project.name} client:load />
+        <div class="py-16 md:py-24 bg-gradient-to-br from-gray-50 to-neutral-100" id="contactFormPlaceholder">
+            <div class="max-w-3xl mx-auto px-4">
+                <div class="text-center mb-10">
+                    <div class="inline-block p-3 bg-neutral-100 rounded-full mb-6">
+                        <svg class="w-6 h-6 text-neutral-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <h2 class="text-3xl md:text-4xl font-bold text-neutral-900 mb-4">
+                        Interested in {project.name}?
+                    </h2>
+                    <p class="text-lg text-neutral-600 max-w-2xl mx-auto leading-relaxed">
+                        Get detailed information about pricing, floor plans, and investment opportunities.
+                    </p>
+                </div>
+                <div class="bg-white rounded-2xl shadow-xl border border-neutral-200 overflow-hidden">
+                    <div class="bg-black px-8 py-6">
+                        <h3 class="text-xl font-semibold text-white">Contact Information</h3>
+                        <p class="text-gray-300 text-sm mt-1">We'll respond within 24 hours</p>
+                    </div>
+                    <div class="p-8">
+                        <div class="text-center text-gray-500">
+                            <div class="inline-block animate-spin w-8 h-8 border-4 border-gray-300 border-t-black rounded-full"></div>
+                            <p class="mt-4">Loading contact form...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ContactForm projectName={project.name} client:visible />
 
         <!-- Navigation Section -->
         <section class="py-16 bg-white">
@@ -299,7 +558,7 @@ const allProjects = projects;
     </div>
     
     <!-- Sticky WhatsApp Button -->
-    <StickyWhatsAppButton client:load />
+    <StickyWhatsAppButton client:visible />
 </body>
 </html>
 
@@ -556,24 +815,86 @@ const allProjects = projects;
         window.open(whatsappUrl, '_blank');
     };
 
+    // Image Loading Handler
+    function initializeImageLoading() {
+        const heroContainer = document.getElementById('heroImageContainer');
+        const heroImage = document.querySelector('.hero-image');
+        
+        if (heroImage && heroContainer) {
+            heroImage.addEventListener('load', function() {
+                heroContainer.classList.add('loaded');
+            });
+            
+            // If image is already cached and loaded
+            if (heroImage.complete) {
+                heroContainer.classList.add('loaded');
+            }
+        }
+        
+        // Hide component loading placeholders when components are ready
+        const hideContactFormPlaceholder = () => {
+            const placeholder = document.getElementById('contactFormPlaceholder');
+            if (placeholder) {
+                placeholder.style.opacity = '0';
+                placeholder.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => {
+                    placeholder.style.display = 'none';
+                }, 300);
+            }
+        };
+        
+        // Observer to detect when React components are mounted
+        const componentObserver = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                mutation.addedNodes.forEach((node) => {
+                    if (node.nodeType === 1) { // Element node
+                        // Check if ContactForm has been rendered
+                        if (node.querySelector && node.querySelector('form')) {
+                            hideContactFormPlaceholder();
+                        }
+                    }
+                });
+            });
+        });
+        
+        componentObserver.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+        
+        // Fallback timeout
+        setTimeout(hideContactFormPlaceholder, 2000);
+    }
+
     // Main Initialization Function
     function initialize() {
         console.log('Initializing project layout for:', project.name);
+        
+        // Prioritize image loading and visual stability
+        initializeImageLoading();
+        
+        // Initialize core functionality
         initializeGallery();
         initializeDropdown();
-        initializeParallax();
         initializeGalleryButton();
-        initializeAnimations();
-        initializeTouchSupport();
         initializeCloseButton();
         initializeBackButton();
+        
+        // Initialize performance-heavy features after layout is stable
+        requestAnimationFrame(() => {
+            initializeParallax();
+            initializeAnimations();
+            initializeTouchSupport();
+        });
+        
         console.log('Project layout initialization complete');
     }
 
-    // Initialize when DOM is ready
+    // Initialize immediately if possible to reduce flicker
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initialize);
     } else {
+        // DOM is already ready, initialize immediately
         initialize();
     }
 </script>
