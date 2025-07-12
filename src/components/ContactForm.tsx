@@ -101,6 +101,10 @@ const ContactForm: React.FC<ContactFormProps> = ({ projectName }) => {
       });
 
       const result = await response.json();
+      
+      // Enhanced logging for debugging
+      console.log('API Response:', result);
+      console.log('Response status:', response.status);
 
       if (result.success) {
         setSubmitStatus('success');
@@ -110,15 +114,22 @@ const ContactForm: React.FC<ContactFormProps> = ({ projectName }) => {
           setSubmitStatus('idle');
         }, 5000);
       } else {
+        console.error('API returned error:', result);
         throw new Error(result.error || 'Submission failed');
       }
     } catch (error) {
       console.error('Form submission error:', error);
       
-      // For development: Show detailed error
-      if (window.location.hostname === 'localhost') {
-        console.error('API Error Details:', error);
-        alert(`Form submission failed: ${error.message}\n\nThis might be because:\n1. Environment variables not loaded\n2. Google Sheets API not configured\n3. Network connection issue\n\nThe form setup is complete, but needs environment variables in production.`);
+      // Enhanced error logging for debugging
+      console.error('Full error details:', {
+        message: error.message,
+        name: error.name,
+        stack: error.stack
+      });
+      
+      // Show error details in console for debugging
+      if (typeof window !== 'undefined') {
+        console.log('Submission data was:', submissionData);
       }
       
       setSubmitStatus('error');
