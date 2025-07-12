@@ -35,6 +35,7 @@ const ProjectsList: React.FC<ProjectsListProps> = ({ projects, emaarProjects, hm
   // Handle initial scroll based on URL hash (only once on page load)
   const handleInitialScroll = useCallback(() => {
     if (isInitializedRef.current) return;
+    if (typeof window === 'undefined') return;
     
     const hash = window.location.hash;
     if (hash) {
