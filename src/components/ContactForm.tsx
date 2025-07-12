@@ -12,7 +12,7 @@ const App = () => {
       {/* This script loads the Tailwind CSS library to style the component */}
       <script src="https://cdn.tailwindcss.com"></script>
       
-      {/* This is your actual form component */}
+      {/* This is your actual form component */}a
       <ContactForm projectName={exampleProjectName} />
     </>
   );

@@ -1,5 +1,5 @@
 ---
-// src/layouts/ProjectLayout.astro - Resolved version
+// src/layouts/ProjectLayout.astro - Refactored version
 import type { ProjectData } from '../types/project';
 import { Image } from 'astro:assets';
 import { projects } from '../data/projects.js';
@@ -8,12 +8,57 @@ import ProjectAmenities from '../components/ProjectDetail/ProjectAmenities.tsx';
 import StickyWhatsAppButton from '../components/StickyWhatsAppButton.tsx';
 import { projectCompletionDates } from '../types/project';
 
-
 export interface Props {
     project: ProjectData;
 }
 
 const { project } = Astro.props;
+
+// Server-side text formatting function
+function formatProjectText(rawText: string): string {
+    if (!rawText) return '';
+    
+    const lines = rawText.split('\n').filter(line => line.trim() !== '');
+    let html = '';
+    let inList = false;
+    
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        
+        // Check if this line is a bullet point (starts with - or •)
+        if (line.startsWith('- ') || line.startsWith('• ')) {
+            if (!inList) {
+                html += '<ul class="key-features-list mb-6 pl-0 list-none">';
+                inList = true;
+            }
+            const listItem = line.substring(2).trim(); // Remove the dash/bullet and space
+            html += `<li class="key-features-item relative pl-6 mb-1 text-sm text-gray-600 font-['Poppins',sans-serif] leading-relaxed before:content-['•'] before:absolute before:left-0 before:top-0 before:text-gray-800 before:font-bold before:text-base">${listItem}</li>`;
+        } else {
+            // If we were in a list and this line is not a bullet point, close the list
+            if (inList) {
+                html += '</ul>';
+                inList = false;
+            }
+            
+            // Check if this is a heading (ends with colon and has no period)
+            if (line.endsWith(':') && !line.includes('.')) {
+                html += `<h4 class="key-features-heading text-base font-semibold text-gray-800 font-['Poppins',sans-serif] mt-8 mb-4 first:mt-0">${line}</h4>`;
+            } else {
+                html += `<p class="text-sm text-gray-600 font-['Poppins',sans-serif] leading-relaxed mb-5 last:mb-0">${line}</p>`;
+            }
+        }
+    }
+    
+    // Close list if we end with list items
+    if (inList) {
+        html += '</ul>';
+    }
+    
+    return html;
+}
+
+// Format the about project content server-side
+const formattedAboutContent = formatProjectText(project.aboutProject);
 const allProjects = projects;
 ---
 
@@ -24,55 +69,57 @@ const allProjects = projects;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{project.name}</title>
     <meta name="description" content={project.description}>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Only essential preloads, no custom CSS -->
+    <link rel="preload" href={project.heroImage.src.src || project.heroImage.src} as="image" type="image/webp">
 </head>
 <body>
-    <header class="project-header px-4">
-        <div class="header-content">
-            <div class="header-left">
-                <button class="close-btn" id="closeBtn">×</button>
-                <div class="project-dropdown">
-                    <button class="project-title-btn" id="projectDropdownBtn">
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md z-[1000] border-b border-black/10 px-4">
+        <div class="flex justify-between items-center max-w-[1400px] mx-auto">
+            <div class="flex items-center gap-5">
+                <button class="bg-none border-none text-2xl text-gray-400 cursor-pointer p-1 transition-colors duration-300 hover:text-gray-700 font-inherit" id="closeBtn">×</button>
+                <div class="relative">
+                    <button class="bg-none border-none text-lg font-medium text-gray-700 cursor-pointer flex items-center gap-2 px-3 py-2 rounded-md transition-all duration-300 hover:bg-gray-100 font-['Poppins',sans-serif]" id="projectDropdownBtn">
                         {project.name}
-                        <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                        <svg class="transition-transform duration-300" width="12" height="12" viewBox="0 0 12 12" fill="none">
                             <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </button>
-                    <div class="dropdown-menu" id="projectDropdownMenu">
+                    <div class="hidden absolute top-full left-0 bg-white border border-gray-300 shadow-[0_10px_30px_rgba(0,0,0,0.1)] min-w-[300px] max-h-[400px] overflow-y-auto z-[1001]" id="projectDropdownMenu">
                         {allProjects.map((proj) => (
                             <a 
                                 href={`/projects/${proj.name.toLowerCase().replace(/[\s&]/g, '-').replace(/--+/g, '-')}`}
-                                class={`dropdown-item ${proj.name === project.name ? 'active' : ''}`}
+                                class={`flex items-center gap-3 px-4 py-3 no-underline text-gray-700 transition-colors duration-300 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 font-['Poppins',sans-serif] ${proj.name === project.name ? 'bg-black text-white' : ''}`}
                             >
-                                <span class="project-number">{proj.number}</span>
-                                <span class="project-name">{proj.name}</span>
-                                <span class="project-location">{proj.location}</span>
+                                <span class={`text-xs min-w-[30px] font-medium ${proj.name === project.name ? 'text-white/80' : 'text-gray-400'}`}>{proj.number}</span>
+                                <span class="flex-1 text-sm font-medium">{proj.name}</span>
+                                <span class={`text-xs font-normal ${proj.name === project.name ? 'text-white/90' : 'text-gray-500'}`}>{proj.location}</span>
                             </a>
                         ))}
                     </div>
                 </div>
             </div>
-            <div class="header-right">
-                <button class="gallery-btn" id="openGalleryBtn">Gallery</button>
+            <div class="flex items-center">
+                <button class="bg-none border-none text-gray-400 text-sm font-normal cursor-pointer px-3 py-2 rounded-md transition-all duration-300 hover:text-gray-700 hover:bg-gray-100 font-['Poppins',sans-serif]" id="openGalleryBtn">Gallery</button>
             </div>
         </div>
     </header>
 
+    <!-- Main Content -->
     <main class="project-main">
-        <section class="hero">
-            <div class="hero-image-container" onclick="openGalleryModal(0)">
+        <!-- Hero Section -->
+        <section class="w-full h-screen relative overflow-hidden">
+            <div class="w-full h-full relative cursor-pointer" onclick="openGalleryModal(0)">
                 <Image 
                     src={project.heroImage.src} 
                     alt={project.heroImage.alt}
                     width={1920}
                     height={1080}
-                    class="hero-image"
+                    class="w-full h-full object-cover object-center"
                 />
-                <div class="image-overlay">
-                    <div class="overlay-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 transition-opacity duration-300 cursor-pointer hover:opacity-100">
+                    <div class="text-white bg-white/20 p-4 rounded-full backdrop-blur-md transition-all duration-300 hover:bg-white/30 hover:scale-110">
+                        <svg class="w-6 h-6 stroke-[1.5]" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                             <circle cx="11" cy="11" r="8"/>
                             <path d="M21 21l-4.35-4.35"/>
                         </svg>
@@ -81,56 +128,59 @@ const allProjects = projects;
             </div>
         </section>
 
-        <section class="hero-text-section">
-            <div class="hero-text-container">
-                <p class="hero-description">{project.description}</p>
+        <!-- Hero Text Section -->
+        <section class="py-16 md:py-20 bg-white">
+            <div class="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-10 text-center">
+                <p class="text-xl md:text-2xl lg:text-3xl xl:text-[32px] font-normal leading-[1.4] text-[#4c4c4c] max-w-[900px] mx-auto font-['Poppins',sans-serif]">{project.description}</p>
             </div>
         </section>
 
-        <section class="project-info-section">
-            <div class="info-container">
-                <div class="info-layout">
-                    <div class="info-image-container">
+        <!-- Project Info Section -->
+        <section class="py-16 md:py-20 bg-white">
+            <div class="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-10">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20 xl:gap-24 items-start">
+                    <div class="lg:sticky lg:top-[120px]">
                         <Image 
                             src={project.heroImage.src} 
                             alt={project.heroImage.alt} 
                             width={600} 
                             height={400} 
-                            class="info-image"
+                            class="w-full h-auto block rounded-lg"
                         />
                     </div>
-                    <div class="info-content">
-                        <div class="info-specs">
-                            <div class="spec-row">
-                                <span class="spec-label">Typology:</span>
-                                <span class="spec-value">{project.info.typology.join(', ')}</span>
+                    <div class="pt-5">
+                        <!-- Project Specifications -->
+                        <div class="mb-16">
+                            <div class="flex flex-col md:flex-row md:items-baseline py-[15px] border-b border-gray-100 gap-2 md:gap-0 last:border-b-0">
+                                <span class="font-medium text-gray-700 min-w-[150px] text-sm font-['Poppins',sans-serif] md:font-semibold">Typology:</span>
+                                <span class="font-normal text-gray-500 text-sm flex-1 font-['Poppins',sans-serif]">{project.info.typology.join(', ')}</span>
                             </div>
-                            <div class="spec-row">
-                                <span class="spec-label">Status:</span>
-                                <span class="spec-value">{project.info.status}</span>
+                            <div class="flex flex-col md:flex-row md:items-baseline py-[15px] border-b border-gray-100 gap-2 md:gap-0 last:border-b-0">
+                                <span class="font-medium text-gray-700 min-w-[150px] text-sm font-['Poppins',sans-serif] md:font-semibold">Status:</span>
+                                <span class="font-normal text-gray-500 text-sm flex-1 font-['Poppins',sans-serif]">{project.info.status}</span>
                             </div>
-                            <div class="spec-row">
-                                <span class="spec-label">Year of design:</span>
-                                <span class="spec-value">{project.info.yearOfDesign}</span>
+                            <div class="flex flex-col md:flex-row md:items-baseline py-[15px] border-b border-gray-100 gap-2 md:gap-0 last:border-b-0">
+                                <span class="font-medium text-gray-700 min-w-[150px] text-sm font-['Poppins',sans-serif] md:font-semibold">Year of design:</span>
+                                <span class="font-normal text-gray-500 text-sm flex-1 font-['Poppins',sans-serif]">{project.info.yearOfDesign}</span>
                             </div>
-                            <div class="spec-row">
-                                <span class="spec-label">Location:</span>
-                                <span class="spec-value">{project.info.location}</span>
+                            <div class="flex flex-col md:flex-row md:items-baseline py-[15px] border-b border-gray-100 gap-2 md:gap-0 last:border-b-0">
+                                <span class="font-medium text-gray-700 min-w-[150px] text-sm font-['Poppins',sans-serif] md:font-semibold">Location:</span>
+                                <span class="font-normal text-gray-500 text-sm flex-1 font-['Poppins',sans-serif]">{project.info.location}</span>
                             </div>
-                            <div class="spec-row">
-                                <span class="spec-label">Square:</span>
-                                <span class="spec-value">{project.info.square}</span>
+                            <div class="flex flex-col md:flex-row md:items-baseline py-[15px] border-b border-gray-100 gap-2 md:gap-0 last:border-b-0">
+                                <span class="font-medium text-gray-700 min-w-[150px] text-sm font-['Poppins',sans-serif] md:font-semibold">Square:</span>
+                                <span class="font-normal text-gray-500 text-sm flex-1 font-['Poppins',sans-serif]">{project.info.square}</span>
                             </div>
-                            <div class="spec-row">
-                                <span class="spec-label">Completion:</span>
-                                <span class="spec-value">{projectCompletionDates[project.id] || 'TBA'}</span>
+                            <div class="flex flex-col md:flex-row md:items-baseline py-[15px] border-b border-gray-100 gap-2 md:gap-0 last:border-b-0">
+                                <span class="font-medium text-gray-700 min-w-[150px] text-sm font-['Poppins',sans-serif] md:font-semibold">Completion:</span>
+                                <span class="font-normal text-gray-500 text-sm flex-1 font-['Poppins',sans-serif]">{projectCompletionDates[project.id] || 'TBA'}</span>
                             </div>
                         </div>
                         
                         <!-- View Brochure Button -->
-                        <div class="brochure-button-section">
-                            <button class="brochure-btn" onclick="openWhatsApp()">
-                                <svg class="brochure-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <div class="mt-[30px] pt-5 border-t border-gray-100">
+                            <button class="inline-flex items-center gap-3 bg-[#121212] text-white border-none px-7 py-[14px] rounded-lg text-sm font-medium cursor-pointer transition-all duration-300 font-['Poppins',sans-serif] shadow-[0_4px_15px_rgba(76,76,76,0.3)] hover:bg-black hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(18,18,18,0.4)]" onclick="openWhatsApp()">
+                                <svg class="w-[18px] h-[18px] stroke-2" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                                     <polyline points="14,2 14,8 20,8"/>
                                     <line x1="16" y1="13" x2="8" y2="13"/>
@@ -141,10 +191,13 @@ const allProjects = projects;
                             </button>
                         </div>
                         
-                        <div class="about-section">
-                            <h3 class="about-title">About project:</h3>
+                        <!-- About Project Section -->
+                        <div class="pt-5">
+                            <h3 class="text-base font-medium mb-5 text-gray-700 font-['Poppins',sans-serif]">About project:</h3>
                             <div class="about-text">
-                                <div id="about-project-content" class="prose-content"></div>
+                                <div id="about-project-content" class="prose-content">
+                                    <Fragment set:html={formattedAboutContent} />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -152,27 +205,29 @@ const allProjects = projects;
             </div>
         </section>
         
-    <!-- Project Amenities Section -->
+        <!-- Project Amenities Section -->
         <ProjectAmenities projectId={project.id} client:load />
 
-        <section class="gallery-section">
-            <div class="gallery-container">
+        <!-- Gallery Section -->
+        <section class="py-20 md:py-24 bg-white">
+            <div class="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-10 flex flex-col gap-16 md:gap-20">
                 {project.galleryImages.map((image, index) => {
                     const isEven = index % 2 === 0;
                     return (
-                        <div class={`gallery-item ${isEven ? 'gallery-left' : 'gallery-right'}`} onclick={`openGalleryModal(${index + 1})`}>
-                            <div class="gallery-image-wrapper">
+                        <div class={`w-full flex cursor-pointer ${isEven ? 'justify-start' : 'justify-end'} md:${isEven ? 'justify-start' : 'justify-end'} justify-center`} 
+                             onclick={`openGalleryModal(${index + 1})`}>
+                            <div class={`relative overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.1)] transition-all duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-2.5 hover:shadow-[0_40px_100px_rgba(0,0,0,0.2)] w-full max-w-full md:max-w-[85%] lg:max-w-[75%]`}>
                                 <Image 
                                     src={image.src} 
                                     alt={image.alt}
                                     width={1200}
                                     height={800}
-                                    class="gallery-image"
+                                    class="w-full h-auto block transition-transform duration-[600ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-105"
                                     loading={index < 2 ? "eager" : "lazy"}
                                 />
-                                <div class="image-overlay">
-                                    <div class="overlay-icon">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 transition-opacity duration-300 cursor-pointer hover:opacity-100">
+                                    <div class="text-white bg-white/20 p-4 rounded-full backdrop-blur-md transition-all duration-300 hover:bg-white/30 hover:scale-110">
+                                        <svg class="w-6 h-6 stroke-[1.5]" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                             <circle cx="11" cy="11" r="8"/>
                                             <path d="M21 21l-4.35-4.35"/>
                                         </svg>
@@ -185,24 +240,25 @@ const allProjects = projects;
             </div>
         </section>
         
-        
+        <!-- Contact Form -->
         <ContactForm projectName={project.name} client:load />
 
-        <section class="navigation-section">
-            <div class="nav-container">
-                <button class="back-link" id="backToProjectsBtn">← Back to Projects</button>
+        <!-- Navigation Section -->
+        <section class="py-16 bg-white">
+            <div class="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-10">
+                <button class="inline-block text-gray-500 bg-none border-none font-normal text-sm transition-colors duration-300 hover:text-gray-700 font-['Poppins',sans-serif] cursor-pointer no-underline" id="backToProjectsBtn">← Back to Projects</button>
             </div>
         </section>
     </main>
 
-    <!-- Minimal Gallery Modal -->
-    <div class="gallery-modal" id="galleryModal">
-        <div class="modal-overlay" onclick="closeGalleryModal()">
-            <div class="modal-content" onclick="event.stopPropagation()">
+    <!-- Gallery Modal -->
+    <div class="fixed top-0 left-0 w-screen h-screen z-[2000] hidden bg-black/95" id="galleryModal">
+        <div class="absolute top-0 left-0 w-full h-full bg-transparent flex items-center justify-center" onclick="closeGalleryModal()">
+            <div class="relative w-[90vw] h-[85vh] max-w-[1200px] max-h-[800px] bg-white rounded-[20px] overflow-hidden shadow-[0_40px_100px_rgba(0,0,0,0.5)] flex flex-col mx-auto z-[2001]" onclick="event.stopPropagation()">
                 <!-- Modal Header -->
-                <div class="modal-header">
-                    <h3 id="modalTitle">{project.name} Gallery</h3>
-                    <button class="modal-close" onclick="closeGalleryModal()">
+                <div class="flex justify-between items-center px-[30px] py-5 bg-white border-b border-black/5 flex-shrink-0">
+                    <h3 class="m-0 text-lg font-semibold text-gray-700 font-['Poppins',sans-serif]" id="modalTitle">{project.name} Gallery</h3>
+                    <button class="bg-none border-none cursor-pointer text-gray-500 p-2 rounded-full transition-all duration-300 flex items-center justify-center hover:bg-gray-100 hover:text-gray-700" onclick="closeGalleryModal()">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                             <line x1="18" y1="6" x2="6" y2="18"></line>
                             <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -211,29 +267,29 @@ const allProjects = projects;
                 </div>
                 
                 <!-- Main Image Display -->
-                <div class="modal-body">
-                    <div class="slideshow-container">
-                        <img id="modalMainImage" src="" alt="" class="slideshow-image" />
+                <div class="flex-1 flex items-center justify-center bg-gray-50 min-h-0">
+                    <div class="relative w-full h-full flex items-center justify-center">
+                        <img id="modalMainImage" src="" alt="" class="max-w-[90%] max-h-[90%] object-contain rounded-lg shadow-[0_10px_40px_rgba(0,0,0,0.1)] select-none pointer-events-none transition-opacity duration-300" />
                         
                         <!-- Navigation Arrows -->
-                        <button class="nav-arrow nav-prev" onclick="previousImage()" aria-label="Previous image">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <button class="absolute top-1/2 -translate-y-1/2 left-[15px] md:left-[30px] bg-white/95 border-none w-[40px] h-[40px] md:w-[50px] md:h-[50px] rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.1)] text-gray-700 z-10 hover:bg-white hover:scale-110 hover:shadow-[0_6px_30px_rgba(0,0,0,0.2)]" onclick="previousImage()" aria-label="Previous image">
+                            <svg width="16" height="16" class="md:w-5 md:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                 <polyline points="15,18 9,12 15,6"></polyline>
                             </svg>
                         </button>
-                        <button class="nav-arrow nav-next" onclick="nextImage()" aria-label="Next image">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <button class="absolute top-1/2 -translate-y-1/2 right-[15px] md:right-[30px] bg-white/95 border-none w-[40px] h-[40px] md:w-[50px] md:h-[50px] rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.1)] text-gray-700 z-10 hover:bg-white hover:scale-110 hover:shadow-[0_6px_30px_rgba(0,0,0,0.2)]" onclick="nextImage()" aria-label="Next image">
+                            <svg width="16" height="16" class="md:w-5 md:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                 <polyline points="9,18 15,12 9,6"></polyline>
                             </svg>
                         </button>
                         
                         <!-- Image Counter -->
-                        <div class="image-counter">
+                        <div class="absolute top-5 right-5 bg-black/70 text-white px-4 py-2 rounded-[20px] text-sm font-medium font-['Poppins',sans-serif] backdrop-blur-md">
                             <span id="currentImageIndex">1</span> / <span id="totalImages">1</span>
                         </div>
                         
                         <!-- Progress Indicators -->
-                        <div class="progress-indicators" id="progressIndicators">
+                        <div class="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2 z-10" id="progressIndicators">
                             <!-- Generated by JavaScript -->
                         </div>
                     </div>
@@ -247,950 +303,17 @@ const allProjects = projects;
 </body>
 </html>
 
-<style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    body {
-        font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
-        line-height: 1.6;
-        color: #333;
-        background: #ffffff;
-    }
-
-    /* Header */
-    .project-header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        z-index: 1000;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    }
-
-    .header-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        max-width: 1400px;
-        margin: 0 auto;
-    }
-
-    .header-left {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-    }
-
-    .close-btn {
-        background: none;
-        border: none;
-        font-size: 24px;
-        color: #999;
-        cursor: pointer;
-        padding: 5px;
-        transition: color 0.3s ease;
-        font-family: inherit;
-    }
-
-    .close-btn:hover {
-        color: #333;
-    }
-
-    /* Project Dropdown */
-    .project-dropdown {
-        position: relative;
-    }
-
-    .project-title-btn {
-        background: none;
-        border: none;
-        font-size: 18px;
-        font-weight: 500;
-        color: #333;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 8px 12px;
-        border-radius: 6px;
-        transition: all 0.3s ease;
-        font-family: 'Poppins', sans-serif;
-    }
-
-    .project-title-btn:hover {
-        background: #f5f5f5;
-    }
-
-    .dropdown-arrow {
-        transition: transform 0.3s ease;
-    }
-
-    .project-title-btn.active .dropdown-arrow {
-        transform: rotate(180deg);
-    }
-
-    .dropdown-menu {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        background: white;
-        border: 1px solid #e0e0e0;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        min-width: 300px;
-        max-height: 400px;
-        overflow-y: auto;
-        opacity: 0;
-        visibility: hidden;
-        transform: translateY(-10px);
-        transition: all 0.3s ease;
-        z-index: 1001;
-    }
-
-    .dropdown-menu.show {
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(0);
-    }
-
-    .dropdown-item {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 12px 16px;
-        text-decoration: none;
-        color: #333;
-        transition: background 0.3s ease;
-        border-bottom: 1px solid #f0f0f0;
-        font-family: 'Poppins', sans-serif;
-    }
-
-    .dropdown-item:last-child {
-        border-bottom: none;
-    }
-
-    .dropdown-item:hover {
-        background: #f8f9fa;
-    }
-
-    .dropdown-item.active {
-        background: black;
-        color: white;
-    }
-
-    .project-number {
-        font-size: 12px;
-        color: #999;
-        min-width: 30px;
-        font-weight: 500;
-    }
-
-    .dropdown-item.active .project-number {
-        color: rgba(255, 255, 255, 0.8);
-    }
-
-    .project-name {
-        flex: 1;
-        font-size: 14px;
-        font-weight: 500;
-    }
-
-    .project-location {
-        font-size: 12px;
-        color: #666;
-        font-weight: 400;
-    }
-
-    .dropdown-item.active .project-location {
-        color: rgba(255, 255, 255, 0.9);
-    }
-
-    .header-right {
-        display: flex;
-        align-items: center;
-    }
-
-    .gallery-btn {
-        background: none;
-        border: none;
-        color: #999;
-        font-size: 14px;
-        font-weight: 400;
-        cursor: pointer;
-        padding: 8px 12px;
-        border-radius: 6px;
-        transition: all 0.3s ease;
-        font-family: 'Poppins', sans-serif;
-    }
-
-    .gallery-btn:hover {
-        color: #333;
-        background: #f5f5f5;
-    }
-
-    /* Image Overlays */
-    .image-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.4);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        cursor: pointer;
-    }
-
-    .hero-image-container:hover .image-overlay,
-    .gallery-image-wrapper:hover .image-overlay {
-        opacity: 1;
-    }
-
-    .overlay-icon {
-        color: white;
-        background: rgba(255, 255, 255, 0.2);
-        padding: 16px;
-        border-radius: 50%;
-        backdrop-filter: blur(10px);
-        transition: all 0.3s ease;
-    }
-
-    .overlay-icon svg {
-        width: 24px;
-        height: 24px;
-        stroke-width: 1.5;
-    }
-
-    .image-overlay:hover .overlay-icon {
-        background: rgba(255, 255, 255, 0.3);
-        transform: scale(1.1);
-    }
-
-    /* Main Content */
-    .project-main {
-        /* margin-top: 80px; */
-    }
-
-    /* Hero Section */
-    .hero {
-        width: 100%;
-        height: 100vh;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .hero-image-container {
-        width: 100%;
-        height: 100%;
-        position: relative;
-        cursor: pointer;
-    }
-
-    .hero-image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center;
-    }
-
-    /* Hero Text Section */
-    .hero-text-section {
-        padding: 80px 0;
-        background: #fff;
-    }
-
-    .hero-text-container {
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 0 40px;
-        text-align: center;
-    }
-
-    .hero-description {
-        font-size: clamp(24px, 4vw, 32px);
-        font-weight: 400;
-        line-height: 1.4;
-        color: #4c4c4c;
-        max-width: 900px;
-        margin: 0 auto;
-        font-family: 'Poppins', sans-serif;
-    }
-
-    /* Project Info Section */
-    .project-info-section {
-        padding: 80px 0;
-        background: #fff;
-    }
-
-    .info-container {
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 0 40px;
-    }
-
-    .info-layout {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 100px;
-        align-items: start;
-    }
-
-    .info-image-container {
-        position: sticky;
-        top: 120px;
-    }
-
-    .info-image {
-        width: 100%;
-        height: auto;
-        display: block;
-        border-radius: 8px;
-    }
-
-    .info-content {
-        padding-top: 20px;
-    }
-
-    .info-specs {
-        margin-bottom: 60px;
-    }
-
-    .spec-row {
-        display: flex;
-        padding: 15px 0;
-        border-bottom: 1px solid #f0f0f0;
-        align-items: baseline;
-    }
-
-    .spec-row:last-child {
-        border-bottom: none;
-    }
-
-    .spec-label {
-        font-weight: 500;
-        color: #333;
-        min-width: 150px;
-        font-size: 14px;
-        font-family: 'Poppins', sans-serif;
-    }
-
-    .spec-value {
-        font-weight: 400;
-        color: #666;
-        font-size: 14px;
-        flex: 1;
-        font-family: 'Poppins', sans-serif;
-    }
-
-    .about-section {
-        padding-top: 20px;
-    }
-
-    .about-title {
-        font-size: 16px;
-        font-weight: 500;
-        margin-bottom: 20px;
-        color: #333;
-        font-family: 'Poppins', sans-serif;
-    }
-
-    .prose-content p {
-        font-size: 14px;
-        line-height: 1.7;
-        color: #666;
-        font-family: 'Poppins', sans-serif;
-        margin-bottom: 1.2em;
-    }
-
-    .prose-content p:last-child {
-        margin-bottom: 0;
-    }
-
-    .brochure-button-section {
-        margin-top: 30px;
-        padding-top: 20px;
-        border-top: 1px solid #f0f0f0;
-    }
-
-    .brochure-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 12px;
-        background: #121212;
-        color: white;
-        border: none;
-        padding: 14px 28px;
-        border-radius: 8px;
-        font-size: 14px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        font-family: 'Poppins', sans-serif;
-        box-shadow: 0 4px 15px rgba(76, 76, 76, 0.3);
-    }
-
-    .brochure-btn:hover {
-        background: #000000;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(18, 18, 18, 0.4);
-    }
-
-    .brochure-icon {
-        width: 18px;
-        height: 18px;
-        stroke-width: 2;
-    }
-
-    /* Gallery Section */
-    .gallery-section {
-        padding: 100px 0;
-        background: #fff;
-    }
-
-    .gallery-container {
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 0 40px;
-        display: flex;
-        flex-direction: column;
-        gap: 80px;
-    }
-
-    .gallery-item {
-        width: 100%;
-        display: flex;
-        cursor: pointer;
-        opacity: 0;
-        transform: translateY(40px);
-        animation: fadeInUp 0.8s ease-out forwards;
-    }
-
-    .gallery-left {
-        justify-content: flex-start;
-    }
-
-    .gallery-left .gallery-image-wrapper {
-        max-width: 75%;
-        width: 100%;
-    }
-
-    .gallery-right {
-        justify-content: flex-end;
-    }
-
-    .gallery-right .gallery-image-wrapper {
-        max-width: 75%;
-        width: 100%;
-    }
-
-    .gallery-image-wrapper {
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .gallery-item:hover .gallery-image-wrapper {
-        transform: translateY(-10px);
-        box-shadow: 0 40px 100px rgba(0, 0, 0, 0.2);
-    }
-
-    .gallery-image {
-        width: 100%;
-        height: auto;
-        display: block;
-        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .gallery-item:hover .gallery-image {
-        transform: scale(1.05);
-    }
-
-    /* Navigation Section */
-    .navigation-section {
-        padding: 60px 0;
-        background: #fff;
-    }
-
-    .nav-container {
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 0 40px;
-    }
-
-    .back-link {
-        display: inline-block;
-        color: #666;
-        background: none;
-        border: none;
-        font-weight: 400;
-        font-size: 14px;
-        transition: color 0.3s ease;
-        font-family: 'Poppins', sans-serif;
-        cursor: pointer;
-        text-decoration: none;
-    }
-
-    .back-link:hover {
-        color: #333;
-    }
-
-    /* MINIMAL GALLERY MODAL STYLES */
-    .gallery-modal {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        z-index: 2000;
-        display: none;
-        background: rgba(0, 0, 0, 0.95);
-    }
-
-    .gallery-modal.show {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .modal-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: transparent;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .modal-content {
-        position: relative;
-        width: 90vw;
-        height: 85vh;
-        max-width: 1200px;
-        max-height: 800px;
-        background: white;
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
-        display: flex;
-        flex-direction: column;
-        margin: auto;
-        z-index: 2001;
-    }
-
-    .modal-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 20px 30px;
-        background: white;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        flex-shrink: 0;
-    }
-
-    .modal-header h3 {
-        margin: 0;
-        font-size: 18px;
-        font-weight: 600;
-        color: #333;
-        font-family: 'Poppins', sans-serif;
-    }
-
-    .modal-close {
-        background: none;
-        border: none;
-        cursor: pointer;
-        color: #666;
-        padding: 8px;
-        border-radius: 50%;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .modal-close:hover {
-        background: #f0f0f0;
-        color: #333;
-    }
-
-    .modal-body {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #fafafa;
-        min-height: 0;
-    }
-
-    .slideshow-container {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .slideshow-image {
-        max-width: 90%;
-        max-height: 90%;
-        object-fit: contain;
-        border-radius: 8px;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-        user-select: none;
-        pointer-events: none;
-        transition: opacity 0.3s ease;
-    }
-
-    .slideshow-image.loading {
-        opacity: 0.7;
-    }
-
-    /* Navigation Arrows */
-    .nav-arrow {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background: rgba(255, 255, 255, 0.95);
-        border: none;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        color: #333;
-        z-index: 10;
-    }
-
-    .nav-arrow:hover {
-        background: white;
-        transform: translateY(-50%) scale(1.1);
-        box-shadow: 0 6px 30px rgba(0, 0, 0, 0.2);
-    }
-
-    .nav-prev {
-        left: 30px;
-    }
-
-    .nav-next {
-        right: 30px;
-    }
-
-    /* Image Counter */
-    .image-counter {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        background: rgba(0, 0, 0, 0.7);
-        color: white;
-        padding: 8px 16px;
-        border-radius: 20px;
-        font-size: 14px;
-        font-weight: 500;
-        font-family: 'Poppins', sans-serif;
-        backdrop-filter: blur(10px);
-    }
-
-    /* Progress Indicators */
-    .progress-indicators {
-        position: absolute;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        gap: 8px;
-        z-index: 10;
-    }
-
-    .progress-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.5);
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .progress-dot.active {
-        background: white;
-        transform: scale(1.2);
-    }
-
-    .progress-dot:hover {
-        background: rgba(255, 255, 255, 0.8);
-        transform: scale(1.1);
-    }
-
-    /* Animation delays for gallery items */
-    .gallery-item:nth-child(1) { animation-delay: 0.1s; }
-    .gallery-item:nth-child(2) { animation-delay: 0.2s; }
-    .gallery-item:nth-child(3) { animation-delay: 0.3s; }
-    .gallery-item:nth-child(4) { animation-delay: 0.4s; }
-    .gallery-item:nth-child(5) { animation-delay: 0.5s; }
-    .gallery-item:nth-child(6) { animation-delay: 0.6s; }
-
-    @keyframes fadeInUp {
-        from { 
-            opacity: 0; 
-            transform: translateY(40px); 
-        }
-        to { 
-            opacity: 1; 
-            transform: translateY(0); 
-        }
-    }
-
-    /* Responsive Design */
-    @media (max-width: 1024px) {
-        .info-layout {
-            grid-template-columns: 1fr;
-            gap: 60px;
-        }
-
-        .info-image-container {
-            position: static;
-        }
-
-        .gallery-container {
-            gap: 60px;
-            padding: 0 30px;
-        }
-
-        .gallery-left .gallery-image-wrapper,
-        .gallery-right .gallery-image-wrapper {
-            max-width: 85%;
-        }
-
-        .hero-text-container,
-        .info-container,
-        .nav-container {
-            padding: 0 30px;
-        }
-
-        .dropdown-menu {
-            min-width: 280px;
-        }
-
-        .modal-content {
-            width: 95vw;
-            height: 90vh;
-            margin: auto;
-        }
-
-        .nav-arrow {
-            width: 45px;
-            height: 45px;
-        }
-
-        .nav-prev {
-            left: 20px;
-        }
-
-        .nav-next {
-            right: 20px;
-        }
-    }
-
-    @media (max-width: 768px) {
-        .project-header {
-            /* padding: 15px 20px; */
-        }
-
-        .project-main {
-            margin-top: 70px;
-        }
-
-        .hero {
-            height: 70vh;
-        }
-
-        .hero-text-section {
-            padding: 60px 0;
-        }
-
-        .project-info-section {
-            padding: 60px 0;
-        }
-
-        .gallery-section {
-            padding: 80px 0;
-        }
-
-        .gallery-container {
-            gap: 40px;
-            padding: 0 20px;
-        }
-
-        .gallery-left,
-        .gallery-right {
-            justify-content: center;
-        }
-
-        .gallery-left .gallery-image-wrapper,
-        .gallery-right .gallery-image-wrapper {
-            max-width: 100%;
-        }
-
-        .hero-text-container,
-        .info-container,
-        .nav-container {
-            padding: 0 20px;
-        }
-
-        .spec-row {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 8px;
-            padding: 20px 0;
-        }
-
-        .spec-label {
-            min-width: auto;
-            font-weight: 600;
-        }
-
-        .dropdown-menu {
-            min-width: 250px;
-        }
-
-        .nav-arrow {
-            width: 40px;
-            height: 40px;
-        }
-
-        .nav-prev {
-            left: 15px;
-        }
-
-        .nav-next {
-            right: 15px;
-        }
-
-        .modal-header {
-            padding: 15px 20px;
-        }
-
-        .image-counter {
-            top: 15px;
-            right: 15px;
-            font-size: 12px;
-            padding: 6px 12px;
-        }
-
-        .progress-indicators {
-            bottom: 15px;
-        }
-
-        .progress-dot {
-            width: 6px;
-            height: 6px;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .project-title-btn {
-            font-size: 16px;
-        }
-
-        .hero-description {
-            font-size: 20px;
-        }
-
-        .gallery-container {
-            gap: 30px;
-            padding: 0 15px;
-        }
-
-        .gallery-image-wrapper {
-            /* border-radius: 8px; */
-        }
-
-        .project-info-section,
-        .gallery-section {
-            padding: 60px 0;
-        }
-
-        .hero-text-section {
-            padding: 40px 0;
-        }
-
-        .hero-text-container,
-        .info-container,
-        .nav-container {
-            padding: 0 15px;
-        }
-
-        .dropdown-menu {
-            min-width: 220px;
-        }
-
-        .brochure-btn {
-            padding: 12px 20px;
-            font-size: 13px;
-        }
-
-        .modal-header {
-            padding: 12px 15px;
-        }
-
-        .modal-header h3 {
-            font-size: 16px;
-        }
-
-        .nav-arrow {
-            width: 35px;
-            height: 35px;
-        }
-
-        .nav-prev {
-            left: 10px;
-        }
-
-        .nav-next {
-            right: 10px;
-        }
-
-        .slideshow-image {
-            max-width: 95%;
-            max-height: 85%;
-        }
-    }
-
-    /* Smooth scrolling */
-    html {
-        scroll-behavior: smooth;
-    }
-</style>
+<!-- No custom CSS - Pure Tailwind only -->
 
 <script define:vars={{ allProjects, project }}>
+    // Global Variables
     let currentImageIndex = 0;
     let galleryImages = [];
     let isModalOpen = false;
 
-    function formatAndDisplayAboutText() {
-        const container = document.getElementById('about-project-content');
-        const rawText = project.aboutProject;
-        if (!container || !rawText) return;
-        const paragraphs = rawText.split('\n').filter(line => line.trim() !== '');
-        container.innerHTML = paragraphs.map(p => `<p>${p}</p>`).join('');
-    }
+    // Note: Text formatting is now handled server-side, no client-side formatting needed
 
+    // Gallery Functions
     function initializeGallery() {
         galleryImages = [
             { src: project.heroImage.src.src || project.heroImage.src, alt: project.heroImage.alt },
@@ -1211,6 +334,7 @@ const allProjects = projects;
         return '/projects';
     }
 
+    // Navigation Functions
     function initializeCloseButton() {
         const closeBtn = document.getElementById('closeBtn');
         if (closeBtn) closeBtn.addEventListener('click', () => { window.location.href = getReturnUrl(); });
@@ -1226,23 +350,27 @@ const allProjects = projects;
         if (galleryBtn) galleryBtn.addEventListener('click', () => openGalleryModal(0));
     }
 
+    // Dropdown Functions
     function initializeDropdown() {
         const dropdownBtn = document.getElementById('projectDropdownBtn');
         const dropdownMenu = document.getElementById('projectDropdownMenu');
+        const arrow = dropdownBtn?.querySelector('svg');
         if (!dropdownBtn || !dropdownMenu) return;
         
         const openDropdown = () => { 
-            dropdownBtn.classList.add('active'); 
-            dropdownMenu.classList.add('show'); 
+            dropdownMenu.classList.remove('hidden');
+            dropdownMenu.classList.add('block');
+            if (arrow) arrow.style.transform = 'rotate(180deg)';
         };
         const closeDropdown = () => { 
-            dropdownBtn.classList.remove('active'); 
-            dropdownMenu.classList.remove('show'); 
+            dropdownMenu.classList.add('hidden');
+            dropdownMenu.classList.remove('block');
+            if (arrow) arrow.style.transform = 'rotate(0deg)';
         };
         
         dropdownBtn.addEventListener('click', (e) => { 
             e.stopPropagation(); 
-            dropdownMenu.classList.contains('show') ? closeDropdown() : openDropdown(); 
+            dropdownMenu.classList.contains('hidden') ? openDropdown() : closeDropdown(); 
         });
         document.addEventListener('click', (e) => { 
             if (!dropdownBtn.contains(e.target) && !dropdownMenu.contains(e.target)) closeDropdown(); 
@@ -1252,12 +380,14 @@ const allProjects = projects;
         });
     }
 
+    // Modal Functions
     window.openGalleryModal = function(imageIndex = 0) {
         const modal = document.getElementById('galleryModal');
         if (!modal) return;
         currentImageIndex = imageIndex;
         isModalOpen = true;
-        modal.classList.add('show');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
         document.body.style.overflow = 'hidden';
         updateModalImage();
         createProgressIndicators();
@@ -1268,7 +398,8 @@ const allProjects = projects;
         const modal = document.getElementById('galleryModal');
         if (!modal) return;
         isModalOpen = false;
-        modal.classList.remove('show');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
         document.body.style.overflow = '';
         document.removeEventListener('keydown', handleKeyboardNavigation);
     };
@@ -1312,16 +443,21 @@ const allProjects = projects;
         
         galleryImages.forEach((_, index) => {
             const dot = document.createElement('div');
-            dot.className = `progress-dot ${index === currentImageIndex ? 'active' : ''}`;
+            dot.setAttribute('data-dot', index);
+            dot.className = `w-2 h-2 rounded-full cursor-pointer transition-all duration-300 ${index === currentImageIndex ? 'bg-white scale-125' : 'bg-white/50 hover:bg-white/80 hover:scale-110'}`;
             dot.onclick = () => selectImage(index);
             container.appendChild(dot);
         });
     }
 
     function updateProgressIndicators() {
-        const dots = document.querySelectorAll('.progress-dot');
+        const dots = document.querySelectorAll('[data-dot]');
         dots.forEach((dot, index) => {
-            dot.classList.toggle('active', index === currentImageIndex);
+            if (index === currentImageIndex) {
+                dot.className = 'w-2 h-2 rounded-full cursor-pointer transition-all duration-300 bg-white scale-125';
+            } else {
+                dot.className = 'w-2 h-2 rounded-full cursor-pointer transition-all duration-300 bg-white/50 hover:bg-white/80 hover:scale-110';
+            }
         });
     }
 
@@ -1347,6 +483,7 @@ const allProjects = projects;
         if (e.key === 'ArrowRight') { e.preventDefault(); nextImage(); }
     }
 
+    // Parallax Effect
     function initializeParallax() {
         const heroImage = document.querySelector('.hero-image');
         if(!heroImage) return;
@@ -1364,6 +501,7 @@ const allProjects = projects;
         }, { passive: true });
     }
 
+    // Animation Observer
     function initializeAnimations() {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -1377,7 +515,7 @@ const allProjects = projects;
         });
     }
 
-    // Touch/swipe support for mobile
+    // Touch Support for Mobile
     function initializeTouchSupport() {
         let startX = 0;
         let startY = 0;
@@ -1409,27 +547,30 @@ const allProjects = projects;
             }
         }, { passive: true });
     }
-      
-     // WhatsApp brochure inquiry
-window.openWhatsApp = function() {
-  const projectName = project.name;
-  const message = `Hi! I'm interested in learning more about EMAAR & HMR waterfront properties. Could you please provide me with more information about ${projectName}?`;
-  const whatsappUrl = `https://wa.me/923360878079?text=${encodeURIComponent(message)}`;
-  window.open(whatsappUrl, '_blank');
-};
 
+    // WhatsApp Function
+    window.openWhatsApp = function() {
+        const projectName = project.name;
+        const message = `Hi! I'm interested in learning more about EMAAR & HMR waterfront properties. Could you please provide me with more information about ${projectName}?`;
+        const whatsappUrl = `https://wa.me/923360878079?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, '_blank');
+    };
+
+    // Main Initialization Function
     function initialize() {
+        console.log('Initializing project layout for:', project.name);
         initializeGallery();
         initializeDropdown();
         initializeParallax();
-        formatAndDisplayAboutText();
         initializeGalleryButton();
         initializeAnimations();
         initializeTouchSupport();
         initializeCloseButton();
         initializeBackButton();
+        console.log('Project layout initialization complete');
     }
 
+    // Initialize when DOM is ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initialize);
     } else {
