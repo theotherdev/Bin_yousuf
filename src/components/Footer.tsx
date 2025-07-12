@@ -1,4 +1,4 @@
-// src/components/Footer.tsx - Minimalistic Footer Design
+// src/components/Footer.tsx
 import React from 'react';
 import { projects, getProjectCounts } from '../data/projects.js';
 import logoImage from '../assets/projects/logo.webp';
@@ -6,84 +6,115 @@ import logoImage from '../assets/projects/logo.webp';
 const Footer: React.FC = () => {
   const projectCounts = getProjectCounts();
   const currentYear = new Date().getFullYear();
-  const emaarProjects = projects.filter(p => p.location === 'Emaar');
-  const hmrProjects = projects.filter(p => p.location === 'HMR');
 
   return (
     <>
-      {/* Simple Separator */}
-      <div className="w-full border-t border-gray-300"></div>
+      {/* Footer Separator */}
+      <div className="w-full h-px bg-gradient-to-r from-transparent via-blue-300 to-transparent"></div>
       
       <footer className="relative w-full py-16" style={{backgroundColor: '#F2F2EC'}}>
-        <div className="relative mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-          
-          {/* Centered Header Section */}
-          <div className="text-center mb-12 px-6">
-            <div className="mb-4 pt-16">
-              <a href="/" className="inline-block">
-                <img 
-                  src={logoImage.src} 
-                  alt="BYG Logo" 
-                  className="h-11 mx-auto mb-4 transition-transform duration-300 hover:scale-105 cursor-pointer"
-                  style={{width: '30%', objectFit: 'contain'}}
-                />
-              </a>
-            </div>
-          </div>
+        {/* Subtle pattern overlay */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `radial-gradient(circle at 25% 25%, rgba(0,0,0,0.05) 0%, transparent 50%), 
+                             radial-gradient(circle at 75% 75%, rgba(0,0,0,0.05) 0%, transparent 50%)`
+          }}></div>
+        </div>
+        
+        <div className="relative mx-auto w-full max-w-7xl px-8">
           
           {/* Main Footer Content */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-12 mb-16">
             
+            {/* Company Logo and Map */}
+            <div className="lg:col-span-1">
+              <div className="mb-8">
+                <img 
+                  src={logoImage.src} 
+                  alt="BinYousuf Group Logo" 
+                  className="h-16 w-auto mb-6"
+                  style={{filter: 'brightness(0.2)'}}
+                />
+                
+                {/* Google Maps Iframe - Full Interactive Map */}
+                <div className="relative rounded-lg overflow-hidden h-48 w-full shadow-lg">
+                  <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14460.816326988188!2d67.29673298089614!3d25.027147338248188!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3eb34ba7aedde237%3A0xef200ee78d0e7246!2sMidway%20Commercial-B%2C%20Bahria%20Town%20Karachi!5e0!3m2!1sen!2s!4v1752291903438!5m2!1sen!2s"
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    allowFullScreen={true}
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title="BinYousuf Group Office Location - Midway Commercial-B, Bahria Town Karachi"
+                    className="w-full h-full"
+                  ></iframe>
+                  
+                  {/* View Larger Map Overlay Link */}
+                  <div className="absolute top-2 left-2">
+                    <a 
+                      href="https://maps.app.goo.gl/MwwtfoP37kS9s5EW6" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-xs bg-white px-2 py-1 rounded shadow text-blue-600 hover:text-blue-800 transition-colors font-medium"
+                    >
+                      View larger map
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* Pages Column */}
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-6 uppercase tracking-wider">
+              <h3 className="text-lg font-semibold text-gray-800 mb-6 uppercase tracking-wider">
                 PAGES
               </h3>
               <nav className="space-y-4">
                 <a 
                   href="/projects/panorama" 
-                  className="block text-gray-600 hover:text-gray-900 transition-colors duration-300 text-sm hover:translate-x-1 transform"
+                  className="block text-gray-600 hover:text-gray-800 transition-colors duration-300 text-sm hover:translate-x-1 transform"
                 >
                   Panorama
                 </a>
                 <a 
-                  href="/projects/the-views" 
-                  className="block text-gray-600 hover:text-gray-900 transition-colors duration-300 text-sm hover:translate-x-1 transform"
-                >
-                  The Views
-                </a>
-                <a 
                   href="/projects/aa-waterfront" 
-                  className="block text-gray-600 hover:text-gray-900 transition-colors duration-300 text-sm hover:translate-x-1 transform"
+                  className="block text-gray-600 hover:text-gray-800 transition-colors duration-300 text-sm hover:translate-x-1 transform"
                 >
                   AA Waterfront
                 </a>
                 <a 
-                  href="/about" 
-                  className="block text-gray-600 hover:text-gray-900 transition-colors duration-300 text-sm hover:translate-x-1 transform"
+                  href="/projects/the-views" 
+                  className="block text-gray-600 hover:text-gray-800 transition-colors duration-300 text-sm hover:translate-x-1 transform"
                 >
-                  About Us
+                  The Views
                 </a>
                 <a 
-                  href="/privacy-policy" 
-                  className="block text-gray-600 hover:text-gray-900 transition-colors duration-300 text-sm hover:translate-x-1 transform"
+                  href="/projects/coral" 
+                  className="block text-gray-600 hover:text-gray-800 transition-colors duration-300 text-sm hover:translate-x-1 transform"
                 >
-                  Privacy Policy
+                  Coral
+                </a>
+                <a 
+                  href="/projects/pear-reef-towers" 
+                  className="block text-gray-600 hover:text-gray-800 transition-colors duration-300 text-sm hover:translate-x-1 transform"
+                >
+                  Pear Reef Towers
                 </a>
               </nav>
             </div>
 
             {/* Follow Us Column */}
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-6 uppercase tracking-wider">
+              <h3 className="text-lg font-semibold text-gray-800 mb-6 uppercase tracking-wider">
                 FOLLOW US
               </h3>
               <nav className="space-y-4">
                 <a 
-                  href="https://www.linkedin.com/company/bin-yousuf" 
+                  href="https://www.linkedin.com/company/binyousuf-group" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="block text-gray-600 hover:text-gray-900 transition-colors duration-300 text-sm hover:translate-x-1 transform"
+                  className="block text-gray-600 hover:text-gray-800 transition-colors duration-300 text-sm hover:translate-x-1 transform"
                 >
                   LinkedIn
                 </a>
@@ -91,76 +122,84 @@ const Footer: React.FC = () => {
                   href="https://www.instagram.com/binyousuf.group" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="block text-gray-600 hover:text-gray-900 transition-colors duration-300 text-sm hover:translate-x-1 transform"
+                  className="block text-gray-600 hover:text-gray-800 transition-colors duration-300 text-sm hover:translate-x-1 transform"
                 >
                   Instagram
                 </a>
                 <a 
-                  href="https://www.instagram.com/binyousuf.group" 
+                  href="https://www.facebook.com/binyousufgroup" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="block text-gray-600 hover:text-gray-900 transition-colors duration-300 text-sm hover:translate-x-1 transform"
+                  className="block text-gray-600 hover:text-gray-800 transition-colors duration-300 text-sm hover:translate-x-1 transform"
                 >
                   Facebook
                 </a>
                 <a 
-                  href="https://www.instagram.com/binyousuf.group" 
+                  href="https://www.youtube.com/@binyousufgroup" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="block text-gray-600 hover:text-gray-900 transition-colors duration-300 text-sm hover:translate-x-1 transform"
+                  className="block text-gray-600 hover:text-gray-800 transition-colors duration-300 text-sm hover:translate-x-1 transform"
                 >
                   YouTube
+                </a>
+                <a 
+                  href="mailto:info@binyousufgroup.com"
+                  className="block text-gray-600 hover:text-gray-800 transition-colors duration-300 text-sm hover:translate-x-1 transform"
+                >
+                  info@binyousufgroup.com
                 </a>
               </nav>
             </div>
 
-            {/* Contact Information Column */}
+            {/* Legal Column */}
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-6 uppercase tracking-wider">
-                CONTACT
+              <h3 className="text-lg font-semibold text-gray-800 mb-6 uppercase tracking-wider">
+                LEGAL
               </h3>
-              <div className="space-y-4">
-                <div className="text-gray-600">
-                  <p className="text-sm mb-2">Phone:</p>
-                  <a 
-                    href="tel:+923360878079"
-                    className="text-gray-900 hover:text-gray-700 transition-colors duration-300 font-medium"
-                  >
-                    +92 336 0878079
-                  </a>
-                </div>
-                <div className="text-gray-600">
-                  <p className="text-sm mb-2">Email:</p>
-                  <a 
-                    href="mailto:info@binyousufgroup.com"
-                    className="text-gray-900 hover:text-gray-700 transition-colors duration-300 font-medium"
-                  >
-                    info@binyousufgroup.com
-                  </a>
-                </div>
-                <div className="text-gray-600">
-                  <p className="text-sm mb-2">Location:</p>
-                  <p className="text-gray-900 text-sm">
-                    DHA Phase 8, Karachi
-                  </p>
-                </div>
-              </div>
+              <nav className="space-y-4">
+                <a 
+                  href="/privacy-policy" 
+                  className="block text-gray-600 hover:text-gray-800 transition-colors duration-300 text-sm hover:translate-x-1 transform"
+                >
+                  Privacy Policy
+                </a>
+                <a 
+                  href="/terms-conditions" 
+                  className="block text-gray-600 hover:text-gray-800 transition-colors duration-300 text-sm hover:translate-x-1 transform"
+                >
+                  Terms & Conditions
+                </a>
+              </nav>
             </div>
           </div>
 
-          {/* Bottom Section */}
-          <div className="border-t border-gray-300 pt-6">
-            <div className="flex flex-col items-center text-center gap-4">
+          {/* Bottom Section with Social Icons */}
+          <div className="border-t border-gray-300 pt-8">
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
               
+              {/* Copyright */}
+              <div className="text-sm text-gray-600">
+                © {currentYear} BinYousuf Group™ with{' '}
+                <span className="text-red-600">❤</span> from{' '}
+                <a 
+                  href="https://otherdev.com/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-gray-700 hover:text-gray-900 transition-colors duration-300 underline hover:no-underline"
+                >
+                  The Other Dev
+                </a>
+              </div>
+
               {/* Social Media Icons */}
               <div className="flex gap-4">
                 
                 {/* Facebook */}
                 <a 
-                  href="https://www.instagram.com/binyousuf.group" 
+                  href="https://www.facebook.com/binyousufgroup" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="text-gray-500 hover:text-gray-700 transition-all duration-300 p-2 rounded-none hover:bg-gray-200/50 hover:scale-110 transform"
+                  className="text-gray-600 hover:text-blue-600 transition-all duration-300 p-2 rounded hover:bg-blue-100 hover:scale-110 transform"
                 >
                   <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path
@@ -171,57 +210,40 @@ const Footer: React.FC = () => {
                   </svg>
                 </a>
 
-                {/* LinkedIn */}
+                {/* Instagram */}
                 <a 
-                  href="https://www.linkedin.com/company/bin-yousuf" 
+                  href="https://www.instagram.com/binyousuf.group" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="text-gray-500 hover:text-gray-700 transition-all duration-300 p-2 rounded-none hover:bg-gray-200/50 hover:scale-110 transform"
+                  className="text-gray-600 hover:text-pink-600 transition-all duration-300 p-2 rounded hover:bg-pink-100 hover:scale-110 transform"
+                >
+                  <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12.004 2.163c2.672 0 2.988.01 4.041.058 1.088.049 1.681.228 2.075.379a3.468 3.468 0 011.254.816 3.468 3.468 0 01.816 1.254c.151.394.33.987.379 2.075.048 1.053.058 1.369.058 4.041s-.01 2.988-.058 4.041c-.049 1.088-.228 1.681-.379 2.075a3.468 3.468 0 01-.816 1.254 3.468 3.468 0 01-1.254.816c-.394.151-.987.33-2.075.379-1.053.048-1.369.058-4.041.058s-2.988-.01-4.041-.058c-1.088-.049-1.681-.228-2.075-.379a3.468 3.468 0 01-1.254-.816 3.468 3.468 0 01-.816-1.254c-.151-.394-.33-.987-.379-2.075-.048-1.053-.058-1.369-.058-4.041s.01-2.988.058-4.041c.049-1.088.228-1.681.379-2.075a3.468 3.468 0 01.816-1.254 3.468 3.468 0 011.254-.816c.394-.151.987-.33 2.075-.379 1.053-.048 1.369-.058 4.041-.058zm0-2.163C9.232 0 8.893.014 7.825.063 6.764.112 6.017.294 5.364.556a5.631 5.631 0 00-2.034 1.324A5.631 5.631 0 001.996 3.914c-.262.653-.444 1.4-.493 2.461C1.454 7.443 1.44 7.782 1.44 10.554s.014 3.111.063 4.179c.049 1.061.231 1.808.493 2.461a5.631 5.631 0 001.324 2.034 5.631 5.631 0 002.034 1.324c.653.262 1.4.444 2.461.493 1.068.049 1.407.063 4.179.063s3.111-.014 4.179-.063c1.061-.049 1.808-.231 2.461-.493a5.631 5.631 0 002.034-1.324 5.631 5.631 0 001.324-2.034c.262-.653.444-1.4.493-2.461.049-1.068.063-1.407.063-4.179s-.014-3.111-.063-4.179c-.049-1.061-.231-1.808-.493-2.461a5.631 5.631 0 00-1.324-2.034A5.631 5.631 0 0016.486.556c-.653-.262-1.4-.444-2.461-.493C15.957.014 15.618 0 12.846 0H12.004zm0 5.838a4.716 4.716 0 100 9.432 4.716 4.716 0 000-9.432zm0 7.784a3.068 3.068 0 110-6.136 3.068 3.068 0 010 6.136zm6.013-7.97a1.102 1.102 0 11-2.204 0 1.102 1.102 0 012.204 0z"/>
+                  </svg>
+                </a>
+
+                {/* LinkedIn */}
+                <a 
+                  href="https://www.linkedin.com/company/binyousuf-group" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-gray-600 hover:text-blue-600 transition-all duration-300 p-2 rounded hover:bg-blue-100 hover:scale-110 transform"
                 >
                   <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
                   </svg>
                 </a>
 
-                {/* Instagram */}
-                <a href="https://www.instagram.com/binyousuf.group" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-gray-500 hover:text-gray-700 transition-all duration-300 p-2 rounded-none hover:bg-gray-200/50 hover:scale-110 transform"
-                >
-                  <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path
-                      fillRule="evenodd"
-                      d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </a>
-
                 {/* YouTube */}
                 <a 
-                  href="https://www.instagram.com/binyousuf.group" 
+                  href="https://www.youtube.com/@binyousufgroup" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="text-gray-500 hover:text-gray-700 transition-all duration-300 p-2 rounded-none hover:bg-gray-200/50 hover:scale-110 transform"
+                  className="text-gray-600 hover:text-red-600 transition-all duration-300 p-2 rounded hover:bg-red-100 hover:scale-110 transform"
                 >
                   <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
                   </svg>
-                </a>
-              </div>
-              
-              {/* Copyright */}
-              <div className="text-sm text-gray-500">
-                © {currentYear} Bin Yousuf Group™ · With{' '}
-                <span className="text-red-500">❤</span> from{' '}
-                <a 
-                  href="https://otherdev.com/" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-gray-700 hover:text-gray-900 transition-colors duration-300 underline hover:no-underline"
-                >
-                  The Other Dev
                 </a>
               </div>
             </div>
