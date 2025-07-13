@@ -52,7 +52,7 @@ const HeroSection: React.FC = () => {
 
   return (
     <main className="h-[110vh] flex items-center justify-start relative pl-[10vw]">
-      <div className="text-[clamp(24px,7vw,80px)] font-medium text-[#4c4c4c] tracking-[-0.02em] text-left relative z-[2]">
+      <div className="text-clamp-title font-medium text-[#4c4c4c] tracking-[-0.02em] text-left relative z-[2]">
         <span className="mr-[0.1em]">BYG </span>
         <span
           ref={animatedTextRef}

@@ -43,9 +43,9 @@ function formatProjectText(rawText: string): string {
             
             // Check if this is a heading (ends with colon and has no period)
             if (line.endsWith(':') && !line.includes('.')) {
-                html += `<h4 class="key-features-heading text-base font-semibold text-gray-800 font-['Poppins',sans-serif] mt-8 mb-4 first:mt-0">${line}</h4>`;
+                html += `<h4 class="key-features-heading text-base font-semibold text-gray-800 mt-8 mb-4 first:mt-0">${line}</h4>`;
             } else {
-                html += `<p class="text-sm text-gray-600 font-['Poppins',sans-serif] leading-relaxed mb-5 last:mb-0">${line}</p>`;
+                html += `<p class="text-body-sm text-gray-600 leading-relaxed mb-5 last:mb-0">${line}</p>`;
             }
         }
     }
@@ -250,7 +250,7 @@ const allProjects = projects;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-family: 'Poppins', sans-serif;
+            font-family: inherit;
             box-shadow: 0 4px 15px rgba(76, 76, 76, 0.3);
             text-decoration: none;
             border: 0;
@@ -306,7 +306,7 @@ const allProjects = projects;
             <div class="flex items-center gap-5">
                 <button class="bg-none border-none text-2xl text-gray-400 cursor-pointer p-1 transition-colors duration-300 hover:text-gray-700 font-inherit" id="closeBtn">×</button>
                 <div class="relative">
-                    <button class="bg-none border-none text-lg font-medium text-gray-700 cursor-pointer flex items-center gap-2 px-3 py-2 rounded-md transition-all duration-300 hover:bg-gray-100 font-['Poppins',sans-serif]" id="projectDropdownBtn">
+                    <button class="bg-none border-none text-lg font-medium text-gray-700 cursor-pointer flex items-center gap-2 px-3 py-2 rounded-md transition-all duration-300 hover:bg-gray-100" id="projectDropdownBtn">
                         {project.name}
                         <svg class="transition-transform duration-300" width="12" height="12" viewBox="0 0 12 12" fill="none">
                             <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -316,7 +316,7 @@ const allProjects = projects;
                         {allProjects.map((proj) => (
                             <a 
                                 href={`/projects/${proj.name.toLowerCase().replace(/[\s&]/g, '-').replace(/--+/g, '-')}`}
-                                class={`flex items-center gap-3 px-4 py-3 no-underline text-gray-700 transition-colors duration-300 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 font-['Poppins',sans-serif] ${proj.name === project.name ? 'bg-black text-white' : ''}`}
+                                class={`flex items-center gap-3 px-4 py-3 no-underline text-gray-700 transition-colors duration-300 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 ${proj.name === project.name ? 'bg-black text-white' : ''}`}
                             >
                                 <span class={`text-xs min-w-[30px] font-medium ${proj.name === project.name ? 'text-white/80' : 'text-gray-400'}`}>{proj.number}</span>
                                 <span class="flex-1 text-sm font-medium">{proj.name}</span>
@@ -327,7 +327,7 @@ const allProjects = projects;
                 </div>
             </div>
             <div class="flex items-center">
-                <button class="bg-none border-none text-gray-400 text-sm font-normal cursor-pointer px-3 py-2 rounded-md transition-all duration-300 hover:text-gray-700 hover:bg-gray-100 font-['Poppins',sans-serif]" id="openGalleryBtn">Gallery</button>
+                <button class="bg-none border-none text-gray-400 text-body-sm font-normal cursor-pointer px-3 py-2 rounded-md transition-all duration-300 hover:text-gray-700 hover:bg-gray-100" id="openGalleryBtn">Gallery</button>
             </div>
         </div>
     </header>
@@ -358,14 +358,14 @@ const allProjects = projects;
         </section>
 
         <!-- Hero Text Section -->
-        <section class="py-16 md:py-20 bg-white">
+        <section class="py-16 md:py-20" style="background-color: #FAFAFA;">
             <div class="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-10 text-center">
-                <p class="text-xl md:text-2xl lg:text-3xl xl:text-[32px] font-normal leading-[1.4] text-[#4c4c4c] max-w-[900px] mx-auto font-['Poppins',sans-serif]">{project.description}</p>
+                <p class="text-clamp-description font-normal leading-[1.4] text-[#4c4c4c] max-w-[900px] mx-auto">{project.description}</p>
             </div>
         </section>
 
         <!-- Project Info Section -->
-        <section class="py-16 md:py-20 bg-white">
+        <section class="py-16 md:py-20" style="background-color: #FAFAFA;">
             <div class="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-10">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20 xl:gap-24 items-start">
                     <div class="lg:sticky lg:top-[120px]">
@@ -379,26 +379,26 @@ const allProjects = projects;
                     </div>
                     <div class="pt-5">
                         <!-- Project Specifications -->
-                        <div class="mb-16">
-                            <div class="flex flex-col md:flex-row md:items-baseline py-[15px] border-b border-gray-100 gap-2 md:gap-0 last:border-b-0">
-                                <span class="font-medium text-gray-700 min-w-[150px] text-sm font-['Poppins',sans-serif] md:font-semibold">Planning:</span>
-                                <span class="font-normal text-gray-500 text-sm flex-1 font-['Poppins',sans-serif]">{project.info.typology.join(', ')}</span>
+                        <div class="mb-16" style="max-width: 400px;">
+                            <div class="flex flex-col md:flex-row md:items-baseline py-[15px] border-b border-gray-400 gap-2 md:gap-0">
+                                <span class="font-medium text-gray-700 min-w-[150px] text-body-sm md:font-semibold">Planning:</span>
+                                <span class="text-body-sm text-gray-500 flex-1">{project.info.typology.join(', ')}</span>
                             </div>
-                            <div class="flex flex-col md:flex-row md:items-baseline py-[15px] border-b border-gray-100 gap-2 md:gap-0 last:border-b-0">
-                                <span class="font-medium text-gray-700 min-w-[150px] text-sm font-['Poppins',sans-serif] md:font-semibold">Status:</span>
-                                <span class="font-normal text-gray-500 text-sm flex-1 font-['Poppins',sans-serif]">{project.info.status}</span>
+                            <div class="flex flex-col md:flex-row md:items-baseline py-[15px] border-b border-gray-400 gap-2 md:gap-0">
+                                <span class="font-medium text-gray-700 min-w-[150px] text-body-sm md:font-semibold">Status:</span>
+                                <span class="text-body-sm text-gray-500 flex-1">{project.info.status}</span>
                             </div>
-                            <div class="flex flex-col md:flex-row md:items-baseline py-[15px] border-b border-gray-100 gap-2 md:gap-0 last:border-b-0">
-                                <span class="font-medium text-gray-700 min-w-[150px] text-sm font-['Poppins',sans-serif] md:font-semibold">Apartment types:</span>
-                                <span class="font-normal text-gray-500 text-sm flex-1 font-['Poppins',sans-serif]">{projectApartmentTypes[project.id] || 'TBA'}</span>
+                            <div class="flex flex-col md:flex-row md:items-baseline py-[15px] border-b border-gray-400 gap-2 md:gap-0">
+                                <span class="font-medium text-gray-700 min-w-[150px] text-body-sm md:font-semibold">Apartment types:</span>
+                                <span class="text-body-sm text-gray-500 flex-1">{projectApartmentTypes[project.id] || 'TBA'}</span>
                             </div>
-                            <div class="flex flex-col md:flex-row md:items-baseline py-[15px] border-b border-gray-100 gap-2 md:gap-0 last:border-b-0">
-                                <span class="font-medium text-gray-700 min-w-[150px] text-sm font-['Poppins',sans-serif] md:font-semibold">Floors:</span>
-                                <span class="font-normal text-gray-500 text-sm flex-1 font-['Poppins',sans-serif]">{projectFloors[project.id] || 'TBA'}</span>
+                            <div class="flex flex-col md:flex-row md:items-baseline py-[15px] border-b border-gray-400 gap-2 md:gap-0">
+                                <span class="font-medium text-gray-700 min-w-[150px] text-body-sm md:font-semibold">Floors:</span>
+                                <span class="text-body-sm text-gray-500 flex-1">{projectFloors[project.id] || 'TBA'}</span>
                             </div>
-                            <div class="flex flex-col md:flex-row md:items-baseline py-[15px] border-b border-gray-100 gap-2 md:gap-0 last:border-b-0">
-                                <span class="font-medium text-gray-700 min-w-[150px] text-sm font-['Poppins',sans-serif] md:font-semibold">Completion date:</span>
-                                <span class="font-normal text-gray-500 text-sm flex-1 font-['Poppins',sans-serif]">{projectCompletionDates[project.id] || 'TBA'}</span>
+                            <div class="flex flex-col md:flex-row md:items-baseline py-[15px] border-b-0 gap-2 md:gap-0">
+                                <span class="font-medium text-gray-700 min-w-[150px] text-body-sm md:font-semibold">Completion date:</span>
+                                <span class="text-body-sm text-gray-500 flex-1">{projectCompletionDates[project.id] || 'TBA'}</span>
                             </div>
                         </div>
                         
@@ -420,7 +420,7 @@ const allProjects = projects;
                         
                         <!-- About Project Section -->
                         <div class="pt-5">
-                            <h3 class="text-base font-medium mb-5 text-gray-700 font-['Poppins',sans-serif]">About project:</h3>
+                            <h3 class="text-base font-medium mb-5 text-gray-700">About project:</h3>
                             <div class="about-text">
                                 <div id="about-project-content" class="prose-content">
                                     <Fragment set:html={formattedAboutContent} />
@@ -436,35 +436,38 @@ const allProjects = projects;
         <ProjectAmenities projectId={project.id} client:visible />
 
         <!-- Gallery Section -->
-        {project.galleryImages && project.galleryImages.length > 0 && (
-            <section class="py-20 md:py-24 bg-white">
+        {project.galleryImages && project.galleryImages.length > 0 ? (
+            <section class="py-20 md:py-24" style="background-color: #FAFAFA;">
                 <div class="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-10 flex flex-col gap-16 md:gap-20">
-                    {project.galleryImages.map((image, index) => (
-                        <div class={`w-full flex cursor-pointer ${index % 2 === 0 ? 'justify-start' : 'justify-end'} md:${index % 2 === 0 ? 'justify-start' : 'justify-end'} justify-center`} 
-                             onclick={`openGalleryModal(${index + 1})`}>
-                            <div class={`relative overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.1)] transition-all duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-2.5 hover:shadow-[0_40px_100px_rgba(0,0,0,0.2)] w-full max-w-full md:max-w-[85%] lg:max-w-[75%]`}>
-                                <Image 
-                                    src={image.src} 
-                                    alt={image.alt}
-                                    width={1200}
-                                    height={800}
-                                    class="w-full h-auto block transition-transform duration-[600ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-105"
-                                    loading={index < 2 ? "eager" : "lazy"}
-                                />
-                                <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 transition-opacity duration-300 cursor-pointer hover:opacity-100">
-                                    <div class="text-white bg-white/20 p-4 rounded-full backdrop-blur-md transition-all duration-300 hover:bg-white/30 hover:scale-110">
-                                        <svg class="w-6 h-6 stroke-[1.5]" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                            <circle cx="11" cy="11" r="8"/>
-                                            <path d="M21 21l-4.35-4.35"/>
-                                        </svg>
+                    {project.galleryImages.map((image, index) => {
+                        const isEven = index % 2 === 0;
+                        return (
+                            <div class={`w-full flex cursor-pointer ${isEven ? 'justify-start' : 'justify-end'} md:${isEven ? 'justify-start' : 'justify-end'} justify-center`} 
+                                 onclick={`openGalleryModal(${index + 1})`}>
+                                <div class={`relative overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.1)] transition-all duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-2.5 hover:shadow-[0_40px_100px_rgba(0,0,0,0.2)] w-full max-w-full md:max-w-[85%] lg:max-w-[75%]`}>
+                                    <Image 
+                                        src={image.src} 
+                                        alt={image.alt}
+                                        width={1200}
+                                        height={800}
+                                        class="w-full h-auto block transition-transform duration-[600ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-105"
+                                        loading={index < 2 ? "eager" : "lazy"}
+                                    />
+                                    <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 transition-opacity duration-300 cursor-pointer hover:opacity-100">
+                                        <div class="text-white bg-white/20 p-4 rounded-full backdrop-blur-md transition-all duration-300 hover:bg-white/30 hover:scale-110">
+                                            <svg class="w-6 h-6 stroke-[1.5]" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                                <circle cx="11" cy="11" r="8"/>
+                                                <path d="M21 21l-4.35-4.35"/>
+                                            </svg>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             </section>
-        )}
+        ) : null}
         
         <!-- Contact Form -->
         <div class="py-16 md:py-24 bg-gradient-to-br from-gray-50 to-neutral-100" id="contactFormPlaceholder">
@@ -499,9 +502,9 @@ const allProjects = projects;
         <ContactForm projectName={project.name} client:visible />
 
         <!-- Navigation Section -->
-        <section class="py-16 bg-white">
+        <section class="py-16" style="background-color: #FAFAFA;">
             <div class="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-10">
-                <button class="inline-block text-gray-500 bg-none border-none font-normal text-sm transition-colors duration-300 hover:text-gray-700 font-['Poppins',sans-serif] cursor-pointer no-underline" id="backToProjectsBtn">← Back to Projects</button>
+                <button class="inline-block text-gray-500 bg-none border-none font-normal text-body-sm transition-colors duration-300 hover:text-gray-700 cursor-pointer no-underline" id="backToProjectsBtn">← Back to Projects</button>
             </div>
         </section>
     </main>
@@ -512,7 +515,7 @@ const allProjects = projects;
             <div class="relative w-[90vw] h-[85vh] max-w-[1200px] max-h-[800px] bg-white rounded-[20px] overflow-hidden shadow-[0_40px_100px_rgba(0,0,0,0.5)] flex flex-col mx-auto z-[2001]" onclick="event.stopPropagation()">
                 <!-- Modal Header -->
                 <div class="flex justify-between items-center px-[30px] py-5 bg-white border-b border-black/5 flex-shrink-0">
-                    <h3 class="m-0 text-lg font-semibold text-gray-700 font-['Poppins',sans-serif]" id="modalTitle">{project.name} Gallery</h3>
+                    <h3 class="m-0 text-lg font-semibold text-gray-700" id="modalTitle">{project.name} Gallery</h3>
                     <button class="bg-none border-none cursor-pointer text-gray-500 p-2 rounded-full transition-all duration-300 flex items-center justify-center hover:bg-gray-100 hover:text-gray-700" onclick="closeGalleryModal()">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                             <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -539,7 +542,7 @@ const allProjects = projects;
                         </button>
                         
                         <!-- Image Counter -->
-                        <div class="absolute top-5 right-5 bg-black/70 text-white px-4 py-2 rounded-[20px] text-sm font-medium font-['Poppins',sans-serif] backdrop-blur-md">
+                        <div class="absolute top-5 right-5 bg-black/70 text-white px-4 py-2 rounded-[20px] text-body-sm font-medium backdrop-blur-md">
                             <span id="currentImageIndex">1</span> / <span id="totalImages">1</span>
                         </div>
                         

@@ -47,7 +47,7 @@ const ProjectAmenities: React.FC<ProjectAmenitiesProps> = ({
   };
 
   return (
-    <section className={`py-20 bg-neutral-50 ${className}`}>
+    <section className={`py-20 ${className}`} style={{backgroundColor: '#FAFAFA'}}>
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         
         {/* Section Header */}

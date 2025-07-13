@@ -22,13 +22,13 @@
 @layer base {
   /* Reset and Base Styles with font stability */
   * {
-    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
   }
 
   /* Body Styles with stable layout */
   body {
-    @apply bg-white overflow-x-hidden font-normal leading-relaxed text-neutral-800;
-    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    @apply bg-white overflow-x-hidden text-base font-normal leading-relaxed text-neutral-800;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
     
     /* Prevent layout shift during loading */
     min-height: 100vh;
@@ -36,13 +36,18 @@
     scroll-behavior: auto; /* Let GSAP handle smooth scrolling */
   }
 
-  /* Typography with stable dimensions */
-  h1 { @apply text-clamp-title font-bold tracking-tight mb-2 text-neutral-800; }
-  h2 { @apply text-clamp-subtitle font-semibold tracking-tight mb-2 text-neutral-800; }
-  h3 { @apply text-2xl lg:text-[28px] font-semibold mb-2 text-neutral-800; }
-  h4 { @apply text-lg lg:text-[22px] font-semibold mb-2 text-neutral-800; }
-  h5 { @apply text-base lg:text-lg font-medium mb-2 text-neutral-800; }
-  h6 { @apply text-sm lg:text-base font-medium mb-2 text-neutral-800; }
+  /* Consistent Typography System */
+  h1 { @apply text-clamp-title font-bold tracking-tight mb-4 text-neutral-800; }
+  h2 { @apply text-clamp-subtitle font-semibold tracking-tight mb-3 text-neutral-800; }
+  h3 { @apply text-2xl lg:text-3xl font-semibold mb-3 text-neutral-800; }
+  h4 { @apply text-xl lg:text-2xl font-semibold mb-2 text-neutral-800; }
+  h5 { @apply text-lg lg:text-xl font-medium mb-2 text-neutral-800; }
+  h6 { @apply text-base lg:text-lg font-medium mb-2 text-neutral-800; }
+  
+  /* Standard body text classes */
+  .text-body-sm { @apply text-sm font-normal leading-relaxed text-neutral-700; }
+  .text-body { @apply text-base font-normal leading-relaxed text-neutral-700; }
+  .text-body-lg { @apply text-lg font-normal leading-relaxed text-neutral-700; }
 
   /* Links */
   a {
