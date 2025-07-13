@@ -32,6 +32,14 @@ export default defineConfig({
     },
     ssr: {
       noExternal: ['gsap', 'googleapis']
+    },
+    server: {
+      headers: {
+        'X-Frame-Options': 'DENY',
+        'X-Content-Type-Options': 'nosniff',
+        'Referrer-Policy': 'strict-origin-when-cross-origin',
+        'X-XSS-Protection': '1; mode=block'
+      }
     }
   }
 });

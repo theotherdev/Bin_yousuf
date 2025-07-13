@@ -98,8 +98,11 @@ const ContactForm: React.FC<ContactFormProps> = ({ projectName }) => {
       const result = await response.json();
       
       // Enhanced logging for debugging
-      console.log('API Response:', result);
-      console.log('Response status:', response.status);
+      // Response logged in development only
+      if (process.env.NODE_ENV === 'development') {
+        console.log('API Response:', result);
+        console.log('Response status:', response.status);
+      }
 
       if (result.success) {
         setSubmitStatus('success');
@@ -109,22 +112,23 @@ const ContactForm: React.FC<ContactFormProps> = ({ projectName }) => {
           setSubmitStatus('idle');
         }, 5000);
       } else {
-        console.error('API returned error:', result);
+        if (process.env.NODE_ENV === 'development') {
+          console.error('API returned error:', result);
+        }
         throw new Error(result.error || 'Submission failed');
       }
     } catch (error) {
-      console.error('Form submission error:', error);
-      
-      // Enhanced error logging for debugging
-      console.error('Full error details:', {
-        message: error.message,
-        name: error.name,
-        stack: error.stack
-      });
-      
-      // Show error details in console for debugging
-      if (typeof window !== 'undefined') {
-        console.log('Submission data was:', submissionData);
+      // Only log errors in development
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Form submission error:', error);
+        console.error('Full error details:', {
+          message: error.message,
+          name: error.name,
+          stack: error.stack
+        });
+        if (typeof window !== 'undefined') {
+          console.log('Submission data was:', submissionData);
+        }
       }
       
       setSubmitStatus('error');

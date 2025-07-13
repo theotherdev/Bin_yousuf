@@ -57,16 +57,17 @@ export const POST: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
     
-    // Enhanced debugging for production
-    console.log('=== Google Sheets API Debug ===');
-    console.log('Environment variables:', {
-      GOOGLE_SHEET_ID: !!process.env.GOOGLE_SHEET_ID,
-      GOOGLE_PROJECT_ID: !!process.env.GOOGLE_PROJECT_ID,
-      GOOGLE_CLIENT_EMAIL: !!process.env.GOOGLE_CLIENT_EMAIL,
-      GOOGLE_PRIVATE_KEY: !!process.env.GOOGLE_PRIVATE_KEY,
-      sheetIdValue: process.env.GOOGLE_SHEET_ID ? process.env.GOOGLE_SHEET_ID.substring(0, 10) + '...' : 'missing'
-    });
-    console.log('Request body:', body);
+    // Debug logging (development only)
+    if (process.env.NODE_ENV === 'development') {
+      console.log('=== Google Sheets API Debug ===');
+      console.log('Environment variables:', {
+        GOOGLE_SHEET_ID: !!process.env.GOOGLE_SHEET_ID,
+        GOOGLE_PROJECT_ID: !!process.env.GOOGLE_PROJECT_ID,
+        GOOGLE_CLIENT_EMAIL: !!process.env.GOOGLE_CLIENT_EMAIL,
+        GOOGLE_PRIVATE_KEY: !!process.env.GOOGLE_PRIVATE_KEY
+      });
+      console.log('Request body:', body);
+    }
     
     // Check if environment variables are loaded
     if (!process.env.GOOGLE_SHEET_ID) {
@@ -224,7 +225,9 @@ export const OPTIONS: APIRoute = async () => {
   return new Response(null, {
     status: 200,
     headers: {
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': process.env.NODE_ENV === 'production' 
+        ? 'https://www.binyousufgroup.com' 
+        : 'http://localhost:4321',
       'Access-Control-Allow-Methods': 'POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
     },
