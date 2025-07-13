@@ -33,11 +33,11 @@ function formatProjectText(rawText: string): string {
         // Check if this line is a bullet point (starts with - or •)
         if (line.startsWith('- ') || line.startsWith('• ')) {
             if (!inList) {
-                html += '<ul class="key-features-list mb-6 pl-0 list-none">';
+                html += '<ul class="list-disc pl-6 mb-6 amenities-list">';
                 inList = true;
             }
             const listItem = line.substring(2).trim(); // Remove the dash/bullet and space
-            html += `<li class="key-features-item relative pl-6 mb-1 text-sm text-gray-600 leading-relaxed">${listItem}</li>`;
+            html += `<li class="list-item mb-1 amenity-item text-sm text-gray-600 leading-relaxed">${listItem}</li>`;
         } else {
             // If we were in a list and this line is not a bullet point, close the list
             if (inList) {
@@ -213,16 +213,6 @@ const allProjects = projects;
             background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
         }
         
-        /* Bullet points for Key Features */
-        .key-features-item::before {
-            content: '•';
-            position: absolute;
-            left: 0;
-            top: 0;
-            color: #1f2937;
-            font-weight: bold;
-            font-size: 1rem;
-        }
         
         /* Component loading states */
         .component-loading {
