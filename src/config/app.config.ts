@@ -2,7 +2,7 @@
 export const APP_CONFIG = {
   // Site information
   site: {
-    name: 'BinYousuf Group',
+    name: 'Bin Yousuf Group - Oceanfront Property Investment',
     shortName: 'BYG',
     url: 'https://www.binyousufgroup.com',
     description: 'BinYousuf Group (BYG) - Official sales partners of Emaar Oceanfront & HMR Waterfront.',
@@ -35,8 +35,8 @@ export const APP_CONFIG = {
 
   // SEO defaults
   seo: {
-    defaultTitle: 'BinYousuf Group - Luxury Waterfront Properties Karachi',
-    defaultDescription: 'Official sales partners of Emaar Oceanfront & HMR Waterfront. Discover luxury sea-facing apartments and waterfront properties in DHA Phase 8, Karachi.',
+    defaultTitle: 'BinYousuf Group - Oceanfront Property Investment | Emaar & HMR Authorized Partners',
+    defaultDescription: 'Unlock exclusive oceanfront property investments in Karachi\'s prime DHA Phase 8. Authorized Emaar & HMR partners offering insider access to luxury waterfront developments with exceptional growth potential.',
     keywords: [
       'waterfront properties Karachi',
       'Emaar Oceanfront Karachi',
