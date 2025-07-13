@@ -9,12 +9,6 @@ import vercel from '@astrojs/vercel';
 export default defineConfig({
   site: 'https://www.binyousufgroup.com',
   
-  // Disable image optimization since images are already optimized WebP
-  image: {
-    service: {
-      entrypoint: 'astro/assets/services/noop'
-    }
-  },
   
   integrations: [
     react(),

@@ -25,11 +25,12 @@ export async function loadImageSafely(
     
     if (imageModules[fullPath]) {
       const module = await imageModules[fullPath]();
+      const imageMetadata = (module as any).default as ImageMetadata;
       return {
-        src: (module as any).default,
+        src: imageMetadata,
         alt,
-        width: 1200,
-        height: 800
+        width: imageMetadata.width,
+        height: imageMetadata.height
       };
     }
     
@@ -37,16 +38,16 @@ export async function loadImageSafely(
     return {
       src: fallback || null,
       alt,
-      width: 1200,
-      height: 800
+      width: fallback?.width || 1200,
+      height: fallback?.height || 800
     };
   } catch (error) {
     console.warn(`Failed to load image: ${imagePath}`, error);
     return {
       src: fallback || null,
       alt,
-      width: 1200,
-      height: 800
+      width: fallback?.width || 1200,
+      height: fallback?.height || 800
     };
   }
 }

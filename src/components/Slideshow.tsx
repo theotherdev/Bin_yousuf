@@ -189,17 +189,6 @@ const ProjectsSlideshow: React.FC<SlideshowProps> = ({
             </div>
           </div>
         )}
-
-        {/* Image counter */}
-        {showControls && (
-          <div className="absolute top-6 left-6 z-10 
-            bg-black/20 backdrop-blur-sm rounded-full px-3 py-1 
-            text-white text-sm font-medium opacity-70">
-            {currentIndex + 1} / {images.length}
-          </div>
-        )}
-
-        
       </div>
     </div>
   );

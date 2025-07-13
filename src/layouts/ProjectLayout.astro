@@ -511,19 +511,14 @@ const allProjects = projects;
                                     <Image 
                                         src={image.src} 
                                         alt={image.alt}
-                                        width={1920}
-                                        height={1080}
+                                        width={image.width}
+                                        height={image.height}
                                         class="w-full h-full object-cover"
                                         loading={index < 2 ? "eager" : "lazy"}
+                                        quality="max"
+                                        format="webp"
                                     />
                                     
-                                    <!-- Slideshow Info Overlay -->
-                                    <div class="absolute bottom-8 left-0 right-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent px-8 py-4">
-                                        <div class="text-white text-center">
-                                            <h3 class="text-lg font-medium">{project.name}</h3>
-                                            <p class="text-sm opacity-90">Image {index + 1} of {project.galleryImages.length}</p>
-                                        </div>
-                                    </div>
                                 </div>
                             ))}
 
