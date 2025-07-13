@@ -122,17 +122,37 @@ export const POST: APIRoute = async ({ request }) => {
       'New' // Status column
     ];
 
-    // Check if sheet exists, create if it doesn't
-    console.log('Checking if sheet exists...');
+    // Check if sheet exists and has headers, create/recreate if needed
+    console.log('Checking if sheet exists and has proper headers...');
+    let needsHeaders = false;
+    
     try {
-      await sheets.spreadsheets.values.get({
+      const headerCheck = await sheets.spreadsheets.values.get({
         spreadsheetId: SHEET_ID,
-        range: `${SHEET_NAME}!A1:A1`,
+        range: `${SHEET_NAME}!A1:K1`,
       });
-      console.log('Sheet exists, proceeding with data append');
+      
+      // Check if headers exist and are correct
+      const existingHeaders = headerCheck.data.values?.[0] || [];
+      const expectedHeaders = [
+        'Timestamp', 'Full Name', 'Email', 'Phone', 'Property Interest',
+        'How Heard', 'Message', 'Source', 'URL', 'User Agent', 'Status'
+      ];
+      
+      if (existingHeaders.length === 0 || 
+          existingHeaders.join(',') !== expectedHeaders.join(',')) {
+        console.log('Headers missing or incorrect, will recreate...');
+        needsHeaders = true;
+      } else {
+        console.log('Sheet exists with correct headers, proceeding with data append');
+      }
     } catch (error) {
       console.log('Sheet does not exist, creating new sheet...');
-      // Sheet doesn't exist, create it with headers
+      needsHeaders = true;
+    }
+    
+    if (needsHeaders) {
+      console.log('Creating/updating sheet headers...');
       const headers = [
         'Timestamp',
         'Full Name',
@@ -147,22 +167,28 @@ export const POST: APIRoute = async ({ request }) => {
         'Status'
       ];
 
-      await sheets.spreadsheets.batchUpdate({
-        spreadsheetId: SHEET_ID,
-        requestBody: {
-          requests: [
-            {
-              addSheet: {
-                properties: {
-                  title: SHEET_NAME,
+      // Try to create sheet if it doesn't exist, otherwise just update headers
+      try {
+        await sheets.spreadsheets.batchUpdate({
+          spreadsheetId: SHEET_ID,
+          requestBody: {
+            requests: [
+              {
+                addSheet: {
+                  properties: {
+                    title: SHEET_NAME,
+                  },
                 },
               },
-            },
-          ],
-        },
-      });
+            ],
+          },
+        });
+      } catch (error) {
+        // Sheet already exists, that's fine
+        console.log('Sheet already exists, updating headers only');
+      }
 
-      // Add headers
+      // Add/update headers
       await sheets.spreadsheets.values.update({
         spreadsheetId: SHEET_ID,
         range: `${SHEET_NAME}!A1:K1`,

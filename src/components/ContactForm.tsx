@@ -278,6 +278,21 @@ const ContactForm: React.FC<ContactFormProps> = ({ projectName }) => {
                               </div>
                           </div>
                           
+                          <div>
+                              <label htmlFor="message" className="block text-body-sm font-semibold text-neutral-700 mb-2">
+                                  Message
+                              </label>
+                              <textarea 
+                                name="message" 
+                                id="message" 
+                                rows={4}
+                                value={formData.message} 
+                                onChange={handleInputChange} 
+                                className="w-full px-4 py-3.5 border border-neutral-300 hover:border-neutral-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:border-transparent transition-all duration-200 bg-neutral-50 focus:bg-white resize-vertical"
+                                placeholder="Any specific questions or requirements? (optional)"
+                              />
+                          </div>
+                          
                           <div className="pt-6">
                               <button 
                                 type="submit" 
