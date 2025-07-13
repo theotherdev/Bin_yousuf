@@ -81,8 +81,8 @@ const ContactForm: React.FC<ContactFormProps> = ({ projectName }) => {
       email: formData.email,
       phone: formData.phone,
       property: formData.project,
-      residency: '', // Can be added to form later if needed
-      features: '', // Can be added to form later if needed
+      howHeard: formData.howHeard,
+      message: formData.message,
       source: 'website_lead_form',
       url: typeof window !== 'undefined' ? window.location.href : '',
       userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : ''
