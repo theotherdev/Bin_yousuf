@@ -10,6 +10,7 @@ import Footer from '../components/Footer.tsx';
 import { projectCompletionDates, projectFloors, projectApartmentTypes } from '../types/project';
 import logoImage from '../assets/projects/logo.webp';
 import ogImage from '../assets/projects/open-graph-img.webp';
+import ogImageSquare from '../assets/projects/open-graph-img-square.webp';
 import Navigation from '../components/Navigation.tsx';
 
 export interface Props {
@@ -77,25 +78,38 @@ const allProjects = projects;
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content={Astro.url} />
+    <meta property="og:url" content={Astro.url.toString()} />
     <meta property="og:title" content={project.name} />
     <meta property="og:description" content={project.description} />
-    <meta property="og:image" content={new URL(ogImage.src, Astro.url)} />
+    <meta property="og:image" content={new URL(project.heroImage.src.src || project.heroImage.src, Astro.url).toString()} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/webp" />
+    <meta property="og:image:alt" content={`${project.name} - Premium Waterfront Property by BYG BinYousufGroup`} />
+    <meta property="og:site_name" content="BYG - BinYousufGroup" />
+    <meta property="og:locale" content="en_US" />
+    
+    <!-- WhatsApp optimized square image -->
+    <meta property="og:image" content={new URL(ogImageSquare.src, Astro.url).toString()} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="1200" />
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content={Astro.url} />
+    <meta property="twitter:url" content={Astro.url.toString()} />
     <meta property="twitter:title" content={project.name} />
     <meta property="twitter:description" content={project.description} />
-    <meta property="twitter:image" content={new URL(ogImage.src, Astro.url)} />
+    <meta property="twitter:image" content={new URL(project.heroImage.src.src || project.heroImage.src, Astro.url).toString()} />
+    <meta property="twitter:image:alt" content={`${project.name} - Premium Waterfront Property by BYG BinYousufGroup`} />
+    <meta property="twitter:site" content="@BinYousufGroup" />
+    <meta property="twitter:creator" content="@BinYousufGroup" />
     
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QCYNLEQGMB"></script>
-    <script>
+    <!-- Google tag (gtag.js) - Optimized for WhatsApp header size limit -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QCYNLEQGMB" is:inline></script>
+    <script is:inline>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'G-QCYNLEQGMB');
     </script>
     

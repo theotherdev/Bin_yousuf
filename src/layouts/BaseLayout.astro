@@ -1,0 +1,83 @@
+---
+// Base layout with optimized OG implementation for social media
+import logoImage from '../assets/projects/logo.webp';
+import ogImageSquare from '../assets/projects/open-graph-img-square.webp';
+import ogImageRect from '../assets/projects/open-graph-img.webp';
+
+export interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+  useSquareImage?: boolean;
+}
+
+const { 
+  title, 
+  description = "BYG-BinYousufGroup - Premium Waterfront Properties", 
+  ogImage,
+  useSquareImage = false 
+} = Astro.props;
+
+// Select appropriate OG image based on requirements
+const selectedOgImage = ogImage || (useSquareImage ? ogImageSquare.src : ogImageRect.src);
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href={logoImage.src} type="image/webp" />
+    
+    <!-- Primary Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url.toString()} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(selectedOgImage, Astro.url).toString()} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content={useSquareImage ? "1200" : "630"} />
+    <meta property="og:image:type" content="image/webp" />
+    <meta property="og:image:alt" content={`${title} - BYG BinYousufGroup`} />
+    <meta property="og:site_name" content="BYG - BinYousufGroup" />
+    <meta property="og:locale" content="en_US" />
+    
+    <!-- WhatsApp-optimized square image -->
+    {useSquareImage && (
+      <>
+        <meta property="og:image" content={new URL(ogImageSquare.src, Astro.url).toString()} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="1200" />
+      </>
+    )}
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={Astro.url.toString()} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={new URL(selectedOgImage, Astro.url).toString()} />
+    <meta property="twitter:image:alt" content={`${title} - BYG BinYousufGroup`} />
+    <meta property="twitter:site" content="@BinYousufGroup" />
+    <meta property="twitter:creator" content="@BinYousufGroup" />
+    
+    <!-- Additional meta tags for better social media compatibility -->
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="BYG - BinYousufGroup" />
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QCYNLEQGMB" is:inline></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-QCYNLEQGMB');
+    </script>
+    
+    <title>{title}</title>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

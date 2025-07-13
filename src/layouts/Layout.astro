@@ -4,6 +4,7 @@ import Footer from '../components/Footer.tsx';
 import StickyWhatsAppButton from '../components/StickyWhatsAppButton.tsx';
 import logoImage from '../assets/projects/logo.webp';
 import ogImage from '../assets/projects/open-graph-img.webp';
+import ogImageSquare from '../assets/projects/open-graph-img-square.webp';
 
 export interface Props {
   title: string;
@@ -23,25 +24,38 @@ const { title, description = "BYG-BinYousufGroup" } = Astro.props;
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content={Astro.url} />
+    <meta property="og:url" content={Astro.url.toString()} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={new URL(ogImage.src, Astro.url)} />
+    <meta property="og:image" content={new URL(ogImage.src, Astro.url).toString()} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/webp" />
+    <meta property="og:image:alt" content={`${title} - BYG BinYousufGroup`} />
+    <meta property="og:site_name" content="BYG - BinYousufGroup" />
+    <meta property="og:locale" content="en_US" />
+    
+    <!-- WhatsApp optimized square image -->
+    <meta property="og:image" content={new URL(ogImageSquare.src, Astro.url).toString()} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="1200" />
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content={Astro.url} />
+    <meta property="twitter:url" content={Astro.url.toString()} />
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
-    <meta property="twitter:image" content={new URL(ogImage.src, Astro.url)} />
+    <meta property="twitter:image" content={new URL(ogImage.src, Astro.url).toString()} />
+    <meta property="twitter:image:alt" content={`${title} - BYG BinYousufGroup`} />
+    <meta property="twitter:site" content="@BinYousufGroup" />
+    <meta property="twitter:creator" content="@BinYousufGroup" />
     
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QCYNLEQGMB"></script>
-    <script>
+    <!-- Google tag (gtag.js) - Moved to end for WhatsApp optimization -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QCYNLEQGMB" is:inline></script>
+    <script is:inline>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'G-QCYNLEQGMB');
     </script>
     
