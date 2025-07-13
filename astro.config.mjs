@@ -3,27 +3,24 @@ import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import tailwind from '@astrojs/tailwind';
 import vercel from '@astrojs/vercel';
-import sitemap from '@astrojs/sitemap';
-import robotsTxt from 'astro-robots-txt';
+// Removed @astrojs/sitemap - using custom SSR endpoint instead
+// Removed astro-robots-txt - using custom SSR endpoint instead
 
 export default defineConfig({
   site: 'https://www.binyousufgroup.com',
+  
+  // Disable image optimization since images are already optimized WebP
+  image: {
+    service: {
+      entrypoint: 'astro/assets/services/noop'
+    }
+  },
   
   integrations: [
     react(),
     tailwind({
       applyBaseStyles: true
     }),
-    sitemap(),
-    robotsTxt({
-      policy: [
-        {
-          userAgent: '*',
-          allow: '/',
-          disallow: ['/api/']
-        }
-      ]
-    })
   ],
 
   output: 'server',
