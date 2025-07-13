@@ -1,8 +1,9 @@
-// astro.config.mjs - Without sitemap integration
+// astro.config.mjs - With sitemap integration
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import tailwind from '@astrojs/tailwind';
 import vercel from '@astrojs/vercel';
+import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   site: 'https://www.binyousufgroup.com',
@@ -11,7 +12,8 @@ export default defineConfig({
     react(),
     tailwind({
       applyBaseStyles: true
-    })
+    }),
+    sitemap()
   ],
 
   output: 'server',
