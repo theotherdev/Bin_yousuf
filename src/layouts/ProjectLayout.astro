@@ -7,7 +7,7 @@ import ContactForm from '../components/ContactForm.tsx';
 import ProjectAmenities from '../components/ProjectDetail/ProjectAmenities.tsx';
 import StickyWhatsAppButton from '../components/StickyWhatsAppButton.tsx';
 import Footer from '../components/Footer.tsx';
-import { projectCompletionDates } from '../types/project';
+import { projectCompletionDates, projectFloors, projectApartmentTypes } from '../types/project';
 
 export interface Props {
     project: ProjectData;
@@ -381,7 +381,7 @@ const allProjects = projects;
                         <!-- Project Specifications -->
                         <div class="mb-16">
                             <div class="flex flex-col md:flex-row md:items-baseline py-[15px] border-b border-gray-100 gap-2 md:gap-0 last:border-b-0">
-                                <span class="font-medium text-gray-700 min-w-[150px] text-sm font-['Poppins',sans-serif] md:font-semibold">Typology:</span>
+                                <span class="font-medium text-gray-700 min-w-[150px] text-sm font-['Poppins',sans-serif] md:font-semibold">Planning:</span>
                                 <span class="font-normal text-gray-500 text-sm flex-1 font-['Poppins',sans-serif]">{project.info.typology.join(', ')}</span>
                             </div>
                             <div class="flex flex-col md:flex-row md:items-baseline py-[15px] border-b border-gray-100 gap-2 md:gap-0 last:border-b-0">
@@ -389,19 +389,15 @@ const allProjects = projects;
                                 <span class="font-normal text-gray-500 text-sm flex-1 font-['Poppins',sans-serif]">{project.info.status}</span>
                             </div>
                             <div class="flex flex-col md:flex-row md:items-baseline py-[15px] border-b border-gray-100 gap-2 md:gap-0 last:border-b-0">
-                                <span class="font-medium text-gray-700 min-w-[150px] text-sm font-['Poppins',sans-serif] md:font-semibold">Year of design:</span>
-                                <span class="font-normal text-gray-500 text-sm flex-1 font-['Poppins',sans-serif]">{project.info.yearOfDesign}</span>
+                                <span class="font-medium text-gray-700 min-w-[150px] text-sm font-['Poppins',sans-serif] md:font-semibold">Apartment types:</span>
+                                <span class="font-normal text-gray-500 text-sm flex-1 font-['Poppins',sans-serif]">{projectApartmentTypes[project.id] || 'TBA'}</span>
                             </div>
                             <div class="flex flex-col md:flex-row md:items-baseline py-[15px] border-b border-gray-100 gap-2 md:gap-0 last:border-b-0">
-                                <span class="font-medium text-gray-700 min-w-[150px] text-sm font-['Poppins',sans-serif] md:font-semibold">Location:</span>
-                                <span class="font-normal text-gray-500 text-sm flex-1 font-['Poppins',sans-serif]">{project.info.location}</span>
+                                <span class="font-medium text-gray-700 min-w-[150px] text-sm font-['Poppins',sans-serif] md:font-semibold">Floors:</span>
+                                <span class="font-normal text-gray-500 text-sm flex-1 font-['Poppins',sans-serif]">{projectFloors[project.id] || 'TBA'}</span>
                             </div>
                             <div class="flex flex-col md:flex-row md:items-baseline py-[15px] border-b border-gray-100 gap-2 md:gap-0 last:border-b-0">
-                                <span class="font-medium text-gray-700 min-w-[150px] text-sm font-['Poppins',sans-serif] md:font-semibold">Square:</span>
-                                <span class="font-normal text-gray-500 text-sm flex-1 font-['Poppins',sans-serif]">{project.info.square}</span>
-                            </div>
-                            <div class="flex flex-col md:flex-row md:items-baseline py-[15px] border-b border-gray-100 gap-2 md:gap-0 last:border-b-0">
-                                <span class="font-medium text-gray-700 min-w-[150px] text-sm font-['Poppins',sans-serif] md:font-semibold">Completion:</span>
+                                <span class="font-medium text-gray-700 min-w-[150px] text-sm font-['Poppins',sans-serif] md:font-semibold">Completion date:</span>
                                 <span class="font-normal text-gray-500 text-sm flex-1 font-['Poppins',sans-serif]">{projectCompletionDates[project.id] || 'TBA'}</span>
                             </div>
                         </div>
@@ -440,12 +436,11 @@ const allProjects = projects;
         <ProjectAmenities projectId={project.id} client:visible />
 
         <!-- Gallery Section -->
-        <section class="py-20 md:py-24 bg-white">
-            <div class="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-10 flex flex-col gap-16 md:gap-20">
-                {project.galleryImages.map((image, index) => {
-                    const isEven = index % 2 === 0;
-                    return (
-                        <div class={`w-full flex cursor-pointer ${isEven ? 'justify-start' : 'justify-end'} md:${isEven ? 'justify-start' : 'justify-end'} justify-center`} 
+        {project.galleryImages && project.galleryImages.length > 0 && (
+            <section class="py-20 md:py-24 bg-white">
+                <div class="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-10 flex flex-col gap-16 md:gap-20">
+                    {project.galleryImages.map((image, index) => (
+                        <div class={`w-full flex cursor-pointer ${index % 2 === 0 ? 'justify-start' : 'justify-end'} md:${index % 2 === 0 ? 'justify-start' : 'justify-end'} justify-center`} 
                              onclick={`openGalleryModal(${index + 1})`}>
                             <div class={`relative overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.1)] transition-all duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-2.5 hover:shadow-[0_40px_100px_rgba(0,0,0,0.2)] w-full max-w-full md:max-w-[85%] lg:max-w-[75%]`}>
                                 <Image 
@@ -466,10 +461,10 @@ const allProjects = projects;
                                 </div>
                             </div>
                         </div>
-                    );
-                })}
-            </div>
-        </section>
+                    ))}
+                </div>
+            </section>
+        )}
         
         <!-- Contact Form -->
         <div class="py-16 md:py-24 bg-gradient-to-br from-gray-50 to-neutral-100" id="contactFormPlaceholder">

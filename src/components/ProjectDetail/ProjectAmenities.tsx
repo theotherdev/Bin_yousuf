@@ -89,8 +89,6 @@ const ProjectAmenities: React.FC<ProjectAmenitiesProps> = ({
             ))}
           </div>
         )}
-
-
       </div>
     </section>
   );
