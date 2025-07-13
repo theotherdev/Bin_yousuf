@@ -1,5 +1,10 @@
 // src/lib/utils/animation.ts - Animation utility functions
-import type { GSAPStatic, GSAPTimeline, GSAPTarget, GSAPVars } from '../../types/gsap';
+import type {
+  GSAPStatic,
+  GSAPTimeline,
+  GSAPTarget,
+  GSAPVars,
+} from '../../types/gsap';
 import { ANIMATION_CONFIG } from '../../config/animation.config';
 
 export class AnimationUtils {
@@ -18,15 +23,15 @@ export class AnimationUtils {
       // Dynamically import GSAP
       const { default: gsap } = await import('gsap');
       const { ScrollTrigger } = await import('gsap/ScrollTrigger');
-      
+
       gsap.registerPlugin(ScrollTrigger);
       this.gsap = gsap;
-      
+
       if (typeof window !== 'undefined') {
         window.gsap = gsap;
         window.ScrollTrigger = ScrollTrigger;
       }
-      
+
       return this.gsap;
     } catch (error) {
       console.warn('Failed to load GSAP:', error);
@@ -50,7 +55,7 @@ export class AnimationUtils {
       y: 0,
       duration: ANIMATION_CONFIG.durations.normal,
       ease: ANIMATION_CONFIG.easing.default,
-      ...options
+      ...options,
     };
 
     return this.gsap.to(target, defaultVars);
@@ -67,7 +72,7 @@ export class AnimationUtils {
       y: -20,
       duration: ANIMATION_CONFIG.durations.normal,
       ease: ANIMATION_CONFIG.easing.default,
-      ...options
+      ...options,
     };
 
     return this.gsap.to(target, defaultVars);
@@ -84,7 +89,7 @@ export class AnimationUtils {
     if (!tl) return null;
 
     const elements = this.normalizeTarget(targets);
-    
+
     elements.forEach((element, index) => {
       const delay = index * staggerDelay;
       const vars: GSAPVars = {
@@ -93,9 +98,9 @@ export class AnimationUtils {
         duration: ANIMATION_CONFIG.durations.normal,
         ease: ANIMATION_CONFIG.easing.default,
         delay,
-        ...options
+        ...options,
       };
-      
+
       tl.to(element, vars, 0);
     });
 
@@ -148,19 +153,19 @@ export class AnimationUtils {
     if (typeof target === 'string') {
       return Array.from(document.querySelectorAll(target));
     }
-    
+
     if (target instanceof HTMLElement) {
       return [target];
     }
-    
+
     if (target instanceof NodeList) {
       return Array.from(target);
     }
-    
+
     if (Array.isArray(target)) {
       return target;
     }
-    
+
     return [];
   }
 

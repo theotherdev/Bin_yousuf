@@ -1,5 +1,12 @@
 import type { APIRoute } from 'astro';
-import { google } from 'googleapis';
+import { config } from 'dotenv';
+
+// Load environment variables
+config();
+
+// Dynamic import at module level to handle CommonJS/ES module compatibility
+const googleapis = await import('googleapis');
+const google = googleapis.google;
 
 export const prerender = false;
 
@@ -31,7 +38,7 @@ async function getGoogleSheetsInstance() {
 
     const authClient = await auth.getClient();
     const sheets = google.sheets({ version: 'v4', auth: authClient });
-    
+
     return sheets;
   } catch (error) {
     console.error('Failed to initialize Google Sheets:', error);
@@ -41,7 +48,7 @@ async function getGoogleSheetsInstance() {
 
 function formatTimestamp(date: Date): string {
   // Format for Pakistan timezone (UTC+5)
-  const pakistanTime = new Date(date.getTime() + (5 * 60 * 60 * 1000));
+  const pakistanTime = new Date(date.getTime() + 5 * 60 * 60 * 1000);
   return pakistanTime.toLocaleString('en-US', {
     year: 'numeric',
     month: '2-digit',
@@ -49,53 +56,56 @@ function formatTimestamp(date: Date): string {
     hour: '2-digit',
     minute: '2-digit',
     second: '2-digit',
-    hour12: true
+    hour12: true,
   });
 }
 
 export const POST: APIRoute = async ({ request }) => {
+  console.log('=== Google Sheets API Starting ===');
+  
   try {
     const body = await request.json();
-    
-    // Debug logging (development only)
-    if (process.env.NODE_ENV === 'development') {
-      console.log('=== Google Sheets API Debug ===');
-      console.log('Environment variables:', {
-        GOOGLE_SHEET_ID: !!process.env.GOOGLE_SHEET_ID,
-        GOOGLE_PROJECT_ID: !!process.env.GOOGLE_PROJECT_ID,
-        GOOGLE_CLIENT_EMAIL: !!process.env.GOOGLE_CLIENT_EMAIL,
-        GOOGLE_PRIVATE_KEY: !!process.env.GOOGLE_PRIVATE_KEY
-      });
-      console.log('Request body:', body);
-    }
-    
+    console.log('Request body received:', body);
+
+    // Check environment variables
+    console.log('Environment check:', {
+      GOOGLE_SHEET_ID: !!process.env.GOOGLE_SHEET_ID,
+      GOOGLE_PROJECT_ID: !!process.env.GOOGLE_PROJECT_ID,
+      GOOGLE_CLIENT_EMAIL: !!process.env.GOOGLE_CLIENT_EMAIL,
+      GOOGLE_PRIVATE_KEY: !!process.env.GOOGLE_PRIVATE_KEY,
+    });
+
     // Check if environment variables are loaded
     if (!process.env.GOOGLE_SHEET_ID) {
       console.error('Environment variables not loaded');
-      return new Response(JSON.stringify({ 
-        success: false, 
-        error: 'Environment variables not configured. Please check .env file.' 
-      }), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' }
-      });
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error:
+            'Environment variables not configured. Please check .env file.',
+        }),
+        {
+          status: 500,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
     }
-    
+
     // Extract fields (all optional)
     const { fullName, email, phone, property } = body;
-    
+
     // Only validate email format if email is provided
     if (email && email.trim()) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
         return new Response(
-          JSON.stringify({ 
-            success: false, 
-            error: 'Invalid email format' 
+          JSON.stringify({
+            success: false,
+            error: 'Invalid email format',
           }),
-          { 
+          {
             status: 400,
-            headers: { 'Content-Type': 'application/json' }
+            headers: { 'Content-Type': 'application/json' },
           }
         );
       }
@@ -105,7 +115,7 @@ export const POST: APIRoute = async ({ request }) => {
     console.log('Attempting to get Google Sheets instance...');
     const sheets = await getGoogleSheetsInstance();
     console.log('Google Sheets instance created successfully');
-    
+
     // Prepare data row (handle empty/undefined values)
     const timestamp = formatTimestamp(new Date());
     const rowData = [
@@ -119,38 +129,51 @@ export const POST: APIRoute = async ({ request }) => {
       body.source || 'website_lead_form',
       body.url || '',
       body.userAgent || '',
-      'New' // Status column
+      'New', // Status column
     ];
 
     // Check if sheet exists and has headers, create/recreate if needed
     console.log('Checking if sheet exists and has proper headers...');
     let needsHeaders = false;
-    
+
     try {
       const headerCheck = await sheets.spreadsheets.values.get({
         spreadsheetId: SHEET_ID,
         range: `${SHEET_NAME}!A1:K1`,
       });
-      
+
       // Check if headers exist and are correct
       const existingHeaders = headerCheck.data.values?.[0] || [];
       const expectedHeaders = [
-        'Timestamp', 'Full Name', 'Email', 'Phone', 'Property Interest',
-        'How Heard', 'Message', 'Source', 'URL', 'User Agent', 'Status'
+        'Timestamp',
+        'Full Name',
+        'Email',
+        'Phone',
+        'Property Interest',
+        'How Heard',
+        'Message',
+        'Source',
+        'URL',
+        'User Agent',
+        'Status',
       ];
-      
-      if (existingHeaders.length === 0 || 
-          existingHeaders.join(',') !== expectedHeaders.join(',')) {
+
+      if (
+        existingHeaders.length === 0 ||
+        existingHeaders.join(',') !== expectedHeaders.join(',')
+      ) {
         console.log('Headers missing or incorrect, will recreate...');
         needsHeaders = true;
       } else {
-        console.log('Sheet exists with correct headers, proceeding with data append');
+        console.log(
+          'Sheet exists with correct headers, proceeding with data append'
+        );
       }
-    } catch (error) {
+    } catch {
       console.log('Sheet does not exist, creating new sheet...');
       needsHeaders = true;
     }
-    
+
     if (needsHeaders) {
       console.log('Creating/updating sheet headers...');
       const headers = [
@@ -164,7 +187,7 @@ export const POST: APIRoute = async ({ request }) => {
         'Source',
         'URL',
         'User Agent',
-        'Status'
+        'Status',
       ];
 
       // Try to create sheet if it doesn't exist, otherwise just update headers
@@ -183,7 +206,7 @@ export const POST: APIRoute = async ({ request }) => {
             ],
           },
         });
-      } catch (error) {
+      } catch {
         // Sheet already exists, that's fine
         console.log('Sheet already exists, updating headers only');
       }
@@ -218,29 +241,37 @@ export const POST: APIRoute = async ({ request }) => {
     // You can add email notification logic here using services like SendGrid, Nodemailer, etc.
 
     return new Response(
-      JSON.stringify({ 
-        success: true, 
+      JSON.stringify({
+        success: true,
         message: 'Lead submitted successfully',
-        rowsUpdated: response.data.updates?.updatedRows || 0
+        rowsUpdated: response.data.updates?.updatedRows || 0,
       }),
-      { 
+      {
         status: 200,
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+        },
       }
     );
-
   } catch (error) {
-    console.error('Google Sheets API error:', error);
-    
+    console.error('=== Google Sheets API Error ===');
+    console.error('Error details:', error);
+    console.error('Error message:', error instanceof Error ? error.message : 'Unknown error');
+    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
+
     return new Response(
-      JSON.stringify({ 
-        success: false, 
+      JSON.stringify({
+        success: false,
         error: 'Failed to submit lead. Please try again later.',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        details: error instanceof Error ? error.message : 'Unknown error',
       }),
-      { 
+      {
         status: 500,
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+        },
       }
     );
   }
@@ -251,9 +282,7 @@ export const OPTIONS: APIRoute = async () => {
   return new Response(null, {
     status: 200,
     headers: {
-      'Access-Control-Allow-Origin': process.env.NODE_ENV === 'production' 
-        ? 'https://www.binyousufgroup.com' 
-        : 'http://localhost:4321',
+      'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
     },

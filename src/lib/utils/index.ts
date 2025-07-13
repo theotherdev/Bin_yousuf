@@ -16,7 +16,11 @@ export function slugify(str: string): string {
     .replace(/^-+|-+$/g, '');
 }
 
-export function truncate(str: string, length: number, suffix: string = '...'): string {
+export function truncate(
+  str: string,
+  length: number,
+  suffix: string = '...'
+): string {
   if (str.length <= length) return str;
   return str.slice(0, length) + suffix;
 }
@@ -111,10 +115,10 @@ export function getViewportSize(): { width: number; height: number } {
   if (!isBrowser()) {
     return { width: 0, height: 0 };
   }
-  
+
   return {
     width: window.innerWidth || document.documentElement.clientWidth,
-    height: window.innerHeight || document.documentElement.clientHeight
+    height: window.innerHeight || document.documentElement.clientHeight,
   };
 }
 
@@ -123,7 +127,7 @@ export function getSearchParams(url?: string): URLSearchParams {
   if (!isBrowser() && !url) {
     return new URLSearchParams();
   }
-  
+
   const searchString = url ? new URL(url).search : window.location.search;
   return new URLSearchParams(searchString);
 }

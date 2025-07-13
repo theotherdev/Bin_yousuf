@@ -114,18 +114,18 @@ export const projects: Project[] = [
 
 // Utility functions with proper typing
 export function getProjectsByLocation(location: string): Project[] {
-  return projects.filter(project => 
-    project.location.toLowerCase() === location.toLowerCase()
+  return projects.filter(
+    project => project.location.toLowerCase() === location.toLowerCase()
   );
 }
 
 export function getProjectCounts(): { emaar: number; hmr: number } {
   const emaarCount = projects.filter(p => p.location === 'Emaar').length;
   const hmrCount = projects.filter(p => p.location === 'HMR').length;
-  
+
   return {
     emaar: emaarCount,
-    hmr: hmrCount
+    hmr: hmrCount,
   };
 }
 
@@ -134,7 +134,7 @@ export function getProjectById(id: number): Project | undefined {
 }
 
 export function getProjectByName(name: string): Project | undefined {
-  return projects.find(project => 
-    project.name.toLowerCase() === name.toLowerCase()
+  return projects.find(
+    project => project.name.toLowerCase() === name.toLowerCase()
   );
 }

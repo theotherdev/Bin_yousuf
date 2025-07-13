@@ -18,9 +18,16 @@ export interface GSAPVars {
 export interface GSAPTimeline {
   to(target: GSAPTarget, vars: GSAPVars): GSAPTimeline;
   from(target: GSAPTarget, vars: GSAPVars): GSAPTimeline;
-  fromTo(target: GSAPTarget, fromVars: GSAPVars, toVars: GSAPVars): GSAPTimeline;
+  fromTo(
+    target: GSAPTarget,
+    fromVars: GSAPVars,
+    toVars: GSAPVars
+  ): GSAPTimeline;
   set(target: GSAPTarget, vars: GSAPVars): GSAPTimeline;
-  add(child: GSAPTimeline | (() => void), position?: number | string): GSAPTimeline;
+  add(
+    child: GSAPTimeline | (() => void),
+    position?: number | string
+  ): GSAPTimeline;
   play(from?: number): GSAPTimeline;
   pause(): GSAPTimeline;
   resume(): GSAPTimeline;
@@ -39,11 +46,19 @@ export interface GSAPStatic {
   timeline(vars?: GSAPVars): GSAPTimeline;
   to(target: GSAPTarget, vars: GSAPVars): GSAPTimeline;
   from(target: GSAPTarget, vars: GSAPVars): GSAPTimeline;
-  fromTo(target: GSAPTarget, fromVars: GSAPVars, toVars: GSAPVars): GSAPTimeline;
+  fromTo(
+    target: GSAPTarget,
+    fromVars: GSAPVars,
+    toVars: GSAPVars
+  ): GSAPTimeline;
   set(target: GSAPTarget, vars: GSAPVars): GSAPTimeline;
   killTweensOf(target: GSAPTarget): void;
   getProperty(target: GSAPTarget, property: string): unknown;
-  quickSetter(target: GSAPTarget, property: string, unit?: string): (value: number | string) => void;
+  quickSetter(
+    target: GSAPTarget,
+    property: string,
+    unit?: string
+  ): (value: number | string) => void;
 }
 
 export interface ScrollTriggerVars {
@@ -52,7 +67,10 @@ export interface ScrollTriggerVars {
   end?: string | number;
   scrub?: boolean | number;
   pin?: boolean | GSAPTarget;
-  snap?: boolean | number | { snapTo: number | string; duration: number; delay: number };
+  snap?:
+    | boolean
+    | number
+    | { snapTo: number | string; duration: number; delay: number };
   onEnter?: () => void;
   onLeave?: () => void;
   onEnterBack?: () => void;
@@ -82,7 +100,11 @@ export interface ScrollTriggerStatic {
   killAll(): void;
 }
 
-export type GSAPTarget = string | HTMLElement | NodeListOf<HTMLElement> | HTMLElement[];
+export type GSAPTarget =
+  | string
+  | HTMLElement
+  | NodeListOf<HTMLElement>
+  | HTMLElement[];
 
 // Global GSAP interface
 declare global {

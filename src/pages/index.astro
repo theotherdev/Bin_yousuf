@@ -29,7 +29,7 @@ let formattedSlideshowImages: Array<{ src: string; alt: string }> = [];
 
 try {
   formattedSlideshowImages = Object.entries(slideshowImageModules)
-    .map(([path, module], index) => {
+    .map(([, module], index) => {
       if (module?.default) {
         return {
           src: module.default.src || module.default,
@@ -46,7 +46,7 @@ try {
 
 // Fallback: If no slideshow images found, use project images
 if (formattedSlideshowImages.length === 0) {
-  formattedSlideshowImages = projects.slice(0, 5).map((project, index) => ({
+  formattedSlideshowImages = projects.slice(0, 5).map((project) => ({
     src: project.image.src,
     alt: `${project.name} - ${project.location} Luxury Waterfront Property`
   }));

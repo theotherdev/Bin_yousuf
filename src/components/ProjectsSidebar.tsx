@@ -6,24 +6,26 @@ import { projects } from '../data/projects';
 import type { Project } from '../types/project';
 
 // Handle CommonJS/ES6 module compatibility
-const ScrollToPlugin = ScrollToPluginPkg.ScrollToPlugin || ScrollToPluginPkg.default || ScrollToPluginPkg;
+const ScrollToPlugin =
+  ScrollToPluginPkg.ScrollToPlugin ||
+  ScrollToPluginPkg.default ||
+  ScrollToPluginPkg;
 
 // Register GSAP plugin
 gsap.registerPlugin(ScrollToPlugin);
 
 interface ProjectsSidebarProps {
-  currentPath: string;
   isVisible?: boolean;
 }
 
-const ProjectsSidebar: React.FC<ProjectsSidebarProps> = ({ currentPath, isVisible = false }) => {
+const ProjectsSidebar: React.FC<ProjectsSidebarProps> = ({
+  isVisible = false,
+}) => {
   const sidebarRef = useRef<HTMLDivElement>(null);
   const [activeProjectId, setActiveProjectId] = useState<number | null>(null);
   const [isScrolling, setIsScrolling] = useState(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
-  const isProjectsPage = currentPath === '/projects' || currentPath === '/projects/';
-  const isHomePage = currentPath === '/' || currentPath === '';
 
   useEffect(() => {
     // Setup intersection observer for highlighting active project
@@ -41,17 +43,17 @@ const ProjectsSidebar: React.FC<ProjectsSidebarProps> = ({ currentPath, isVisibl
     const options: IntersectionObserverInit = {
       root: null,
       rootMargin: '-50% 0px -50% 0px', // Trigger when element is in center of viewport
-      threshold: 0
+      threshold: 0,
     };
 
-    observerRef.current = new IntersectionObserver((entries) => {
+    observerRef.current = new IntersectionObserver(entries => {
       if (isScrolling) return; // Don't update during programmatic scrolling
 
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           const target = entry.target as HTMLElement;
           const projectId = target.getAttribute('data-project');
-          
+
           if (projectId) {
             setActiveProjectId(parseInt(projectId));
           }
@@ -71,7 +73,7 @@ const ProjectsSidebar: React.FC<ProjectsSidebarProps> = ({ currentPath, isVisibl
   const handleProjectClick = (project: Project, event?: React.MouseEvent) => {
     // Prevent default link behavior
     event?.preventDefault();
-    
+
     const targetId = `project-${project.id}`;
     const targetElement = document.getElementById(targetId);
 
@@ -82,19 +84,22 @@ const ProjectsSidebar: React.FC<ProjectsSidebarProps> = ({ currentPath, isVisibl
       // Calculate offset based on navigation height
       const navHeight = 80;
       const elementPosition = targetElement.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + (typeof window !== 'undefined' ? window.pageYOffset : 0) - navHeight;
+      const offsetPosition =
+        elementPosition +
+        (typeof window !== 'undefined' ? window.pageYOffset : 0) -
+        navHeight;
 
       // Use GSAP for smooth scrolling
       gsap.to(window, {
         scrollTo: offsetPosition,
         duration: 1,
-        ease: "power2.out",
+        ease: 'power2.out',
         onComplete: () => {
           // Reset scrolling state after animation
           setTimeout(() => {
             setIsScrolling(false);
           }, 100);
-        }
+        },
       });
 
       // Add highlight animation to target element
@@ -105,60 +110,72 @@ const ProjectsSidebar: React.FC<ProjectsSidebarProps> = ({ currentPath, isVisibl
   const highlightProject = (targetElement: HTMLElement) => {
     // Create highlight animation
     const timeline = gsap.timeline();
-    
+
     timeline
       .to(targetElement, {
         y: -15,
-        boxShadow: "0 40px 100px rgba(0, 0, 0, 0.25)",
+        boxShadow: '0 40px 100px rgba(0, 0, 0, 0.25)',
         duration: 0.6,
-        ease: "power2.out"
+        ease: 'power2.out',
       })
-      .to(targetElement.querySelector('.project-image') || targetElement.querySelector('img'), {
-        scale: 1.02,
-        duration: 0.6,
-        ease: "power2.out"
-      }, 0)
+      .to(
+        targetElement.querySelector('.project-image') ||
+          targetElement.querySelector('img'),
+        {
+          scale: 1.02,
+          duration: 0.6,
+          ease: 'power2.out',
+        },
+        0
+      )
       .to(targetElement, {
         y: 0,
-        boxShadow: "0 20px 60px rgba(0, 0, 0, 0.15)",
+        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.15)',
         duration: 0.6,
-        ease: "power2.out",
-        delay: 1.4
+        ease: 'power2.out',
+        delay: 1.4,
       })
-      .to(targetElement.querySelector('.project-image') || targetElement.querySelector('img'), {
-        scale: 1,
-        duration: 0.6,
-        ease: "power2.out"
-      }, "-=0.6");
+      .to(
+        targetElement.querySelector('.project-image') ||
+          targetElement.querySelector('img'),
+        {
+          scale: 1,
+          duration: 0.6,
+          ease: 'power2.out',
+        },
+        '-=0.6'
+      );
   };
 
   const scrollSidebarToActiveProject = (activeProjectId: number) => {
     if (!sidebarRef.current) return;
 
-    const activeItem = sidebarRef.current.querySelector(`[data-project-id="${activeProjectId}"]`) as HTMLElement;
+    const activeItem = sidebarRef.current.querySelector(
+      `[data-project-id="${activeProjectId}"]`
+    ) as HTMLElement;
     if (!activeItem) return;
 
     const sidebarRect = sidebarRef.current.getBoundingClientRect();
     const activeItemRect = activeItem.getBoundingClientRect();
-    
+
     const activeItemTop = activeItemRect.top - sidebarRect.top;
     const activeItemBottom = activeItemRect.bottom - sidebarRect.top;
-    
+
     const sidebarHeight = sidebarRef.current.clientHeight;
     const sidebarScrollTop = sidebarRef.current.scrollTop;
-    
+
     // Smooth scroll sidebar to keep active item visible
     if (activeItemTop < 0) {
       gsap.to(sidebarRef.current, {
         scrollTop: sidebarScrollTop + activeItemTop - 20,
         duration: 0.5,
-        ease: "power2.out"
+        ease: 'power2.out',
       });
     } else if (activeItemBottom > sidebarHeight) {
       gsap.to(sidebarRef.current, {
         scrollTop: sidebarScrollTop + (activeItemBottom - sidebarHeight) + 20,
         duration: 0.5,
-        ease: "power2.out"
+        ease: 'power2.out',
       });
     }
   };
@@ -170,16 +187,10 @@ const ProjectsSidebar: React.FC<ProjectsSidebarProps> = ({ currentPath, isVisibl
     }
   }, [activeProjectId, isScrolling]);
 
-  const getProjectHref = (project: Project) => {
-    if (isProjectsPage) {
-      return `#project-${project.id}`;
-    }
-    return `/projects#project-${project.id}`;
-  };
 
-  const renderProjectItem = (project: Project, index: number) => {
+  const renderProjectItem = (project: Project) => {
     const isActive = activeProjectId === project.id;
-    
+
     const itemContent = (
       <>
         <span className="text-[11px] text-neutral-500 mr-3 font-medium min-w-[25px] mt-0.5">
@@ -209,10 +220,10 @@ const ProjectsSidebar: React.FC<ProjectsSidebarProps> = ({ currentPath, isVisibl
         key={project.id}
         className={className}
         data-project-id={project.id}
-        onClick={(e) => handleProjectClick(project, e)}
+        onClick={e => handleProjectClick(project, e)}
         role="button"
         tabIndex={0}
-        onKeyDown={(e) => {
+        onKeyDown={e => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
             handleProjectClick(project);
@@ -243,7 +254,7 @@ const ProjectsSidebar: React.FC<ProjectsSidebarProps> = ({ currentPath, isVisibl
       </div>
 
       <div className="flex flex-col">
-        {projects.map((project: Project, index: number) => 
+        {projects.map((project: Project, index: number) =>
           renderProjectItem(project, index)
         )}
       </div>

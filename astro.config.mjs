@@ -31,7 +31,8 @@ export default defineConfig({
       }
     },
     ssr: {
-      noExternal: ['gsap', 'googleapis']
+      noExternal: ['gsap'],
+      external: ['googleapis']
     },
     server: {
       headers: {

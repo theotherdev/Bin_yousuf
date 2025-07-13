@@ -4,30 +4,30 @@ import { projects } from '../data/projects';
 
 const HeroSection: React.FC = () => {
   const animatedTextRef = useRef<HTMLSpanElement>(null);
-  
+
   const heroWords = projects.map(project => project.name.toUpperCase());
   let currentIndex = 0;
 
   const changeWord = () => {
     if (!animatedTextRef.current) return;
-    
+
     const animatedText = animatedTextRef.current;
-    
+
     // Start blur-out animation
-    animatedText.classList.add("blur-out");
+    animatedText.classList.add('blur-out');
 
     setTimeout(() => {
       // Change the word
       currentIndex = (currentIndex + 1) % heroWords.length;
       animatedText.textContent = heroWords[currentIndex];
-      
+
       // Remove blur-out and add blur-in
-      animatedText.classList.remove("blur-out");
-      animatedText.classList.add("blur-in");
+      animatedText.classList.remove('blur-out');
+      animatedText.classList.add('blur-in');
 
       setTimeout(() => {
         // Remove blur-in class after animation completes
-        animatedText.classList.remove("blur-in");
+        animatedText.classList.remove('blur-in');
       }, 800); // Duration matches the blur-in animation
     }, 400); // Duration matches the blur-out animation
   };
@@ -41,7 +41,7 @@ const HeroSection: React.FC = () => {
     // Start the animation cycle after initial delay
     const initialTimeout = setTimeout(() => {
       const interval = setInterval(changeWord, 3000); // Change word every 3 seconds
-      
+
       // Cleanup function
       return () => clearInterval(interval);
     }, 2000); // Initial delay of 2 seconds
@@ -61,12 +61,12 @@ const HeroSection: React.FC = () => {
         >
           {heroWords[0] || 'PANORAMA'}
         </span>
-        <div 
+        <div
           className="block text-neutral-500 mt-[0.4em] tracking-[0.18em] uppercase font-semibold leading-tight w-full sm:w-auto"
-          style={{ 
+          style={{
             marginLeft: '0.4em',
             fontSize: 'clamp(6px, 1vw, 18px)', // Responsive font size for mobile
-            maxWidth: '80vw' // On mobile, max width is 80% of viewport width
+            maxWidth: '80vw', // On mobile, max width is 80% of viewport width
           }}
         >
           Official Partners With EMAAR® Oceanfront & HMR® Waterfront

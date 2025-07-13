@@ -17,7 +17,7 @@ const ProjectsSlideshow: React.FC<SlideshowProps> = ({
   autoPlayInterval = 2000,
   showDots = true,
   showArrows = false,
-  height = "60vh"
+  height = '60vh',
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
@@ -26,19 +26,24 @@ const ProjectsSlideshow: React.FC<SlideshowProps> = ({
 
   // Memoized function to go to next slide
   const nextSlide = useCallback(() => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+    setCurrentIndex(prevIndex => (prevIndex + 1) % images.length);
   }, [images.length]);
 
   // Memoized function to go to previous slide
   const prevSlide = useCallback(() => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+    setCurrentIndex(
+      prevIndex => (prevIndex - 1 + images.length) % images.length
+    );
   }, [images.length]);
 
   // Memoized function to go to specific slide
-  const goToSlide = useCallback((index: number) => {
-    if (index === currentIndex) return;
-    setCurrentIndex(index);
-  }, [currentIndex]);
+  const goToSlide = useCallback(
+    (index: number) => {
+      if (index === currentIndex) return;
+      setCurrentIndex(index);
+    },
+    [currentIndex]
+  );
 
   // Auto-play functionality - removed currentIndex from dependencies to prevent restart
   useEffect(() => {
@@ -70,18 +75,21 @@ const ProjectsSlideshow: React.FC<SlideshowProps> = ({
   }, []);
 
   // Handle manual navigation - temporarily pause auto-play
-  const handleManualNavigation = useCallback((action: () => void) => {
-    // Temporarily pause auto-play
-    setIsPlaying(false);
-    
-    // Execute the navigation action
-    action();
-    
-    // Resume auto-play after a short delay
-    setTimeout(() => {
-      setIsPlaying(true);
-    }, autoPlayInterval);
-  }, [autoPlayInterval]);
+  const handleManualNavigation = useCallback(
+    (action: () => void) => {
+      // Temporarily pause auto-play
+      setIsPlaying(false);
+
+      // Execute the navigation action
+      action();
+
+      // Resume auto-play after a short delay
+      setTimeout(() => {
+        setIsPlaying(true);
+      }, autoPlayInterval);
+    },
+    [autoPlayInterval]
+  );
 
   // If no images, return null
   if (!images || images.length === 0) {
@@ -92,9 +100,12 @@ const ProjectsSlideshow: React.FC<SlideshowProps> = ({
   const showControls = images.length > 1;
 
   return (
-    <div className="relative w-full overflow-hidden bg-neutral-50 group" style={{ height }}>
+    <div
+      className="relative w-full overflow-hidden bg-neutral-50 group"
+      style={{ height }}
+    >
       {/* Main slideshow container */}
-      <div 
+      <div
         ref={slideshowRef}
         className="relative w-full h-full"
         onMouseEnter={handleMouseEnter}
@@ -106,21 +117,21 @@ const ProjectsSlideshow: React.FC<SlideshowProps> = ({
             <div
               key={index}
               className={`absolute top-0 left-0 w-full h-full transition-all duration-700 ease-in-out ${
-                index === currentIndex 
-                  ? 'opacity-100 scale-100' 
+                index === currentIndex
+                  ? 'opacity-100 scale-100'
                   : 'opacity-0 scale-105'
               }`}
               style={{
-                zIndex: index === currentIndex ? 2 : 1
+                zIndex: index === currentIndex ? 2 : 1,
               }}
             >
               <img
                 src={image.src}
                 alt={image.alt}
                 className="w-full h-full object-cover"
-                loading={index === 0 ? "eager" : "lazy"}
+                loading={index === 0 ? 'eager' : 'lazy'}
               />
-              
+
               {/* Subtle overlay for better contrast */}
               <div className="absolute inset-0 bg-black/5"></div>
             </div>
@@ -139,13 +150,18 @@ const ProjectsSlideshow: React.FC<SlideshowProps> = ({
                 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-white/50"
               aria-label="Previous image"
             >
-              <svg 
-                className="w-5 h-5 text-white" 
-                fill="none" 
-                stroke="currentColor" 
+              <svg
+                className="w-5 h-5 text-white"
+                fill="none"
+                stroke="currentColor"
                 viewBox="0 0 24 24"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
               </svg>
             </button>
 
@@ -158,13 +174,18 @@ const ProjectsSlideshow: React.FC<SlideshowProps> = ({
                 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-white/50"
               aria-label="Next image"
             >
-              <svg 
-                className="w-5 h-5 text-white" 
-                fill="none" 
-                stroke="currentColor" 
+              <svg
+                className="w-5 h-5 text-white"
+                fill="none"
+                stroke="currentColor"
                 viewBox="0 0 24 24"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
             </button>
           </>

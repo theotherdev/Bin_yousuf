@@ -29,11 +29,13 @@ export class GSAPLoader {
 
       // Load GSAP from CDN
       const script1 = document.createElement('script');
-      script1.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js';
+      script1.src =
+        'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js';
       script1.async = true;
 
       const script2 = document.createElement('script');
-      script2.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js';
+      script2.src =
+        'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js';
       script2.async = true;
 
       let scriptsLoaded = 0;

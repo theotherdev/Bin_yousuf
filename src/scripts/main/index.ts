@@ -1,5 +1,9 @@
 // src/scripts/main/index.ts - Fixed version with footer detection
-import type { Project, AnimationElements, AnimationState } from '../types/index.js';
+import type {
+  Project,
+  AnimationElements,
+  AnimationState,
+} from '../types/index.js';
 import { GSAPLoader } from '../utils/gsap-loader.js';
 
 // Import projects data - this will be loaded dynamically
@@ -8,7 +12,9 @@ let projects: Project[] = [];
 // Function to load projects data
 async function loadProjects(): Promise<Project[]> {
   try {
-    const { projects: importedProjects } = await import('../../data/projects.js');
+    const { projects: importedProjects } = await import(
+      '../../data/projects.js'
+    );
     return importedProjects;
   } catch (error) {
     console.warn('Could not import projects data:', error);
@@ -19,9 +25,11 @@ async function loadProjects(): Promise<Project[]> {
 // Check if we're on the projects page to prevent conflicts
 function isProjectsPage(): boolean {
   if (typeof window === 'undefined') return false;
-  return window.location.pathname === '/projects' || 
-         window.location.pathname === '/projects/' ||
-         (window as any).__isProjectsPage === true;
+  return (
+    window.location.pathname === '/projects' ||
+    window.location.pathname === '/projects/' ||
+    (window as any).__isProjectsPage === true
+  );
 }
 
 class ProjectAnimationController {
@@ -42,13 +50,14 @@ class ProjectAnimationController {
       scrollY: 0,
       windowHeight: typeof window !== 'undefined' ? window.innerHeight : 0,
       progress: 0,
-      isAnimating: false
+      isAnimating: false,
     };
 
     // Bind event handlers
     this.scrollHandler = () => this.requestTick();
     this.resizeHandler = this.debounce(() => {
-      this.animationState.windowHeight = typeof window !== 'undefined' ? window.innerHeight : 0;
+      this.animationState.windowHeight =
+        typeof window !== 'undefined' ? window.innerHeight : 0;
       this.handleScroll();
     }, 150);
   }
@@ -59,8 +68,10 @@ class ProjectAnimationController {
       projectItems: document.querySelectorAll<HTMLElement>('.project-item'),
       imageItems: document.querySelectorAll<HTMLElement>('.project-image-item'),
       animatedProjectImage: document.getElementById('animatedProjectImage'),
-      mainAnimatedImage: document.getElementById('mainAnimatedImage') as HTMLImageElement,
-      firstProjectInGrid: document.querySelector<HTMLElement>('#project-1')
+      mainAnimatedImage: document.getElementById(
+        'mainAnimatedImage'
+      ) as HTMLImageElement,
+      firstProjectInGrid: document.querySelector<HTMLElement>('#project-1'),
     };
   }
 
@@ -84,7 +95,7 @@ class ProjectAnimationController {
       opacity: 0,
       borderRadius: '0px',
       zIndex: 999,
-      position: 'fixed'
+      position: 'fixed',
     });
 
     // Create animation sequence with better timing
@@ -94,12 +105,12 @@ class ProjectAnimationController {
         top: '0vh',
         opacity: 1,
         duration: 0.3,
-        ease: "power2.out"
+        ease: 'power2.out',
       })
       // Phase 2: Hold full screen briefly (0.3 -> 0.4)
       .to(this.elements.animatedProjectImage, {
         duration: 0.1,
-        ease: "none"
+        ease: 'none',
       })
       // Phase 3: Transform to grid position (0.4 -> 0.9)
       .to(this.elements.animatedProjectImage, {
@@ -109,101 +120,111 @@ class ProjectAnimationController {
         height: '60vh',
         borderRadius: '12px',
         duration: 0.5,
-        ease: "power2.inOut"
+        ease: 'power2.inOut',
       })
       // Phase 4: Fine positioning for perfect alignment (0.9 -> 1.0)
       .to(this.elements.animatedProjectImage, {
         duration: 0.1,
-        ease: "power1.inOut"
+        ease: 'power1.inOut',
       });
   }
 
   private handleScroll(): void {
     const scrollY = window.scrollY;
     const windowHeight = window.innerHeight;
-    
+
     // Update animation state
     this.animationState = {
       ...this.animationState,
       scrollY,
-      windowHeight
+      windowHeight,
     };
-    
+
     // Calculate positions with better precision
     const heroHeight = windowHeight * 1.1;
     const projectsSectionPadding = windowHeight * 0.12;
     const firstProjectPosition = heroHeight + projectsSectionPadding;
     const scrollStart = firstProjectPosition - windowHeight * 0.9;
     const scrollRange = windowHeight * 1.8;
-    
+
     const gsap = window.gsap;
-    
+
     // FOOTER DETECTION - NEW LOGIC
     const footer = document.querySelector('footer');
     let isNearFooter = false;
-    
+
     if (footer) {
       const footerRect = footer.getBoundingClientRect();
       const footerTop = footerRect.top + scrollY;
       const footerBuffer = windowHeight * 0.4; // 40% of viewport height as buffer
-      
+
       // Check if we're approaching the footer
       isNearFooter = scrollY + windowHeight > footerTop - footerBuffer;
     }
-    
+
     // SIDEBAR VISIBILITY WITH FOOTER DETECTION
-    const sidebarThreshold = scrollStart + (scrollRange * 0.85);
+    const sidebarThreshold = scrollStart + scrollRange * 0.85;
     const shouldShowSidebar = scrollY > sidebarThreshold && !isNearFooter;
 
     if (shouldShowSidebar) {
-      if (this.elements.projectsSidebar && !this.elements.projectsSidebar.classList.contains('visible')) {
+      if (
+        this.elements.projectsSidebar &&
+        !this.elements.projectsSidebar.classList.contains('visible')
+      ) {
         this.showSidebar(gsap);
       }
     } else {
-      if (this.elements.projectsSidebar && this.elements.projectsSidebar.classList.contains('visible')) {
+      if (
+        this.elements.projectsSidebar &&
+        this.elements.projectsSidebar.classList.contains('visible')
+      ) {
         this.hideSidebar(gsap);
       }
     }
-    
+
     if (!this.elements.animatedProjectImage) return;
-    
+
     // Calculate progress with smoother curve
-    const progress = Math.min(Math.max((scrollY - scrollStart) / scrollRange, 0), 1);
+    const progress = Math.min(
+      Math.max((scrollY - scrollStart) / scrollRange, 0),
+      1
+    );
     this.animationState.progress = progress;
-    
+
     // Update timeline progress
     if (gsap && this.mainTimeline) {
       this.mainTimeline.progress(progress);
     } else {
       this.fallbackAnimation(progress);
     }
-    
+
     // IMPROVED: Smoother crossfade transition
     this.handleImageCrossfade(progress, gsap);
-    
+
     // Update active project highlighting
     this.highlightActiveProject();
   }
 
   private showSidebar(gsap: any): void {
     if (!this.elements.projectsSidebar) return;
-    
+
     this.elements.projectsSidebar.style.transition = 'none';
-    
+
     if (gsap) {
       gsap.killTweensOf(this.elements.projectsSidebar);
-      gsap.fromTo(this.elements.projectsSidebar, 
+      gsap.fromTo(
+        this.elements.projectsSidebar,
         { opacity: 0, x: -100 },
         {
           opacity: 1,
           x: 0,
           duration: 0.8,
-          ease: "power2.out",
+          ease: 'power2.out',
           onComplete: () => {
             if (this.elements.projectsSidebar) {
               this.elements.projectsSidebar.style.transition = '';
             }
-          }
+          },
         }
       );
     } else {
@@ -220,21 +241,21 @@ class ProjectAnimationController {
 
   private hideSidebar(gsap: any): void {
     if (!this.elements.projectsSidebar) return;
-    
+
     this.elements.projectsSidebar.style.transition = 'none';
-    
+
     if (gsap) {
       gsap.killTweensOf(this.elements.projectsSidebar);
       gsap.to(this.elements.projectsSidebar, {
         opacity: 0,
         x: -100,
         duration: 0.4,
-        ease: "power2.in",
+        ease: 'power2.in',
         onComplete: () => {
           if (this.elements.projectsSidebar) {
             this.elements.projectsSidebar.style.transition = '';
           }
-        }
+        },
       });
     } else {
       this.elements.projectsSidebar.style.opacity = '0';
@@ -250,7 +271,7 @@ class ProjectAnimationController {
 
   private handleImageCrossfade(progress: number, gsap: any): void {
     if (!this.elements.firstProjectInGrid) return;
-    
+
     if (progress < 0.85) {
       // Keep grid image hidden while animated image is transitioning
       if (gsap) {
@@ -266,26 +287,30 @@ class ProjectAnimationController {
       // Smooth crossfade over longer range
       const fadeProgress = (progress - 0.85) / 0.15; // 0.85 to 1.0 range
       const easedProgress = this.easeInOutCubic(fadeProgress);
-      
+
       // Fade out animated image
       const animatedOpacity = 1 - easedProgress;
       if (gsap) {
-        gsap.set(this.elements.animatedProjectImage, { opacity: animatedOpacity });
+        gsap.set(this.elements.animatedProjectImage, {
+          opacity: animatedOpacity,
+        });
         gsap.set(this.elements.firstProjectInGrid, { opacity: easedProgress });
       } else {
         if (this.elements.animatedProjectImage) {
-          this.elements.animatedProjectImage.style.opacity = animatedOpacity.toString();
+          this.elements.animatedProjectImage.style.opacity =
+            animatedOpacity.toString();
         }
-        this.elements.firstProjectInGrid.style.opacity = easedProgress.toString();
+        this.elements.firstProjectInGrid.style.opacity =
+          easedProgress.toString();
       }
     } else {
       // Animation complete - ensure proper final state
       if (gsap) {
         gsap.set(this.elements.firstProjectInGrid, { opacity: 1 });
-        gsap.set(this.elements.animatedProjectImage, { 
+        gsap.set(this.elements.animatedProjectImage, {
           opacity: 0,
           pointerEvents: 'none',
-          zIndex: -1
+          zIndex: -1,
         });
       } else {
         this.elements.firstProjectInGrid.style.opacity = '1';
@@ -304,7 +329,7 @@ class ProjectAnimationController {
 
   private fallbackAnimation(progress: number): void {
     if (!this.elements.animatedProjectImage) return;
-    
+
     if (progress === 0) {
       // Initial state
       this.elements.animatedProjectImage.style.top = '100vh';
@@ -318,13 +343,14 @@ class ProjectAnimationController {
       // Phase 1: Rise from bottom and fade in
       const phaseProgress = progress / 0.3;
       const easedProgress = this.easeInOutCubic(phaseProgress);
-      const top = 100 - (easedProgress * 100);
-      
+      const top = 100 - easedProgress * 100;
+
       this.elements.animatedProjectImage.style.top = `${top}vh`;
       this.elements.animatedProjectImage.style.left = '0';
       this.elements.animatedProjectImage.style.width = '100vw';
       this.elements.animatedProjectImage.style.height = '100vh';
-      this.elements.animatedProjectImage.style.opacity = easedProgress.toString();
+      this.elements.animatedProjectImage.style.opacity =
+        easedProgress.toString();
       this.elements.animatedProjectImage.style.borderRadius = '0px';
     } else if (progress < 0.4) {
       // Phase 2: Hold full screen
@@ -338,13 +364,13 @@ class ProjectAnimationController {
       // Phase 3: Transform to grid position
       const phaseProgress = (progress - 0.4) / 0.5;
       const easedProgress = this.easeInOutCubic(phaseProgress);
-      
-      const top = 0 + (easedProgress * 12);
-      const left = 0 + (easedProgress * 38);
-      const width = 100 - (easedProgress * 40);
-      const height = 100 - (easedProgress * 40);
+
+      const top = 0 + easedProgress * 12;
+      const left = 0 + easedProgress * 38;
+      const width = 100 - easedProgress * 40;
+      const height = 100 - easedProgress * 40;
       const borderRadius = easedProgress * 12;
-      
+
       this.elements.animatedProjectImage.style.top = `${top}vh`;
       this.elements.animatedProjectImage.style.left = `${left}vw`;
       this.elements.animatedProjectImage.style.width = `${width}vw`;
@@ -364,30 +390,30 @@ class ProjectAnimationController {
 
   private scrollSidebarToActiveProject(activeItem: HTMLElement): void {
     if (!this.elements.projectsSidebar || !activeItem) return;
-    
+
     const gsap = window.gsap;
     const sidebarRect = this.elements.projectsSidebar.getBoundingClientRect();
     const activeItemRect = activeItem.getBoundingClientRect();
-    
+
     const activeItemTop = activeItemRect.top - sidebarRect.top;
     const activeItemBottom = activeItemRect.bottom - sidebarRect.top;
-    
+
     const sidebarHeight = this.elements.projectsSidebar.clientHeight;
     const sidebarScrollTop = this.elements.projectsSidebar.scrollTop;
-    
+
     // Smooth scroll with GSAP if available, fallback to native
     if (gsap) {
       if (activeItemTop < 0) {
         gsap.to(this.elements.projectsSidebar, {
           scrollTop: sidebarScrollTop + activeItemTop - 20,
           duration: 0.5,
-          ease: "power2.out"
+          ease: 'power2.out',
         });
       } else if (activeItemBottom > sidebarHeight) {
         gsap.to(this.elements.projectsSidebar, {
           scrollTop: sidebarScrollTop + (activeItemBottom - sidebarHeight) + 20,
           duration: 0.5,
-          ease: "power2.out"
+          ease: 'power2.out',
         });
       }
     } else {
@@ -395,12 +421,12 @@ class ProjectAnimationController {
       if (activeItemTop < 0) {
         this.elements.projectsSidebar.scrollTo({
           top: sidebarScrollTop + activeItemTop - 20,
-          behavior: 'smooth'
+          behavior: 'smooth',
         });
       } else if (activeItemBottom > sidebarHeight) {
         this.elements.projectsSidebar.scrollTo({
           top: sidebarScrollTop + (activeItemBottom - sidebarHeight) + 20,
-          behavior: 'smooth'
+          behavior: 'smooth',
         });
       }
     }
@@ -410,15 +436,15 @@ class ProjectAnimationController {
     this.elements.projectItems.forEach((item: HTMLElement) => {
       item.addEventListener('click', () => {
         // Remove active class from all items
-        this.elements.projectItems.forEach((pi: HTMLElement) => 
+        this.elements.projectItems.forEach((pi: HTMLElement) =>
           pi.classList.remove('active')
         );
         item.classList.add('active');
-        
+
         const targetId = item.dataset.scrollTarget || null;
         if (targetId) {
           const targetImage = document.getElementById(targetId);
-          
+
           if (targetImage) {
             this.scrollToTarget(targetImage);
           }
@@ -431,29 +457,29 @@ class ProjectAnimationController {
     const navHeight = 80;
     const elementPosition = targetImage.getBoundingClientRect().top;
     const offsetPosition = elementPosition + window.pageYOffset - navHeight;
-    
+
     const gsap = window.gsap;
     if (gsap) {
       // Smooth scroll with GSAP
       gsap.to(window, {
         scrollTo: offsetPosition,
         duration: 1,
-        ease: "power2.out"
+        ease: 'power2.out',
       });
-      
+
       // Highlight animation
       this.highlightElement(targetImage, gsap);
     } else {
       // Fallback to native scroll
       window.scrollTo({
         top: offsetPosition,
-        behavior: 'smooth'
+        behavior: 'smooth',
       });
-      
+
       // Simple highlight effect
       targetImage.style.transform = 'translateY(-15px)';
       targetImage.style.boxShadow = '0 40px 100px rgba(0, 0, 0, 0.25)';
-      
+
       setTimeout(() => {
         targetImage.style.transform = 'translateY(0)';
         targetImage.style.boxShadow = '0 20px 60px rgba(0, 0, 0, 0.15)';
@@ -463,43 +489,52 @@ class ProjectAnimationController {
 
   private highlightElement(element: HTMLElement, gsap: any): void {
     if (gsap) {
-      gsap.timeline()
+      gsap
+        .timeline()
         .to(element, {
           y: -15,
-          boxShadow: "0 40px 100px rgba(0, 0, 0, 0.25)",
+          boxShadow: '0 40px 100px rgba(0, 0, 0, 0.25)',
           duration: 0.6,
-          ease: "power2.out"
+          ease: 'power2.out',
         })
-        .to(element.querySelector('.project-image'), {
-          scale: 1.02,
-          duration: 0.6,
-          ease: "power2.out"
-        }, 0)
+        .to(
+          element.querySelector('.project-image'),
+          {
+            scale: 1.02,
+            duration: 0.6,
+            ease: 'power2.out',
+          },
+          0
+        )
         .to(element, {
           y: 0,
-          boxShadow: "0 20px 60px rgba(0, 0, 0, 0.15)",
+          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.15)',
           duration: 0.6,
-          ease: "power2.out",
-          delay: 1.4
+          ease: 'power2.out',
+          delay: 1.4,
         })
-        .to(element.querySelector('.project-image'), {
-          scale: 1,
-          duration: 0.6,
-          ease: "power2.out"
-        }, "-=0.6");
+        .to(
+          element.querySelector('.project-image'),
+          {
+            scale: 1,
+            duration: 0.6,
+            ease: 'power2.out',
+          },
+          '-=0.6'
+        );
     }
   }
 
   private highlightActiveProject(): void {
     const scrollPosition = window.scrollY + window.innerHeight / 2;
-    
+
     this.elements.imageItems.forEach((image: HTMLElement) => {
       const rect = image.getBoundingClientRect();
       const imageTop = rect.top + window.scrollY;
       const imageBottom = imageTop + rect.height;
-      
+
       if (scrollPosition >= imageTop && scrollPosition <= imageBottom) {
-        this.elements.projectItems.forEach((item: HTMLElement) => 
+        this.elements.projectItems.forEach((item: HTMLElement) =>
           item.classList.remove('active')
         );
         const projectName = image.dataset.project;
@@ -548,37 +583,37 @@ class ProjectAnimationController {
     try {
       // Load GSAP first
       await this.gsapLoader.loadGSAP();
-      
+
       // Initialize GSAP animations
       this.initializeGSAPAnimations();
       this.setupProjectInteractions();
-      
+
       // Store scroll handler reference for cleanup
       (window as any).__scrollHandlers = (window as any).__scrollHandlers || [];
       (window as any).__scrollHandlers.push(this.scrollHandler);
-      
+
       // Add scroll listener with passive option for better performance
       window.addEventListener('scroll', this.scrollHandler, { passive: true });
       window.addEventListener('resize', this.resizeHandler);
-      
+
       // Initial calls
       this.handleScroll();
-      
+
       console.log('🚀 App initialized with GSAP animations!');
     } catch (error) {
       console.warn('GSAP failed to load, using fallback animations:', error);
-      
+
       // Setup basic functionality without GSAP
       this.setupProjectInteractions();
-      
+
       // Store fallback scroll handler reference
       (window as any).__scrollHandlers = (window as any).__scrollHandlers || [];
       (window as any).__scrollHandlers.push(this.scrollHandler);
-      
+
       window.addEventListener('scroll', this.scrollHandler, { passive: true });
       window.addEventListener('resize', this.resizeHandler);
       this.handleScroll();
-      
+
       console.log('🚀 App initialized with fallback animations!');
     }
   }
@@ -587,12 +622,12 @@ class ProjectAnimationController {
     // Clean up event listeners
     window.removeEventListener('scroll', this.scrollHandler);
     window.removeEventListener('resize', this.resizeHandler);
-    
+
     // Clean up GSAP animations
     if (this.mainTimeline) {
       this.mainTimeline.kill();
     }
-    
+
     // Remove from global handlers array
     const handlers = (window as any).__scrollHandlers || [];
     const index = handlers.indexOf(this.scrollHandler);
@@ -612,23 +647,23 @@ class HeroTextController {
 
   constructor(words: string[]) {
     this.words = words;
-    this.animatedTextElement = document.getElementById("animatedText");
+    this.animatedTextElement = document.getElementById('animatedText');
   }
 
   private changeWord(): void {
     if (!this.animatedTextElement) return;
-    this.animatedTextElement.classList.add("blur-out");
+    this.animatedTextElement.classList.add('blur-out');
 
     this.timeoutId = setTimeout(() => {
       if (!this.animatedTextElement) return;
       this.currentIndex = (this.currentIndex + 1) % this.words.length;
       this.animatedTextElement.textContent = this.words[this.currentIndex];
-      this.animatedTextElement.classList.remove("blur-out");
-      this.animatedTextElement.classList.add("blur-in");
+      this.animatedTextElement.classList.remove('blur-out');
+      this.animatedTextElement.classList.add('blur-in');
 
       this.timeoutId = setTimeout(() => {
         if (!this.animatedTextElement) return;
-        this.animatedTextElement.classList.remove("blur-in");
+        this.animatedTextElement.classList.remove('blur-in');
       }, 800);
     }, 400);
   }
@@ -675,13 +710,15 @@ class AppController {
 
     // Load projects data first
     projects = await loadProjects();
-    
+
     if (projects.length === 0) {
       console.warn('No projects loaded, skipping initialization');
       return;
     }
-    
-    const heroWords = projects.map((project: Project) => project.name.toUpperCase());
+
+    const heroWords = projects.map((project: Project) =>
+      project.name.toUpperCase()
+    );
     this.projectController = new ProjectAnimationController(projects);
     this.heroController = new HeroTextController(heroWords);
   }

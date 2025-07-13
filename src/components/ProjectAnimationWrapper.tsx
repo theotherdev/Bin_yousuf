@@ -7,8 +7,13 @@ interface ProjectAnimationWrapperProps {
   children: React.ReactNode;
 }
 
-const ProjectAnimationWrapper: React.FC<ProjectAnimationWrapperProps> = ({ children }) => {
-  const { animationState, sidebarVisible } = useProjectAnimations(projects, true);
+const ProjectAnimationWrapper: React.FC<ProjectAnimationWrapperProps> = ({
+  children,
+}) => {
+  const { animationState, sidebarVisible } = useProjectAnimations(
+    projects,
+    true
+  );
 
   useEffect(() => {
     // Update sidebar visibility based on hook state
@@ -38,7 +43,7 @@ const ProjectAnimationWrapper: React.FC<ProjectAnimationWrapperProps> = ({ child
   return (
     <div className="relative">
       {children}
-      
+
       {/* Debug info in development */}
       {import.meta.env.DEV && (
         <div className="fixed bottom-20 right-5 bg-black/80 text-white p-4 rounded-none text-xs font-mono z-[2000]">

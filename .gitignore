@@ -23,3 +23,12 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 .vercel/
+
+# VS Code settings
+.vscode/
+
+# Windows file metadata
+*.Zone.Identifier
+
+# bun lockfile
+bun.lock

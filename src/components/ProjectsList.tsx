@@ -5,17 +5,20 @@ import ScrollToPluginPkg from 'gsap/ScrollToPlugin';
 import type { Project } from '../scripts/types/index.js';
 
 // Handle CommonJS/ES6 module compatibility
-const ScrollToPlugin = ScrollToPluginPkg.ScrollToPlugin || ScrollToPluginPkg.default || ScrollToPluginPkg;
+const ScrollToPlugin =
+  ScrollToPluginPkg.ScrollToPlugin ||
+  ScrollToPluginPkg.default ||
+  ScrollToPluginPkg;
 
 gsap.registerPlugin(ScrollToPlugin);
 
 interface ProjectsListProps {
   projects: Project[];
-  emaarProjects: Project[];
-  hmrProjects: Project[];
 }
 
-const ProjectsList: React.FC<ProjectsListProps> = ({ projects, emaarProjects, hmrProjects }) => {
+const ProjectsList: React.FC<ProjectsListProps> = ({
+  projects,
+}) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isScrolling, setIsScrolling] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -29,7 +32,7 @@ const ProjectsList: React.FC<ProjectsListProps> = ({ projects, emaarProjects, hm
     if (scrollTimeoutRef.current) {
       clearTimeout(scrollTimeoutRef.current);
     }
-    
+
     scrollTimeoutRef.current = setTimeout(() => {
       setCurrentIndex(index);
     }, 100);
@@ -39,22 +42,24 @@ const ProjectsList: React.FC<ProjectsListProps> = ({ projects, emaarProjects, hm
   const handleInitialScroll = useCallback(() => {
     if (isInitializedRef.current) return;
     if (typeof window === 'undefined') return;
-    
+
     const hash = window.location.hash;
     if (hash) {
       // Use requestAnimationFrame to ensure DOM is ready
       requestAnimationFrame(() => {
         const targetElement = document.querySelector(hash);
         if (targetElement) {
-          const projectIndex = parseInt((targetElement as HTMLElement).dataset.projectIndex || '0');
+          const projectIndex = parseInt(
+            (targetElement as HTMLElement).dataset.projectIndex || '0'
+          );
           if (!isNaN(projectIndex)) {
             setCurrentIndex(projectIndex);
-            
+
             // Smooth scroll to element without changing URL
-            targetElement.scrollIntoView({ 
-              behavior: 'smooth', 
+            targetElement.scrollIntoView({
+              behavior: 'smooth',
               block: 'start',
-              inline: 'nearest'
+              inline: 'nearest',
             });
           }
         }
@@ -73,10 +78,10 @@ const ProjectsList: React.FC<ProjectsListProps> = ({ projects, emaarProjects, hm
     const options: IntersectionObserverInit = {
       root: null,
       rootMargin: '-20% 0px -20% 0px', // More conservative margins
-      threshold: [0.3, 0.7] // Multiple thresholds for better detection
+      threshold: [0.3, 0.7], // Multiple thresholds for better detection
     };
 
-    observerRef.current = new IntersectionObserver((entries) => {
+    observerRef.current = new IntersectionObserver(entries => {
       // Only process if not currently scrolling programmatically
       if (isScrolling) return;
 
@@ -94,7 +99,7 @@ const ProjectsList: React.FC<ProjectsListProps> = ({ projects, emaarProjects, hm
       if (mostVisibleEntry && mostVisibleEntry.isIntersecting) {
         const target = mostVisibleEntry.target as HTMLElement;
         const projectIndex = parseInt(target.dataset.projectIndex || '0');
-        
+
         if (!isNaN(projectIndex)) {
           // Don't update URL hash during scrolling - bad for SEO
           // Just update the current index for internal state
@@ -112,70 +117,82 @@ const ProjectsList: React.FC<ProjectsListProps> = ({ projects, emaarProjects, hm
   }, [isScrolling, debouncedSetCurrentIndex]);
 
   // Optimized scroll to project function
-  const scrollToProject = useCallback((index: number) => {
-    if (index < 0 || index >= sectionsRef.current.length || isScrolling) return;
-    
-    const targetSection = sectionsRef.current[index];
-    if (!targetSection) return;
+  const scrollToProject = useCallback(
+    (index: number) => {
+      if (index < 0 || index >= sectionsRef.current.length || isScrolling)
+        return;
 
-    setIsScrolling(true);
-    
-    // Use GSAP for smooth, controlled scrolling
-    gsap.to(window, {
-      duration: 1.2,
-      scrollTo: { 
-        y: targetSection, 
-        offsetY: 0
-      },
-      ease: "power2.inOut",
-      onComplete: () => {
-        // Add delay to prevent immediate intersection observer conflicts
-        setTimeout(() => {
-          setIsScrolling(false);
-        }, 200);
-      }
-    });
-  }, [isScrolling]);
+      const targetSection = sectionsRef.current[index];
+      if (!targetSection) return;
+
+      setIsScrolling(true);
+
+      // Use GSAP for smooth, controlled scrolling
+      gsap.to(window, {
+        duration: 1.2,
+        scrollTo: {
+          y: targetSection,
+          offsetY: 0,
+        },
+        ease: 'power2.inOut',
+        onComplete: () => {
+          // Add delay to prevent immediate intersection observer conflicts
+          setTimeout(() => {
+            setIsScrolling(false);
+          }, 200);
+        },
+      });
+    },
+    [isScrolling]
+  );
 
   // Handle navigation clicks (for bottom nav and external links)
-  const handleNavigationClick = useCallback((e: Event) => {
-    const target = e.target as HTMLElement;
-    const link = target.closest('a[href^="#"]') as HTMLAnchorElement;
-    
-    if (!link) return;
-    
-    e.preventDefault();
-    const section = link.getAttribute('href')?.substring(1);
-    
-    if (section === 'emaar') {
-      scrollToProject(0);
-    } else if (section === 'hmr') {
-      const hmrIndex = projects.findIndex(p => p.location === 'HMR');
-      if (hmrIndex !== -1) {
-        scrollToProject(hmrIndex);
+  const handleNavigationClick = useCallback(
+    (e: Event) => {
+      const target = e.target as HTMLElement;
+      const link = target.closest('a[href^="#"]') as HTMLAnchorElement;
+
+      if (!link) return;
+
+      e.preventDefault();
+      const section = link.getAttribute('href')?.substring(1);
+
+      if (section === 'emaar') {
+        scrollToProject(0);
+      } else if (section === 'hmr') {
+        const hmrIndex = projects.findIndex(p => p.location === 'HMR');
+        if (hmrIndex !== -1) {
+          scrollToProject(hmrIndex);
+        }
+      } else if (section?.startsWith('project-')) {
+        // Handle direct project links
+        const projectId = section.replace('project-', '');
+        const projectIndex = projects.findIndex(
+          p => p.id.toString() === projectId
+        );
+        if (projectIndex !== -1) {
+          scrollToProject(projectIndex);
+        }
       }
-    } else if (section?.startsWith('project-')) {
-      // Handle direct project links
-      const projectId = section.replace('project-', '');
-      const projectIndex = projects.findIndex(p => p.id.toString() === projectId);
-      if (projectIndex !== -1) {
-        scrollToProject(projectIndex);
-      }
-    }
-  }, [projects, scrollToProject]);
+    },
+    [projects, scrollToProject]
+  );
 
   // Keyboard navigation with throttling (no URL changes)
-  const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    if (isScrolling) return; // Prevent rapid key presses during scroll
-    
-    if (e.key === 'ArrowDown' && currentIndex < projects.length - 1) {
-      e.preventDefault();
-      scrollToProject(currentIndex + 1);
-    } else if (e.key === 'ArrowUp' && currentIndex > 0) {
-      e.preventDefault();
-      scrollToProject(currentIndex - 1);
-    }
-  }, [currentIndex, projects.length, scrollToProject, isScrolling]);
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (isScrolling) return; // Prevent rapid key presses during scroll
+
+      if (e.key === 'ArrowDown' && currentIndex < projects.length - 1) {
+        e.preventDefault();
+        scrollToProject(currentIndex + 1);
+      } else if (e.key === 'ArrowUp' && currentIndex > 0) {
+        e.preventDefault();
+        scrollToProject(currentIndex - 1);
+      }
+    },
+    [currentIndex, projects.length, scrollToProject, isScrolling]
+  );
 
   // Generate project URL
   const getProjectUrl = useCallback((project: Project) => {
@@ -186,32 +203,29 @@ const ProjectsList: React.FC<ProjectsListProps> = ({ projects, emaarProjects, hm
   const getImageConfig = (project: Project) => {
     // Vertical/Portrait images - need portrait containers
     const verticalProjects = ['H1 Tower'];
-    
+
     // Wide panoramic images - work better with object-contain
     const panoramicProjects = ['Pearl & Reef Towers', 'The Views'];
-    
+
     // Standard landscape images - work fine with object-cover
-    const standardProjects = ['Panorama', 'Park Edge', 'Coral Towers', 'AA Waterfront', 
-                             'Gold Crest Residence', 'H&S Residence', 'Saima Marina', 
-                             'Saima Waterfront', 'Beach Terraces'];
 
     if (verticalProjects.includes(project.name)) {
-      return { 
-        type: 'vertical', 
-        aspectRatio: '4/5', 
-        objectFit: 'object-cover' 
+      return {
+        type: 'vertical',
+        aspectRatio: '4/5',
+        objectFit: 'object-cover',
       };
     } else if (panoramicProjects.includes(project.name)) {
-      return { 
-        type: 'panoramic', 
-        aspectRatio: '16/9', 
-        objectFit: 'object-contain' 
+      return {
+        type: 'panoramic',
+        aspectRatio: '16/9',
+        objectFit: 'object-contain',
       };
     } else {
-      return { 
-        type: 'standard', 
-        aspectRatio: '16/10', 
-        objectFit: 'object-cover' 
+      return {
+        type: 'standard',
+        aspectRatio: '16/10',
+        objectFit: 'object-cover',
       };
     }
   };
@@ -219,7 +233,7 @@ const ProjectsList: React.FC<ProjectsListProps> = ({ projects, emaarProjects, hm
   // Initialize everything
   useEffect(() => {
     handleInitialScroll();
-    
+
     // Small delay to ensure DOM is fully rendered
     const initTimeout = setTimeout(() => {
       setupIntersectionObserver();
@@ -254,7 +268,7 @@ const ProjectsList: React.FC<ProjectsListProps> = ({ projects, emaarProjects, hm
   }, []);
 
   return (
-    <div 
+    <div
       ref={containerRef}
       className="w-full min-h-screen overflow-x-hidden relative"
       id="projectsListContainer"
@@ -262,8 +276,8 @@ const ProjectsList: React.FC<ProjectsListProps> = ({ projects, emaarProjects, hm
       {projects.map((project, index) => (
         <section
           key={project.id}
-          ref={el => { 
-            if (el) sectionsRef.current[index] = el; 
+          ref={el => {
+            if (el) sectionsRef.current[index] = el;
           }}
           className={`
             min-h-screen w-full flex items-center justify-center relative
@@ -276,9 +290,10 @@ const ProjectsList: React.FC<ProjectsListProps> = ({ projects, emaarProjects, hm
           data-project-location={project.location.toLowerCase()}
           data-project-index={index}
         >
-          <div className="w-full max-w-[1400px] mx-auto px-4 py-[60px] 
-            grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-[60px] items-center">
-            
+          <div
+            className="w-full max-w-[1400px] mx-auto px-4 py-[60px] 
+            grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-[60px] items-center"
+          >
             {/* Project Header */}
             <div className="flex flex-col gap-5 text-left lg:text-left">
               <span className="text-sm text-neutral-500 font-medium">
@@ -291,28 +306,29 @@ const ProjectsList: React.FC<ProjectsListProps> = ({ projects, emaarProjects, hm
                 {project.location}
               </p>
             </div>
-            
+
             {/* Smart Image Container - Adapts to each project's image characteristics */}
-            <a 
+            <a
               href={getProjectUrl(project)}
               className="w-full relative block no-underline text-inherit transition-all 
                 duration-500 ease-out group hover:-translate-y-2 focus:outline-none 
                 focus:ring-4 focus:ring-blue-500/20"
             >
               {/* Image Container - Optimized for each project */}
-              <div className="relative w-full overflow-hidden rounded-2xl 
+              <div
+                className="relative w-full overflow-hidden rounded-2xl 
                 shadow-[0_40px_80px_rgba(0,0,0,0.15)] group-hover:shadow-[0_50px_100px_rgba(0,0,0,0.2)]
-                transition-shadow duration-500">
-                
+                transition-shadow duration-500"
+              >
                 {(() => {
                   const config = getImageConfig(project);
                   const needsBackground = config.objectFit === 'object-contain';
-                  
+
                   return (
                     <>
                       {/* Desktop: Optimized container for each project */}
-                      <div 
-                        className={`hidden lg:block relative w-full ${needsBackground ? 'bg-neutral-100' : ''}`} 
+                      <div
+                        className={`hidden lg:block relative w-full ${needsBackground ? 'bg-neutral-100' : ''}`}
                         style={{ aspectRatio: config.aspectRatio }}
                       >
                         <img
@@ -320,7 +336,7 @@ const ProjectsList: React.FC<ProjectsListProps> = ({ projects, emaarProjects, hm
                           alt={project.name}
                           className={`absolute inset-0 w-full h-full ${config.objectFit} object-center 
                             transition-transform duration-700 ease-out group-hover:scale-105`}
-                          loading={index < 2 ? "eager" : "lazy"}
+                          loading={index < 2 ? 'eager' : 'lazy'}
                         />
                       </div>
 
@@ -331,21 +347,21 @@ const ProjectsList: React.FC<ProjectsListProps> = ({ projects, emaarProjects, hm
                           alt={project.name}
                           className="absolute inset-0 w-full h-full object-cover object-center 
                             transition-transform duration-700 ease-out group-hover:scale-105"
-                          loading={index < 2 ? "eager" : "lazy"}
+                          loading={index < 2 ? 'eager' : 'lazy'}
                         />
                       </div>
                     </>
                   );
                 })()}
-                
+
                 {/* Overlay for better interaction feedback */}
                 <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/10" />
               </div>
             </a>
-            
+
             {/* Desktop Details Button */}
             <div className="col-span-full text-center mt-10 hidden lg:block">
-              <a 
+              <a
                 href={getProjectUrl(project)}
                 className="inline-block px-10 py-4 bg-[#121212] text-white no-underline 
                   rounded-lg font-medium transition-all duration-300 hover:bg-black 
@@ -358,7 +374,8 @@ const ProjectsList: React.FC<ProjectsListProps> = ({ projects, emaarProjects, hm
 
           {/* Progress indicator */}
           <div className="absolute bottom-8 right-8 text-sm text-neutral-400 font-medium">
-            {String(index + 1).padStart(2, '0')} / {String(projects.length).padStart(2, '0')}
+            {String(index + 1).padStart(2, '0')} /{' '}
+            {String(projects.length).padStart(2, '0')}
           </div>
         </section>
       ))}

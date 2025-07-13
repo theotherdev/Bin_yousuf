@@ -5,7 +5,10 @@ import ScrollToPluginPkg from 'gsap/ScrollToPlugin';
 import type { Project } from '../scripts/types/index.js';
 
 // Handle CommonJS/ES6 module compatibility
-const ScrollToPlugin = ScrollToPluginPkg.ScrollToPlugin || ScrollToPluginPkg.default || ScrollToPluginPkg;
+const ScrollToPlugin =
+  ScrollToPluginPkg.ScrollToPlugin ||
+  ScrollToPluginPkg.default ||
+  ScrollToPluginPkg;
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollToPlugin);
@@ -17,12 +20,15 @@ interface AnimationState {
   isAnimating: boolean;
 }
 
-export const useProjectAnimations = (projects: Project[], enabled: boolean = true) => {
+export const useProjectAnimations = (
+  projects: Project[],
+  enabled: boolean = true
+) => {
   const [animationState, setAnimationState] = useState<AnimationState>({
     scrollY: 0,
     windowHeight: typeof window !== 'undefined' ? window.innerHeight : 0,
     progress: 0,
-    isAnimating: false
+    isAnimating: false,
   });
 
   const [sidebarVisible, setSidebarVisible] = useState(false);
@@ -40,8 +46,12 @@ export const useProjectAnimations = (projects: Project[], enabled: boolean = tru
 
     // Get elements
     projectsSidebarRef.current = document.getElementById('projectsSidebar');
-    animatedProjectImageRef.current = document.getElementById('animatedProjectImage');
-    mainAnimatedImageRef.current = document.getElementById('mainAnimatedImage') as HTMLImageElement;
+    animatedProjectImageRef.current = document.getElementById(
+      'animatedProjectImage'
+    );
+    mainAnimatedImageRef.current = document.getElementById(
+      'mainAnimatedImage'
+    ) as HTMLImageElement;
     firstProjectInGridRef.current = document.querySelector('#project-1');
 
     // Initialize GSAP animations
@@ -62,7 +72,7 @@ export const useProjectAnimations = (projects: Project[], enabled: boolean = tru
     const handleResize = () => {
       setAnimationState(prev => ({
         ...prev,
-        windowHeight: window.innerHeight
+        windowHeight: window.innerHeight,
       }));
     };
 
@@ -97,7 +107,7 @@ export const useProjectAnimations = (projects: Project[], enabled: boolean = tru
       height: '100vh',
       opacity: 0,
       borderRadius: '0px',
-      zIndex: 999
+      zIndex: 999,
     });
 
     // Create animation sequence
@@ -107,7 +117,7 @@ export const useProjectAnimations = (projects: Project[], enabled: boolean = tru
         top: '0vh',
         opacity: 1,
         duration: 0.4,
-        ease: "power2.out"
+        ease: 'power2.out',
       })
       // Phase 2: Shrink and move to grid position (0.4 -> 0.95)
       .to(animatedProjectImageRef.current, {
@@ -117,12 +127,12 @@ export const useProjectAnimations = (projects: Project[], enabled: boolean = tru
         height: '60vh',
         borderRadius: '12px',
         duration: 0.55,
-        ease: "power2.inOut"
+        ease: 'power2.inOut',
       })
       // Phase 3: Final positioning (0.95 -> 1.0)
       .to(animatedProjectImageRef.current, {
         duration: 0.05,
-        ease: "none"
+        ease: 'none',
       });
   };
 
@@ -139,8 +149,10 @@ export const useProjectAnimations = (projects: Project[], enabled: boolean = tru
 
     // Get footer element and its position
     const footer = document.querySelector('footer');
-    const footerTop = footer ? footer.getBoundingClientRect().top + scrollY : Infinity;
-    
+    const footerTop = footer
+      ? footer.getBoundingClientRect().top + scrollY
+      : Infinity;
+
     // Calculate if we're near the footer (with some buffer)
     const footerBuffer = windowHeight * 0.3; // 30% of viewport height as buffer
     const isNearFooter = scrollY + windowHeight > footerTop - footerBuffer;
@@ -151,14 +163,17 @@ export const useProjectAnimations = (projects: Project[], enabled: boolean = tru
     updateSidebarVisibility(shouldShowSidebar);
 
     // Calculate progress
-    const progress = Math.min(Math.max((scrollY - scrollStart) / scrollRange, 0), 1);
+    const progress = Math.min(
+      Math.max((scrollY - scrollStart) / scrollRange, 0),
+      1
+    );
 
     // Update animation state
     setAnimationState({
       scrollY,
       windowHeight,
       progress,
-      isAnimating: progress > 0 && progress < 1
+      isAnimating: progress > 0 && progress < 1,
     });
 
     // Update timeline progress
@@ -177,9 +192,10 @@ export const useProjectAnimations = (projects: Project[], enabled: boolean = tru
       if (projectsSidebarRef.current) {
         if (visible) {
           gsap.killTweensOf(projectsSidebarRef.current);
-          gsap.fromTo(projectsSidebarRef.current,
+          gsap.fromTo(
+            projectsSidebarRef.current,
             { opacity: 0, x: -100 },
-            { opacity: 1, x: 0, duration: 0.5, ease: "power2.out" }
+            { opacity: 1, x: 0, duration: 0.5, ease: 'power2.out' }
           );
         } else {
           gsap.killTweensOf(projectsSidebarRef.current);
@@ -187,7 +203,7 @@ export const useProjectAnimations = (projects: Project[], enabled: boolean = tru
             opacity: 0,
             x: -100,
             duration: 0.3,
-            ease: "power2.in"
+            ease: 'power2.in',
           });
         }
       }
@@ -195,7 +211,8 @@ export const useProjectAnimations = (projects: Project[], enabled: boolean = tru
   };
 
   const handleImageCrossfade = (progress: number) => {
-    if (!animatedProjectImageRef.current || !firstProjectInGridRef.current) return;
+    if (!animatedProjectImageRef.current || !firstProjectInGridRef.current)
+      return;
 
     if (progress < 0.95) {
       gsap.set(firstProjectInGridRef.current, { opacity: 0 });
@@ -205,52 +222,66 @@ export const useProjectAnimations = (projects: Project[], enabled: boolean = tru
       gsap.set(firstProjectInGridRef.current, { opacity: fadeProgress });
     } else {
       gsap.set(firstProjectInGridRef.current, { opacity: 1 });
-      gsap.set(animatedProjectImageRef.current, { opacity: 0, pointerEvents: 'none' });
+      gsap.set(animatedProjectImageRef.current, {
+        opacity: 0,
+        pointerEvents: 'none',
+      });
     }
   };
 
   const scrollToProject = (projectIndex: number) => {
-    const targetElement = document.getElementById(`project-${projectIndex + 1}`);
+    const targetElement = document.getElementById(
+      `project-${projectIndex + 1}`
+    );
     if (targetElement) {
       gsap.to(window, {
         scrollTo: { y: targetElement, offsetY: 80 },
         duration: 1,
-        ease: "power2.out"
+        ease: 'power2.out',
       });
     }
   };
 
   const highlightProject = (projectElement: HTMLElement) => {
-    gsap.timeline()
+    gsap
+      .timeline()
       .to(projectElement, {
         y: -15,
-        boxShadow: "0 40px 100px rgba(0, 0, 0, 0.25)",
+        boxShadow: '0 40px 100px rgba(0, 0, 0, 0.25)',
         duration: 0.6,
-        ease: "power2.out"
+        ease: 'power2.out',
       })
-      .to(projectElement.querySelector('.project-image'), {
-        scale: 1.02,
-        duration: 0.6,
-        ease: "power2.out"
-      }, 0)
+      .to(
+        projectElement.querySelector('.project-image'),
+        {
+          scale: 1.02,
+          duration: 0.6,
+          ease: 'power2.out',
+        },
+        0
+      )
       .to(projectElement, {
         y: 0,
-        boxShadow: "0 20px 60px rgba(0, 0, 0, 0.15)",
+        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.15)',
         duration: 0.6,
-        ease: "power2.out",
-        delay: 1.4
+        ease: 'power2.out',
+        delay: 1.4,
       })
-      .to(projectElement.querySelector('.project-image'), {
-        scale: 1,
-        duration: 0.6,
-        ease: "power2.out"
-      }, "-=0.6");
+      .to(
+        projectElement.querySelector('.project-image'),
+        {
+          scale: 1,
+          duration: 0.6,
+          ease: 'power2.out',
+        },
+        '-=0.6'
+      );
   };
 
   return {
     animationState,
     sidebarVisible,
     scrollToProject,
-    highlightProject
+    highlightProject,
   };
 };

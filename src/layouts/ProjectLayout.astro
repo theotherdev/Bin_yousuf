@@ -2,14 +2,12 @@
 // src/layouts/ProjectLayout.astro - Refactored version
 import type { ProjectData } from '../types/project';
 import { Image } from 'astro:assets';
-import { projects } from '../data/projects';
 import ContactForm from '../components/ContactForm.tsx';
 import ProjectAmenities from '../components/ProjectDetail/ProjectAmenities.tsx';
 import StickyWhatsAppButton from '../components/StickyWhatsAppButton.tsx';
 import Footer from '../components/Footer.tsx';
 import { projectCompletionDates, projectFloors, projectApartmentTypes } from '../types/project';
 import logoImage from '../assets/projects/logo.webp';
-import ogImage from '../assets/projects/open-graph-img.webp';
 import ogImageSquare from '../assets/projects/open-graph-img-square.webp';
 import Navigation from '../components/Navigation.tsx';
 
@@ -64,7 +62,6 @@ function formatProjectText(rawText: string): string {
 
 // Format the about project content server-side
 const formattedAboutContent = formatProjectText(project.aboutProject);
-const allProjects = projects;
 ---
 
 <!DOCTYPE html>
@@ -642,7 +639,7 @@ const allProjects = projects;
 
 <!-- No custom CSS - Pure Tailwind only -->
 
-<script define:vars={{ allProjects, project }}>
+<script define:vars={{ project }}>
     // Global Variables
     let currentImageIndex = 0;
     let galleryImages = [];
