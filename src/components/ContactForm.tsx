@@ -3,22 +3,17 @@
 
 import React, { useState, useEffect } from 'react';
 
-// --- WRAPPER APP TO RUN THE FORM AND LOAD STYLES ---
-const App = () => {
-  const exampleProjectName = "this project"; 
-  
+// --- WRAPPER APP TO RUN THE FORM ---
+const App = ({ projectName }: { projectName: string }) => {
   return (
     <>
-      {/* This script loads the Tailwind CSS library to style the component */}
-      <script src="https://cdn.tailwindcss.com"></script>
-      
-      {/* This is your actual form component */}a
-      <ContactForm projectName={exampleProjectName} />
+      {/* This is your actual form component */}
+      <ContactForm projectName={projectName} />
     </>
   );
 };
 
-// --- THE UPDATED CONTACT FORM COMPONENT WITH WEBSITE COLORS ---
+// --- THE CONTACT FORM COMPONENT ---
 interface ContactFormProps {
   projectName: string;
 }

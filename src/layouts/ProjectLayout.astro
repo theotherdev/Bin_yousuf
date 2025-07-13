@@ -381,24 +381,24 @@ const allProjects = projects;
                         <!-- Project Specifications -->
                         <div class="mb-16" style="max-width: 400px;">
                             <div class="flex flex-col md:flex-row md:items-baseline py-[15px] border-b border-gray-400 gap-2 md:gap-0">
-                                <span class="font-medium text-gray-700 min-w-[150px] text-body-sm md:font-semibold">Planning:</span>
-                                <span class="text-body-sm text-gray-500 flex-1">{project.info.typology.join(', ')}</span>
+                                <span class="font-medium text-gray-750 min-w-[150px] text-lg font-['Poppins',sans-serif] md:font-semibold">Planning:</span>
+                                <span class="font-normal text-gray-500 text-lg flex-1 font-['Poppins',sans-serif]">{project.info.typology.join(', ')}</span>
                             </div>
                             <div class="flex flex-col md:flex-row md:items-baseline py-[15px] border-b border-gray-400 gap-2 md:gap-0">
-                                <span class="font-medium text-gray-700 min-w-[150px] text-body-sm md:font-semibold">Status:</span>
-                                <span class="text-body-sm text-gray-500 flex-1">{project.info.status}</span>
+                                <span class="font-medium text-gray-750 min-w-[150px] text-lg font-['Poppins',sans-serif] md:font-semibold">Status:</span>
+                                <span class="font-normal text-gray-500 text-lg flex-1 font-['Poppins',sans-serif]">{project.info.status}</span>
                             </div>
                             <div class="flex flex-col md:flex-row md:items-baseline py-[15px] border-b border-gray-400 gap-2 md:gap-0">
-                                <span class="font-medium text-gray-700 min-w-[150px] text-body-sm md:font-semibold">Apartment types:</span>
-                                <span class="text-body-sm text-gray-500 flex-1">{projectApartmentTypes[project.id] || 'TBA'}</span>
+                                <span class="font-medium text-gray-750 min-w-[150px] text-lg font-['Poppins',sans-serif] md:font-semibold">Apartment types:</span>
+                                <span class="font-normal text-gray-500 text-lg flex-1 font-['Poppins',sans-serif]">{projectApartmentTypes[project.id] || 'TBA'}</span>
                             </div>
                             <div class="flex flex-col md:flex-row md:items-baseline py-[15px] border-b border-gray-400 gap-2 md:gap-0">
-                                <span class="font-medium text-gray-700 min-w-[150px] text-body-sm md:font-semibold">Floors:</span>
-                                <span class="text-body-sm text-gray-500 flex-1">{projectFloors[project.id] || 'TBA'}</span>
+                                <span class="font-medium text-gray-750 min-w-[150px] text-lg font-['Poppins',sans-serif] md:font-semibold">Floors:</span>
+                                <span class="font-normal text-gray-500 text-lg flex-1 font-['Poppins',sans-serif]">{projectFloors[project.id] || 'TBA'}</span>
                             </div>
                             <div class="flex flex-col md:flex-row md:items-baseline py-[15px] border-b-0 gap-2 md:gap-0">
-                                <span class="font-medium text-gray-700 min-w-[150px] text-body-sm md:font-semibold">Completion date:</span>
-                                <span class="text-body-sm text-gray-500 flex-1">{projectCompletionDates[project.id] || 'TBA'}</span>
+                                <span class="font-medium text-gray-750 min-w-[150px] text-lg font-['Poppins',sans-serif] md:font-semibold">Completion date:</span>
+                                <span class="font-normal text-gray-500 text-lg flex-1 font-['Poppins',sans-serif]">{projectCompletionDates[project.id] || 'TBA'}</span>
                             </div>
                         </div>
                         
@@ -441,8 +441,9 @@ const allProjects = projects;
                 <div class="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-10 flex flex-col gap-16 md:gap-20">
                     {project.galleryImages.map((image, index) => {
                         const isEven = index % 2 === 0;
+                        const alignmentClass = isEven ? 'md:justify-start' : 'md:justify-end';
                         return (
-                            <div class={`w-full flex cursor-pointer ${isEven ? 'justify-start' : 'justify-end'} md:${isEven ? 'justify-start' : 'justify-end'} justify-center`} 
+                            <div class={`w-full flex cursor-pointer justify-center ${alignmentClass}`} 
                                  onclick={`openGalleryModal(${index + 1})`}>
                                 <div class={`relative overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.1)] transition-all duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-2.5 hover:shadow-[0_40px_100px_rgba(0,0,0,0.2)] w-full max-w-full md:max-w-[85%] lg:max-w-[75%]`}>
                                     <Image 
