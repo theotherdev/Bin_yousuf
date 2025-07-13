@@ -141,12 +141,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ projectName }) => {
       <section className="py-16 md:py-24" style={{backgroundColor: '#FAFAFA'}}>
           <div className="max-w-3xl mx-auto px-4">
               <div className="text-center mb-10">
-                  <div className="inline-block p-3 bg-neutral-100 rounded-full mb-6">
-                      <svg className="w-6 h-6 text-neutral-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                      </svg>
-                  </div>
-                  <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-4">
+                  <h2 className="text-3xl lg:text-4xl font-semibold text-neutral-800 mb-4">
                       Interested in {projectName}?
                   </h2>
                   <p className="text-body-lg text-neutral-600 max-w-2xl mx-auto leading-relaxed">
@@ -155,11 +150,6 @@ const ContactForm: React.FC<ContactFormProps> = ({ projectName }) => {
               </div>
               
               <div className="bg-white rounded-2xl shadow-xl border border-neutral-200 overflow-hidden">
-                  <div className="bg-black px-8 py-6">
-                      <h3 className="text-xl font-semibold text-white">Contact Information</h3>
-                      <p className="text-body-sm text-gray-300 mt-1">We'll respond within 24 hours</p>
-                  </div>
-                  
                   <div className="p-8">
                       <form onSubmit={handleSubmit} className="space-y-6">
                           <div>
