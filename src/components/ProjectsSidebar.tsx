@@ -2,8 +2,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import ScrollToPluginPkg from 'gsap/ScrollToPlugin';
-import { projects } from '../data/projects.js';
-import type { Project } from '../scripts/types/index.js';
+import { projects } from '../data/projects';
+import type { Project } from '../types/project';
 
 // Handle CommonJS/ES6 module compatibility
 const ScrollToPlugin = ScrollToPluginPkg.ScrollToPlugin || ScrollToPluginPkg.default || ScrollToPluginPkg;

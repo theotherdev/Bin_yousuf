@@ -1,6 +1,6 @@
 // src/components/BottomNavigation.tsx - Updated for new homepage structure
 import React, { useEffect, useState } from 'react';
-import { getProjectCounts } from '../data/projects.js';
+import { getProjectCounts } from '../data/projects';
 
 interface BottomNavigationProps {
   currentPath: string;

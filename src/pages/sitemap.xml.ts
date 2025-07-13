@@ -1,6 +1,6 @@
 // src/pages/sitemap.xml.ts - Server-side sitemap endpoint
 import type { APIRoute } from 'astro';
-import { projects } from '../data/projects.js';
+import { projects } from '../data/projects';
 
 export const GET: APIRoute = async ({ site }) => {
   const baseUrl = site?.origin || 'https://www.binyousufgroup.com';

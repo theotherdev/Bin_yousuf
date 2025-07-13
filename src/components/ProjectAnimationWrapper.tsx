@@ -1,7 +1,7 @@
 // src/components/ProjectAnimationWrapper.tsx
 import React, { useEffect } from 'react';
 import { useProjectAnimations } from '../hooks/useProjectAnimations';
-import { projects } from '../data/projects.js';
+import { projects } from '../data/projects';
 
 interface ProjectAnimationWrapperProps {
   children: React.ReactNode;

@@ -1,6 +1,6 @@
 // src/components/HeroSection.tsx
 import React, { useEffect, useRef } from 'react';
-import { projects } from '../data/projects.js';
+import { projects } from '../data/projects';
 
 const HeroSection: React.FC = () => {
   const animatedTextRef = useRef<HTMLSpanElement>(null);

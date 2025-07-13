@@ -1,6 +1,6 @@
 // src/components/Navigation.tsx - Updated with new WhatsApp message
 import React, { useState, useEffect } from 'react';
-import { getProjectCounts } from '../data/projects.js';
+import { getProjectCounts } from '../data/projects';
 import logoImage from '../assets/projects/logo.webp';
 
 interface NavigationProps {

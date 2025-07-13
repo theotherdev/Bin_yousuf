@@ -1,17 +1,9 @@
-// src/scripts/types/index.ts - Updated to use Astro's ImageMetadata
-import type { ImageMetadata } from 'astro';
+// src/scripts/types/index.ts - Improved type definitions
+import type { Project } from '../../types/project';
+import type { GSAPTimeline, GSAPTarget } from '../../types/gsap';
 
-// Use Astro's ImageMetadata directly instead of custom interface
-export type ProjectImageMetadata = ImageMetadata;
-
-// Project interface - matches your data structure
-export interface Project {
-  id: number;
-  number: string;
-  name: string;
-  location: string;
-  image: ImageMetadata; // Use Astro's ImageMetadata directly
-}
+// Re-export project types for consistency
+export type { Project };
 
 // Animation elements interface
 export interface AnimationElements {
@@ -31,19 +23,31 @@ export interface AnimationState {
   isAnimating: boolean;
 }
 
-// GSAP interfaces (simplified to avoid conflicts)
-export interface GSAPTimeline {
-  progress(value?: number): GSAPTimeline | number;
-  to(target: any, vars: any): GSAPTimeline;
-  set?(target: any, vars: any): GSAPTimeline;
-  pause?(): GSAPTimeline;
-  play?(): GSAPTimeline;
-  kill?(): void;
+// Animation controller interface
+export interface AnimationController {
+  elements: AnimationElements | null;
+  state: AnimationState;
+  timeline: GSAPTimeline | null;
+  initialize(): Promise<void>;
+  updateProgress(progress: number): void;
+  cleanup(): void;
 }
 
-// Window interface extension for GSAP
-declare global {
-  interface Window {
-    gsap: any; // Keep it simple to avoid conflicts
-  }
+// Scroll handler interface
+export interface ScrollHandler {
+  isThrottled: boolean;
+  lastScrollY: number;
+  threshold: number;
+  handleScroll(): void;
+  throttle(func: () => void, delay: number): () => void;
+}
+
+// Project animation interface
+export interface ProjectAnimationConfig {
+  duration: number;
+  ease: string;
+  stagger: number;
+  trigger: GSAPTarget;
+  start: string;
+  end: string;
 }

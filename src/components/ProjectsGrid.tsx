@@ -1,7 +1,7 @@
 // src/components/ProjectsGrid.tsx
 import React from 'react';
-import { projects } from '../data/projects.js';
-import type { Project } from '../scripts/types/index.js';
+import { projects } from '../data/projects';
+import type { Project } from '../types/project';
 
 const ProjectsGrid: React.FC = () => {
   return (

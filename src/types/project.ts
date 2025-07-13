@@ -1,6 +1,16 @@
-// src/types/project.ts - Updated with amenities
+// src/types/project.ts - Consolidated project type definitions
 import type { ImageMetadata } from 'astro';
 
+// Basic project interface for listings
+export interface Project {
+  id: number;
+  number: string;
+  name: string;
+  location: string;
+  image: ImageMetadata;
+}
+
+// Enhanced image interface for detailed project pages
 export interface ProjectImage {
     src: ImageMetadata;
     alt: string;
@@ -8,17 +18,19 @@ export interface ProjectImage {
     height: number;
 }
 
+// Project information interface
 export interface ProjectInfo {
     typology: string[];
     status: string;
     yearOfDesign: number;
     location: string;
     square: string;
-    apartmentTypes?: string; // New field for apartment types (e.g., "1-4 bed")
-    floors?: string; // New field for number of floors
-    completionDate?: string; // New field for completion dates
+    apartmentTypes?: string;
+    floors?: string;
+    completionDate?: string;
 }
 
+// Detailed project data interface for individual project pages
 export interface ProjectData {
     id: string;
     name: string;
@@ -28,7 +40,7 @@ export interface ProjectData {
     info: ProjectInfo;
     aboutProject: string;
     galleryImages: ProjectImage[];
-    amenities?: string[]; // New field - array of amenity IDs
+    amenities?: string[];
 }
 
 // Completion dates mapping - accurate data provided

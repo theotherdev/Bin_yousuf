@@ -1,5 +1,7 @@
-// src/data/projects.js - Fixed to work with Astro's ImageMetadata
-// Import your images - these paths need to match your actual file structure
+// src/data/projects.ts - Comprehensive project data with proper TypeScript types
+import type { ImageMetadata } from 'astro';
+
+// Import project images
 import panoramaImg from '../assets/projects/emaar/panorama/main-image.webp';
 import theViewsImg from '../assets/projects/emaar/the-views/main-image.webp';
 import parkEdgeImg from '../assets/projects/emaar/park-edge/main-image.webp';
@@ -13,13 +15,23 @@ import saimaMarinaImg from '../assets/projects/hmr/saima-marina/main-image.webp'
 import saimaWaterfrontImg from '../assets/projects/hmr/saima-waterfront/main-image.webp';
 import beachTerraceImg from '../assets/projects/hmr/beach-terraces-by-metro/main-image.webp';
 
-export const projects = [
+// Project interface for the simplified project list
+export interface Project {
+  id: number;
+  number: string;
+  name: string;
+  location: string;
+  image: ImageMetadata;
+}
+
+// Project data array with proper typing
+export const projects: Project[] = [
   {
     id: 1,
     number: '001',
     name: 'Panorama',
     location: 'Emaar',
-    image: panoramaImg, // This is now properly typed as ImageMetadata
+    image: panoramaImg,
   },
   {
     id: 2,
@@ -59,7 +71,7 @@ export const projects = [
   {
     id: 7,
     number: '007',
-    name: 'Gold Crest',
+    name: 'Gold Crest Residence',
     location: 'HMR',
     image: goldCrestImg,
   },
@@ -94,19 +106,35 @@ export const projects = [
   {
     id: 12,
     number: '012',
-    name: 'Beach Terraces',
+    name: 'Beach Terraces by Metro',
     location: 'HMR',
     image: beachTerraceImg,
   },
 ];
 
-export const getProjectsByLocation = (location) => {
-  return projects.filter(project => project.location === location);
-};
+// Utility functions with proper typing
+export function getProjectsByLocation(location: string): Project[] {
+  return projects.filter(project => 
+    project.location.toLowerCase() === location.toLowerCase()
+  );
+}
 
-export const getProjectCounts = () => {
+export function getProjectCounts(): { emaar: number; hmr: number } {
+  const emaarCount = projects.filter(p => p.location === 'Emaar').length;
+  const hmrCount = projects.filter(p => p.location === 'HMR').length;
+  
   return {
-    emaar: projects.filter(p => p.location === 'Emaar').length,
-    hmr: projects.filter(p => p.location === 'HMR').length,
+    emaar: emaarCount,
+    hmr: hmrCount
   };
-};
+}
+
+export function getProjectById(id: number): Project | undefined {
+  return projects.find(project => project.id === id);
+}
+
+export function getProjectByName(name: string): Project | undefined {
+  return projects.find(project => 
+    project.name.toLowerCase() === name.toLowerCase()
+  );
+}

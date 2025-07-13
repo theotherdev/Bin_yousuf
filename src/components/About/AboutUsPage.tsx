@@ -1,6 +1,6 @@
 // src/components/About/AboutUsPage.tsx - Updated with new WhatsApp message
 import React, { useEffect, useRef } from 'react';
-import { getProjectCounts } from '../../data/projects.js';
+import { getProjectCounts } from '../../data/projects';
 
 // Import the partner logos - add these to your assets folder
 import emaarLogo from '../../assets/projects/emaar-logo.png';

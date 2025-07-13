@@ -1,6 +1,6 @@
 // src/components/Footer.tsx
 import React from 'react';
-import { projects, getProjectCounts } from '../data/projects.js';
+import { projects, getProjectCounts } from '../data/projects';
 import logoImage from '../assets/projects/logo.webp';
 
 const Footer: React.FC = () => {
