@@ -55,7 +55,7 @@ export const projectCompletionDates: Record<string, string> = {
     // HMR Projects (7 projects)
     'aa-waterfront': 'December 2028',
     'gold-crest-residence': 'December 2028',
-    'hs-residence': 'December 2029',
+    'h-s-residence': 'December 2029',
     'h1-tower': 'June 2026',
     'saima-marina': 'December 2029',
     'saima-waterfront': 'December 2028',
@@ -74,7 +74,7 @@ export const projectFloors: Record<string, string> = {
     // HMR Projects (7 projects)
     'aa-waterfront': '34',
     'gold-crest-residence': '33',
-    'hs-residence': '39',
+    'h-s-residence': '39',
     'h1-tower': '34',
     'saima-marina': '40',
     'saima-waterfront': '40',
@@ -94,7 +94,7 @@ export const projectApartmentTypes: Record<string, string> = {
     'h1-tower': '1-4 Bedroom + Penthouse',
     'aa-waterfront': '1-4 Bedroom + Penthouse',
     'gold-crest-residence': '1-4 Bedroom + Penthouse',
-    'hs-residence': '1-4 Bedroom + Penthouse',
+    'h-s-residence': '1-4 Bedroom + Penthouse',
     'saima-marina': '1-4 Bedroom + Penthouse',
     'saima-waterfront': '1-4 Bedroom + Penthouse',
     'beach-terraces-by-metro': '1-4 Bedroom + Penthouse'

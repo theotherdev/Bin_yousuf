@@ -28,8 +28,12 @@ const ProjectAmenities: React.FC<ProjectAmenitiesProps> = ({
         key={amenity.id}
         className="bg-white border border-neutral-200 rounded-xl p-6 text-center hover:shadow-md hover:-translate-y-1 transition-all duration-300 group"
       >
-        <div className="w-12 h-12 mx-auto mb-3 text-amber-500 group-hover:text-amber-600 transition-colors duration-300">
-          <IconComponent />
+        <div className="w-12 h-12 mx-auto mb-3 text-amber-500 group-hover:text-amber-600 transition-colors duration-300 flex items-center justify-center">
+          {IconComponent ? (
+            <IconComponent className="w-8 h-8" size={32} />
+          ) : (
+            <div className="w-8 h-8 bg-gray-300 rounded"></div>
+          )}
         </div>
         <span className="text-sm font-medium text-neutral-700 group-hover:text-neutral-800 transition-colors duration-300">
           {amenity.name}
