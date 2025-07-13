@@ -1,9 +1,10 @@
-// astro.config.mjs - With sitemap integration
+// astro.config.mjs - With sitemap and robots.txt integration
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import tailwind from '@astrojs/tailwind';
 import vercel from '@astrojs/vercel';
 import sitemap from '@astrojs/sitemap';
+import robotsTxt from 'astro-robots-txt';
 
 export default defineConfig({
   site: 'https://www.binyousufgroup.com',
@@ -13,7 +14,16 @@ export default defineConfig({
     tailwind({
       applyBaseStyles: true
     }),
-    sitemap()
+    sitemap(),
+    robotsTxt({
+      policy: [
+        {
+          userAgent: '*',
+          allow: '/',
+          disallow: ['/api/']
+        }
+      ]
+    })
   ],
 
   output: 'server',
