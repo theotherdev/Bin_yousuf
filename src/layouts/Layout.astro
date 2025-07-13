@@ -3,6 +3,7 @@
 import Footer from '../components/Footer.tsx';
 import StickyWhatsAppButton from '../components/StickyWhatsAppButton.tsx';
 import logoImage from '../assets/projects/logo.webp';
+import ogImage from '../assets/projects/open-graph-img.webp';
 
 export interface Props {
   title: string;
@@ -19,6 +20,20 @@ const { title, description = "BYG-BinYousufGroup" } = Astro.props;
     <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href={logoImage.src} type="image/webp" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(ogImage.src, Astro.url)} />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={Astro.url} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={new URL(ogImage.src, Astro.url)} />
     
     <!-- Preload critical fonts to prevent layout shift -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>

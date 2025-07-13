@@ -8,6 +8,9 @@ import ProjectAmenities from '../components/ProjectDetail/ProjectAmenities.tsx';
 import StickyWhatsAppButton from '../components/StickyWhatsAppButton.tsx';
 import Footer from '../components/Footer.tsx';
 import { projectCompletionDates, projectFloors, projectApartmentTypes } from '../types/project';
+import logoImage from '../assets/projects/logo.webp';
+import ogImage from '../assets/projects/open-graph-img.webp';
+import Navigation from '../components/Navigation.tsx';
 
 export interface Props {
     project: ProjectData;
@@ -68,8 +71,23 @@ const allProjects = projects;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href={logoImage.src} type="image/webp" />
     <title>{project.name}</title>
     <meta name="description" content={project.description}>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:title" content={project.name} />
+    <meta property="og:description" content={project.description} />
+    <meta property="og:image" content={new URL(ogImage.src, Astro.url)} />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={Astro.url} />
+    <meta property="twitter:title" content={project.name} />
+    <meta property="twitter:description" content={project.description} />
+    <meta property="twitter:image" content={new URL(ogImage.src, Astro.url)} />
     
     <!-- Performance and anti-flicker meta tags -->
     <meta name="color-scheme" content="light">
@@ -275,6 +293,56 @@ const allProjects = projects;
             display: flex;
             align-items: center;
         }
+        
+        /* Show thumbnail grid on desktop only */
+        @media (min-width: 768px) {
+            .thumbnail-grid-container {
+                display: block !important;
+            }
+        }
+        
+        /* Fix dropdown styling */
+        #projectDropdownMenu {
+            border-radius: 0.5rem;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        #projectDropdownMenu a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            text-decoration: none;
+            color: #374151;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        #projectDropdownMenu a:hover {
+            background-color: #f9fafb;
+        }
+        
+        #projectDropdownMenu a:last-child {
+            border-bottom: none;
+        }
+        
+        /* Force header visibility */
+        header {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            z-index: 1000 !important;
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(12px) !important;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+            padding: 0 1rem !important;
+            height: 60px !important;
+        }
     </style>
     
     <!-- Preload hero image -->
@@ -300,37 +368,9 @@ const allProjects = projects;
     </script>
 </head>
 <body>
-    <!-- Header -->
-    <header class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md z-[1000] border-b border-black/10 px-4">
-        <div class="flex justify-between items-center max-w-[1400px] mx-auto">
-            <div class="flex items-center gap-5">
-                <button class="bg-none border-none text-2xl text-gray-400 cursor-pointer p-1 transition-colors duration-300 hover:text-gray-700 font-inherit" id="closeBtn">×</button>
-                <div class="relative">
-                    <button class="bg-none border-none text-lg font-medium text-gray-700 cursor-pointer flex items-center gap-2 px-3 py-2 rounded-md transition-all duration-300 hover:bg-gray-100" id="projectDropdownBtn">
-                        {project.name}
-                        <svg class="transition-transform duration-300" width="12" height="12" viewBox="0 0 12 12" fill="none">
-                            <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </button>
-                    <div class="hidden absolute top-full left-0 bg-white border border-gray-300 shadow-[0_10px_30px_rgba(0,0,0,0.1)] min-w-[300px] max-h-[400px] overflow-y-auto z-[1001]" id="projectDropdownMenu">
-                        {allProjects.map((proj) => (
-                            <a 
-                                href={`/projects/${proj.name.toLowerCase().replace(/[\s&]/g, '-').replace(/--+/g, '-')}`}
-                                class={`flex items-center gap-3 px-4 py-3 no-underline text-gray-700 transition-colors duration-300 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 ${proj.name === project.name ? 'bg-black text-white' : ''}`}
-                            >
-                                <span class={`text-xs min-w-[30px] font-medium ${proj.name === project.name ? 'text-white/80' : 'text-gray-400'}`}>{proj.number}</span>
-                                <span class="flex-1 text-sm font-medium">{proj.name}</span>
-                                <span class={`text-xs font-normal ${proj.name === project.name ? 'text-white/90' : 'text-gray-500'}`}>{proj.location}</span>
-                            </a>
-                        ))}
-                    </div>
-                </div>
-            </div>
-            <div class="flex items-center">
-                <button class="bg-none border-none text-gray-400 text-body-sm font-normal cursor-pointer px-3 py-2 rounded-md transition-all duration-300 hover:text-gray-700 hover:bg-gray-100" id="openGalleryBtn">Gallery</button>
-            </div>
-        </div>
-    </header>
+    <!-- Main Navigation Header -->
+    <Navigation currentPath={Astro.url.pathname} client:load />
+    
 
     <!-- Main Content -->
     <main class="project-main">
@@ -435,72 +475,137 @@ const allProjects = projects;
         <!-- Project Amenities Section -->
         <ProjectAmenities projectId={project.id} client:visible />
 
-        <!-- Gallery Section -->
+        <!-- Hybrid Gallery Section -->
+        <div>
+        
         {project.galleryImages && project.galleryImages.length > 0 ? (
-            <section class="py-20 md:py-24" style="background-color: #FAFAFA;">
-                <div class="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-10 flex flex-col gap-16 md:gap-20">
-                    {project.galleryImages.map((image, index) => {
-                        const isEven = index % 2 === 0;
-                        const alignmentClass = isEven ? 'md:justify-start' : 'md:justify-end';
-                        return (
-                            <div class={`w-full flex cursor-pointer justify-center ${alignmentClass}`} 
-                                 onclick={`openGalleryModal(${index + 1})`}>
-                                <div class={`relative overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.1)] transition-all duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-2.5 hover:shadow-[0_40px_100px_rgba(0,0,0,0.2)] w-full max-w-full md:max-w-[85%] lg:max-w-[75%]`}>
+            <section class="py-20 md:py-32" style="background-color: #FAFAFA;">
+                <div class="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8">
+                    <!-- Gallery Header -->
+                    <div class="text-center mb-16 md:mb-20">
+                        <h2 class="text-3xl md:text-4xl lg:text-5xl font-light text-gray-900 mb-4 tracking-tight">
+                            Project Gallery
+                        </h2>
+                        <div class="w-24 h-px bg-gray-300 mx-auto"></div>
+                    </div>
+
+                    <!-- Slideshow -->
+                    <div class="relative max-w-6xl mx-auto" style="margin-bottom: 40px;">
+                        <div class="relative h-[60vh] overflow-hidden rounded-3xl bg-white shadow-lg">
+                            <!-- Slideshow Images -->
+                            {project.galleryImages.map((image, index) => (
+                                <div 
+                                    class={`absolute inset-0 transition-all duration-1000 ease-in-out slideshow-image ${index === 0 ? 'opacity-100 scale-100' : 'opacity-0 scale-105'}`}
+                                    data-slide={index}
+                                >
                                     <Image 
                                         src={image.src} 
                                         alt={image.alt}
-                                        width={1200}
-                                        height={800}
-                                        class="w-full h-auto block transition-transform duration-[600ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-105"
+                                        width={1920}
+                                        height={1080}
+                                        class="w-full h-full object-cover"
                                         loading={index < 2 ? "eager" : "lazy"}
                                     />
-                                    <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 transition-opacity duration-300 cursor-pointer hover:opacity-100">
-                                        <div class="text-white bg-white/20 p-4 rounded-full backdrop-blur-md transition-all duration-300 hover:bg-white/30 hover:scale-110">
-                                            <svg class="w-6 h-6 stroke-[1.5]" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                                <circle cx="11" cy="11" r="8"/>
-                                                <path d="M21 21l-4.35-4.35"/>
-                                            </svg>
+                                    
+                                    <!-- Slideshow Info Overlay -->
+                                    <div class="absolute bottom-8 left-0 right-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent px-8 py-4">
+                                        <div class="text-white text-center">
+                                            <h3 class="text-lg font-medium">{project.name}</h3>
+                                            <p class="text-sm opacity-90">Image {index + 1} of {project.galleryImages.length}</p>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        );
-                    })}
+                            ))}
+
+                            <!-- Slideshow Navigation Controls -->
+                            <button 
+                                class="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-all duration-300 hover:scale-110"
+                                onclick="previousSlide()"
+                            >
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                                </svg>
+                            </button>
+                            
+                            <button 
+                                class="absolute right-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-all duration-300 hover:scale-110"
+                                onclick="nextSlide()"
+                            >
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                </svg>
+                            </button>
+
+
+                            <!-- Play/Pause Button -->
+                            <button 
+                                class="absolute top-6 right-6 w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-all duration-300"
+                                onclick="toggleSlideshow()"
+                                id="playPauseBtn"
+                            >
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" id="pauseIcon">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6"/>
+                                </svg>
+                                <svg class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" id="playIcon">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Thumbnail Grid -->
+                    <div class="thumbnail-grid-container" style="display: none;">
+                        <div style="display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                        {project.galleryImages.map((image, index) => (
+                        <div 
+                            class="group cursor-pointer thumbnail-item"
+                            data-thumbnail={index}
+                            onclick={`selectSlide(${index})`}
+                        >
+                                <div class={`relative overflow-hidden rounded-xl bg-white shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 ${index === 0 ? 'ring-2 ring-blue-500 ring-offset-2' : ''}`}>
+                                    <Image 
+                                        src={image.src} 
+                                        alt={image.alt}
+                                        width={300}
+                                        height={200}
+                                        class="w-full aspect-[4/3] object-cover transition-transform duration-300 group-hover:scale-105"
+                                        loading={index < 6 ? "eager" : "lazy"}
+                                    />
+                                    
+                                    <!-- Thumbnail Number -->
+                                    <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                        <div class="absolute bottom-2 right-2 w-6 h-6 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center">
+                                            <span class="text-xs font-medium text-gray-800">{index + 1}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                        ))}
+                        </div>
+                    </div>
+
+                    <!-- View All Button -->
+                    {project.galleryImages.length > 6 && (
+                        <div class="text-center mt-16">
+                            <button 
+                                onclick="openGalleryModal(0)"
+                                class="inline-flex items-center px-8 py-3 bg-gray-900 hover:bg-black text-white font-medium rounded-full transition-all duration-300 hover:shadow-lg group"
+                            >
+                                <span>View All Images</span>
+                                <svg class="w-4 h-4 ml-2 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                                </svg>
+                            </button>
+                        </div>
+                    )}
                 </div>
             </section>
         ) : null}
+        </div>
         
         <!-- Contact Form -->
-        <div class="py-16 md:py-24 bg-gradient-to-br from-gray-50 to-neutral-100" id="contactFormPlaceholder">
-            <div class="max-w-3xl mx-auto px-4">
-                <div class="text-center mb-10">
-                    <div class="inline-block p-3 bg-neutral-100 rounded-full mb-6">
-                        <svg class="w-6 h-6 text-neutral-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                        </svg>
-                    </div>
-                    <h2 class="text-3xl md:text-4xl font-bold text-neutral-900 mb-4">
-                        Interested in {project.name}?
-                    </h2>
-                    <p class="text-lg text-neutral-600 max-w-2xl mx-auto leading-relaxed">
-                        Get detailed information about pricing, floor plans, and investment opportunities.
-                    </p>
-                </div>
-                <div class="bg-white rounded-2xl shadow-xl border border-neutral-200 overflow-hidden">
-                    <div class="bg-black px-8 py-6">
-                        <h3 class="text-xl font-semibold text-white">Contact Information</h3>
-                        <p class="text-gray-300 text-sm mt-1">We'll respond within 24 hours</p>
-                    </div>
-                    <div class="p-8">
-                        <div class="text-center text-gray-500">
-                            <div class="inline-block animate-spin w-8 h-8 border-4 border-gray-300 border-t-black rounded-full"></div>
-                            <p class="mt-4">Loading contact form...</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <ContactForm projectName={project.name} client:visible />
+        <ContactForm projectName={project.name} client:load />
 
         <!-- Navigation Section -->
         <section class="py-16" style="background-color: #FAFAFA;">
@@ -510,52 +615,6 @@ const allProjects = projects;
         </section>
     </main>
 
-    <!-- Gallery Modal -->
-    <div class="fixed top-0 left-0 w-screen h-screen z-[2000] hidden bg-black/95" id="galleryModal">
-        <div class="absolute top-0 left-0 w-full h-full bg-transparent flex items-center justify-center" onclick="closeGalleryModal()">
-            <div class="relative w-[90vw] h-[85vh] max-w-[1200px] max-h-[800px] bg-white rounded-[20px] overflow-hidden shadow-[0_40px_100px_rgba(0,0,0,0.5)] flex flex-col mx-auto z-[2001]" onclick="event.stopPropagation()">
-                <!-- Modal Header -->
-                <div class="flex justify-between items-center px-[30px] py-5 bg-white border-b border-black/5 flex-shrink-0">
-                    <h3 class="m-0 text-lg font-semibold text-gray-700" id="modalTitle">{project.name} Gallery</h3>
-                    <button class="bg-none border-none cursor-pointer text-gray-500 p-2 rounded-full transition-all duration-300 flex items-center justify-center hover:bg-gray-100 hover:text-gray-700" onclick="closeGalleryModal()">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                        </svg>
-                    </button>
-                </div>
-                
-                <!-- Main Image Display -->
-                <div class="flex-1 flex items-center justify-center bg-gray-50 min-h-0">
-                    <div class="relative w-full h-full flex items-center justify-center">
-                        <img id="modalMainImage" src="" alt="" class="max-w-[90%] max-h-[90%] object-contain rounded-lg shadow-[0_10px_40px_rgba(0,0,0,0.1)] select-none pointer-events-none transition-opacity duration-300" />
-                        
-                        <!-- Navigation Arrows -->
-                        <button class="absolute top-1/2 -translate-y-1/2 left-[15px] md:left-[30px] bg-white/95 border-none w-[40px] h-[40px] md:w-[50px] md:h-[50px] rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.1)] text-gray-700 z-10 hover:bg-white hover:scale-110 hover:shadow-[0_6px_30px_rgba(0,0,0,0.2)]" onclick="previousImage()" aria-label="Previous image">
-                            <svg width="16" height="16" class="md:w-5 md:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                <polyline points="15,18 9,12 15,6"></polyline>
-                            </svg>
-                        </button>
-                        <button class="absolute top-1/2 -translate-y-1/2 right-[15px] md:right-[30px] bg-white/95 border-none w-[40px] h-[40px] md:w-[50px] md:h-[50px] rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.1)] text-gray-700 z-10 hover:bg-white hover:scale-110 hover:shadow-[0_6px_30px_rgba(0,0,0,0.2)]" onclick="nextImage()" aria-label="Next image">
-                            <svg width="16" height="16" class="md:w-5 md:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                <polyline points="9,18 15,12 9,6"></polyline>
-                            </svg>
-                        </button>
-                        
-                        <!-- Image Counter -->
-                        <div class="absolute top-5 right-5 bg-black/70 text-white px-4 py-2 rounded-[20px] text-body-sm font-medium backdrop-blur-md">
-                            <span id="currentImageIndex">1</span> / <span id="totalImages">1</span>
-                        </div>
-                        
-                        <!-- Progress Indicators -->
-                        <div class="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2 z-10" id="progressIndicators">
-                            <!-- Generated by JavaScript -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     
     <!-- Sticky WhatsApp Button -->
     <StickyWhatsAppButton client:visible />
@@ -620,19 +679,17 @@ const allProjects = projects;
         if (!dropdownBtn || !dropdownMenu) return;
         
         const openDropdown = () => { 
-            dropdownMenu.classList.remove('hidden');
-            dropdownMenu.classList.add('block');
+            dropdownMenu.style.display = 'block';
             if (arrow) arrow.style.transform = 'rotate(180deg)';
         };
         const closeDropdown = () => { 
-            dropdownMenu.classList.add('hidden');
-            dropdownMenu.classList.remove('block');
+            dropdownMenu.style.display = 'none';
             if (arrow) arrow.style.transform = 'rotate(0deg)';
         };
         
         dropdownBtn.addEventListener('click', (e) => { 
             e.stopPropagation(); 
-            dropdownMenu.classList.contains('hidden') ? openDropdown() : closeDropdown(); 
+            dropdownMenu.style.display === 'none' || dropdownMenu.style.display === '' ? openDropdown() : closeDropdown(); 
         });
         document.addEventListener('click', (e) => { 
             if (!dropdownBtn.contains(e.target) && !dropdownMenu.contains(e.target)) closeDropdown(); 
@@ -818,6 +875,188 @@ const allProjects = projects;
         window.open(whatsappUrl, '_blank');
     };
 
+    // Desktop Slideshow Functions
+    let currentSlideIndex = 0;
+    let slideshowInterval = null;
+    let isPlaying = true;
+
+    window.nextSlide = function() {
+        currentSlideIndex = (currentSlideIndex + 1) % project.galleryImages.length;
+        updateSlideshow();
+    };
+
+    window.previousSlide = function() {
+        currentSlideIndex = currentSlideIndex === 0 ? project.galleryImages.length - 1 : currentSlideIndex - 1;
+        updateSlideshow();
+    };
+
+    window.goToSlide = function(index) {
+        currentSlideIndex = index;
+        updateSlideshow();
+    };
+
+    window.selectSlide = function(index) {
+        currentSlideIndex = index;
+        updateSlideshow();
+        updateThumbnails();
+    };
+
+    window.toggleSlideshow = function() {
+        const playIcon = document.getElementById('playIcon');
+        const pauseIcon = document.getElementById('pauseIcon');
+        
+        if (isPlaying) {
+            pauseSlideshow();
+            playIcon.classList.remove('hidden');
+            pauseIcon.classList.add('hidden');
+        } else {
+            startSlideshow();
+            playIcon.classList.add('hidden');
+            pauseIcon.classList.remove('hidden');
+        }
+        isPlaying = !isPlaying;
+    };
+
+    function updateSlideshow() {
+        // Update slide images
+        const slides = document.querySelectorAll('.slideshow-image');
+        slides.forEach((slide, index) => {
+            if (index === currentSlideIndex) {
+                slide.classList.add('opacity-100', 'scale-100');
+                slide.classList.remove('opacity-0', 'scale-105');
+            } else {
+                slide.classList.remove('opacity-100', 'scale-100');
+                slide.classList.add('opacity-0', 'scale-105');
+            }
+        });
+
+        // Update slideshow dots
+        const dots = document.querySelectorAll('.slideshow-dot');
+        dots.forEach((dot, index) => {
+            if (index === currentSlideIndex) {
+                dot.classList.add('bg-white', 'scale-125');
+                dot.classList.remove('bg-white/50');
+            } else {
+                dot.classList.remove('bg-white', 'scale-125');
+                dot.classList.add('bg-white/50');
+            }
+        });
+
+        updateThumbnails();
+    }
+
+    function updateThumbnails() {
+        const thumbnails = document.querySelectorAll('.thumbnail-item');
+        thumbnails.forEach((thumb, index) => {
+            const thumbDiv = thumb.querySelector('div');
+            if (index === currentSlideIndex) {
+                thumbDiv.classList.add('ring-2', 'ring-blue-500', 'ring-offset-2');
+            } else {
+                thumbDiv.classList.remove('ring-2', 'ring-blue-500', 'ring-offset-2');
+            }
+        });
+    }
+
+    function startSlideshow() {
+        slideshowInterval = setInterval(() => {
+            nextSlide();
+        }, 3000); // 3 seconds
+    }
+
+    function pauseSlideshow() {
+        if (slideshowInterval) {
+            clearInterval(slideshowInterval);
+            slideshowInterval = null;
+        }
+    }
+
+    function initializeSlideshow() {
+        console.log('Initializing slideshow...');
+        
+        // Check if slideshow elements exist
+        const slides = document.querySelectorAll('.slideshow-image');
+        console.log(`Found ${slides.length} slideshow images`);
+        
+        if (slides.length === 0) {
+            console.log('No slideshow found - probably on mobile');
+            return;
+        }
+        
+        // Start auto-advancing slideshow
+        startSlideshow();
+        console.log('Slideshow started');
+        
+        // Pause on hover
+        const slideshowContainer = document.querySelector('.slideshow-image').parentElement;
+        if (slideshowContainer) {
+            slideshowContainer.addEventListener('mouseenter', () => {
+                if (isPlaying) pauseSlideshow();
+            });
+            
+            slideshowContainer.addEventListener('mouseleave', () => {
+                if (isPlaying) startSlideshow();
+            });
+        }
+    }
+
+    // Mobile Gallery Functions
+    window.scrollToGalleryImage = function(index) {
+        const mobileGallery = document.getElementById('mobileGallery');
+        const imageWidth = mobileGallery.children[0]?.offsetWidth || 0;
+        const gap = 16; // 4 * 4px (gap-4)
+        const scrollPosition = index * (imageWidth + gap);
+        
+        mobileGallery.scrollTo({
+            left: scrollPosition,
+            behavior: 'smooth'
+        });
+        
+        updateMobileDots(index);
+    };
+
+    function updateMobileDots(activeIndex) {
+        const dots = document.querySelectorAll('.gallery-dot');
+        dots.forEach((dot, index) => {
+            if (index === activeIndex) {
+                dot.classList.remove('bg-gray-300');
+                dot.classList.add('bg-gray-600', 'scale-125');
+            } else {
+                dot.classList.remove('bg-gray-600', 'scale-125');
+                dot.classList.add('bg-gray-300');
+            }
+        });
+    }
+
+    function initializeMobileGallery() {
+        const mobileGallery = document.getElementById('mobileGallery');
+        if (!mobileGallery) return;
+
+        // Initialize first dot as active
+        updateMobileDots(0);
+
+        // Add scroll listener for dot updates
+        mobileGallery.addEventListener('scroll', () => {
+            const imageWidth = mobileGallery.children[0]?.offsetWidth || 0;
+            const gap = 16;
+            const scrollLeft = mobileGallery.scrollLeft;
+            const currentIndex = Math.round(scrollLeft / (imageWidth + gap));
+            updateMobileDots(currentIndex);
+        }, { passive: true });
+
+        // Add CSS for smooth scrolling and hiding scrollbar
+        const style = document.createElement('style');
+        style.textContent = `
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
     // Image Loading Handler
     function initializeImageLoading() {
         const heroContainer = document.getElementById('heroImageContainer');
@@ -878,6 +1117,8 @@ const allProjects = projects;
         
         // Initialize core functionality
         initializeGallery();
+        initializeMobileGallery();
+        initializeSlideshow();
         initializeDropdown();
         initializeGalleryButton();
         initializeCloseButton();

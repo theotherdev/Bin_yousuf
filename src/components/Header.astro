@@ -1,0 +1,160 @@
+---
+// src/components/Header.astro - Reusable header component
+import { projects } from '../data/projects.js';
+
+export interface Props {
+    currentProject?: string;
+    showProjectDropdown?: boolean;
+}
+
+const { currentProject, showProjectDropdown = false } = Astro.props;
+const allProjects = projects;
+---
+
+<!-- Header -->
+<header class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md z-[1000] border-b border-black/10 px-4">
+    <div class="flex justify-between items-center max-w-[1400px] mx-auto">
+        <div class="flex items-center gap-5">
+            <button class="bg-none border-none text-2xl text-gray-400 cursor-pointer p-1 transition-colors duration-300 hover:text-gray-700 font-inherit" id="closeBtn">×</button>
+            {showProjectDropdown && currentProject ? (
+                <div class="relative">
+                    <button class="bg-none border-none text-lg font-medium text-gray-700 cursor-pointer flex items-center gap-2 px-3 py-2 rounded-md transition-all duration-300 hover:bg-gray-100" id="projectDropdownBtn">
+                        {currentProject}
+                        <svg class="transition-transform duration-300" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                            <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="hidden absolute top-full left-0 bg-white border border-gray-300 shadow-[0_10px_30px_rgba(0,0,0,0.1)] min-w-[300px] max-h-[400px] overflow-y-auto z-[1001]" id="projectDropdownMenu">
+                        {allProjects.map((proj) => (
+                            <a 
+                                href={`/projects/${proj.name.toLowerCase().replace(/[\s&]/g, '-').replace(/--+/g, '-')}`}
+                                class={`flex items-center gap-3 px-4 py-3 no-underline text-gray-700 transition-colors duration-300 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 ${proj.name === currentProject ? 'bg-black text-white' : ''}`}
+                            >
+                                <span class={`text-xs min-w-[30px] font-medium ${proj.name === currentProject ? 'text-white/80' : 'text-gray-400'}`}>{proj.number}</span>
+                                <span class="flex-1 text-sm font-medium">{proj.name}</span>
+                                <span class={`text-xs font-normal ${proj.name === currentProject ? 'text-white/90' : 'text-gray-500'}`}>{proj.location}</span>
+                            </a>
+                        ))}
+                    </div>
+                </div>
+            ) : (
+                <a href="/" class="text-lg font-medium text-gray-700 hover:text-gray-900 transition-colors duration-300">
+                    BYG Properties
+                </a>
+            )}
+        </div>
+        <div class="flex items-center">
+            {showProjectDropdown ? (
+                <button class="bg-none border-none text-gray-400 text-sm font-normal cursor-pointer px-3 py-2 rounded-md transition-all duration-300 hover:text-gray-700 hover:bg-gray-100" id="openGalleryBtn">Gallery</button>
+            ) : (
+                <nav class="flex items-center gap-6">
+                    <a href="/about" class="text-gray-600 hover:text-gray-900 transition-colors duration-300">About</a>
+                    <a href="/#projects" class="text-gray-600 hover:text-gray-900 transition-colors duration-300">Projects</a>
+                    <a href="/privacy-policy" class="text-gray-600 hover:text-gray-900 transition-colors duration-300">Privacy</a>
+                </nav>
+            )}
+        </div>
+    </div>
+</header>
+
+<style>
+    /* Fix dropdown styling */
+    #projectDropdownMenu {
+        border-radius: 0.5rem;
+        background: white;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    
+    #projectDropdownMenu a {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem 1rem;
+        text-decoration: none;
+        color: #374151;
+        transition: all 0.3s ease;
+        border-bottom: 1px solid #f3f4f6;
+    }
+    
+    #projectDropdownMenu a:hover {
+        background-color: #f9fafb;
+    }
+    
+    #projectDropdownMenu a:last-child {
+        border-bottom: none;
+    }
+</style>
+
+<script define:vars={{ allProjects, currentProject, showProjectDropdown }}>
+    // Only initialize dropdown if it exists
+    if (showProjectDropdown) {
+        function initializeDropdown() {
+            const dropdownBtn = document.getElementById('projectDropdownBtn');
+            const dropdownMenu = document.getElementById('projectDropdownMenu');
+            const arrow = dropdownBtn?.querySelector('svg');
+            if (!dropdownBtn || !dropdownMenu) return;
+            
+            const openDropdown = () => { 
+                dropdownMenu.classList.remove('hidden');
+                dropdownMenu.classList.add('block');
+                if (arrow) arrow.style.transform = 'rotate(180deg)';
+            };
+            const closeDropdown = () => { 
+                dropdownMenu.classList.add('hidden');
+                dropdownMenu.classList.remove('block');
+                if (arrow) arrow.style.transform = 'rotate(0deg)';
+            };
+            
+            dropdownBtn.addEventListener('click', (e) => { 
+                e.stopPropagation(); 
+                dropdownMenu.classList.contains('hidden') ? openDropdown() : closeDropdown(); 
+            });
+            document.addEventListener('click', (e) => { 
+                if (!dropdownBtn.contains(e.target) && !dropdownMenu.contains(e.target)) closeDropdown(); 
+            });
+            document.addEventListener('keydown', (e) => { 
+                if (e.key === 'Escape') closeDropdown(); 
+            });
+        }
+
+        // Initialize when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeDropdown);
+        } else {
+            initializeDropdown();
+        }
+    }
+
+    // Initialize close button
+    function initializeCloseButton() {
+        const closeBtn = document.getElementById('closeBtn');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => { 
+                window.location.href = '/'; 
+            });
+        }
+    }
+
+    // Initialize gallery button
+    function initializeGalleryButton() {
+        const galleryBtn = document.getElementById('openGalleryBtn');
+        if (galleryBtn) {
+            galleryBtn.addEventListener('click', () => {
+                if (typeof window.openGalleryModal === 'function') {
+                    window.openGalleryModal(0);
+                }
+            });
+        }
+    }
+
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeCloseButton();
+            initializeGalleryButton();
+        });
+    } else {
+        initializeCloseButton();
+        initializeGalleryButton();
+    }
+</script>
