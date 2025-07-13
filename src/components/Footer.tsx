@@ -175,11 +175,11 @@ const Footer: React.FC = () => {
 
           {/* Bottom Section with Social Icons */}
           <div className="border-t border-gray-300 pt-8">
-            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+            <div className="flex flex-col items-center gap-6">
               
               {/* Copyright */}
-              <div className="text-sm text-gray-600">
-                © {currentYear} BinYousuf Group™ with{' '}
+              <div className="text-sm text-gray-600 text-center">
+                © {currentYear} Bin Yousuf Group™ with{' '}
                 <span className="text-red-600">❤</span> from{' '}
                 <a 
                   href="https://otherdev.com/" 

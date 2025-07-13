@@ -1,5 +1,7 @@
 ---
 // src/pages/projects/[id].astro - Fixed gallery image loading
+export const prerender = true;
+
 import type { GetStaticPaths, GetStaticPathsResult } from "astro";
 import ProjectLayout from '../../layouts/ProjectLayout.astro';
 import type { ProjectData } from '../../types/project';

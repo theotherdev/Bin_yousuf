@@ -6,6 +6,7 @@ import { projects } from '../data/projects.js';
 import ContactForm from '../components/ContactForm.tsx';
 import ProjectAmenities from '../components/ProjectDetail/ProjectAmenities.tsx';
 import StickyWhatsAppButton from '../components/StickyWhatsAppButton.tsx';
+import Footer from '../components/Footer.tsx';
 import { projectCompletionDates } from '../types/project';
 
 export interface Props {
@@ -559,6 +560,9 @@ const allProjects = projects;
     
     <!-- Sticky WhatsApp Button -->
     <StickyWhatsAppButton client:visible />
+    
+    <!-- Footer -->
+    <Footer client:visible />
 </body>
 </html>
 
