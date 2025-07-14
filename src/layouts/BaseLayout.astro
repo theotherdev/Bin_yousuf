@@ -40,14 +40,7 @@ const selectedJpegImage = useSquareImage ? ogImageSquareJpeg.src : ogImageRectJp
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     
-    <!-- Primary WebP image (optimized for performance) -->
-    <meta property="og:image" content={new URL(selectedOgImageUrl, Astro.site).toString()} />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content={useSquareImage ? "1200" : "630"} />
-    <meta property="og:image:type" content="image/webp" />
-    <meta property="og:image:alt" content={`${title} - BYG BinYousufGroup`} />
-    
-    <!-- JPEG fallback for better compatibility -->
+    <!-- Primary image (JPEG for WhatsApp compatibility) -->
     <meta property="og:image" content={new URL(selectedJpegImage, Astro.site).toString()} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content={useSquareImage ? "1200" : "630"} />
@@ -57,21 +50,19 @@ const selectedJpegImage = useSquareImage ? ogImageSquareJpeg.src : ogImageRectJp
     <meta property="og:site_name" content="Bin Yousuf Group - Oceanfront Property Investment" />
     <meta property="og:locale" content="en_US" />
     
-    <!-- WhatsApp-optimized square image -->
-    {useSquareImage && (
-      <>
-        <meta property="og:image" content={new URL(ogImageSquare.src, Astro.site).toString()} />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="1200" />
-      </>
-    )}
+    <!-- WhatsApp specific optimizations -->
+    <meta property="og:image:secure_url" content={new URL(selectedJpegImage, Astro.site).toString()} />
+    <meta name="thumbnail" content={new URL(selectedJpegImage, Astro.site).toString()} />
+    
+    <!-- Additional meta for better WhatsApp compatibility -->
+    <link rel="image_src" href={new URL(selectedJpegImage, Astro.site).toString()} />
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content={new URL(Astro.url.pathname, Astro.site).toString()} />
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
-    <meta property="twitter:image" content={new URL(selectedOgImageUrl, Astro.site).toString()} />
+    <meta property="twitter:image" content={new URL(selectedJpegImage, Astro.site).toString()} />
     <meta property="twitter:image:alt" content={`${title} - BYG BinYousufGroup`} />
     <meta property="twitter:site" content="@BinYousufGroup" />
     <meta property="twitter:creator" content="@BinYousufGroup" />
